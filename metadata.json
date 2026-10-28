@@ -1,0 +1,8 @@
+{
+  "name": "Urooj Choudhary",
+  "description": "Standalone Mobile WhatsApp Automation Suite with Embedded Local Server, Device-Bound Session Storage, Native Live Location, Fake Quoted Reply, and Scheduled Message Queue.",
+  "prompt": "This app was imported from GitHub repository ZahidAshiqusa/Queen-Riam.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

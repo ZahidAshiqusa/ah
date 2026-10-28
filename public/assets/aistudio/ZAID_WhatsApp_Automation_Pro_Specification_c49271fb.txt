@@ -1,0 +1,195 @@
+ZAID WHATSAPP AUTOMATION PRO
+Feature Specification and Implementation Plan
+
+1. PROJECT OVERVIEW
+
+ZAID WhatsApp Automation Pro is a proposed WhatsApp automation SaaS dashboard. It is designed to let multiple users connect eligible WhatsApp Business accounts and manage messaging, media, automation, scheduling, and reporting from one dashboard.
+
+The recommended approach is a hybrid dashboard built around the official WhatsApp Business Platform Cloud API. Features must be limited to capabilities actually supported by the selected API, the connected account, and WhatsApp's current policies.
+
+2. DASHBOARD
+
+The main dashboard should include:
+- WhatsApp connection status
+- Connected business phone number
+- Total messages sent
+- Incoming message count
+- Active automation rules
+- Scheduled messages
+- Recent activity logs
+- Message delivery and error summaries
+
+3. PRIVACY, TRACKING, AND MESSAGE LOGS
+
+- Connection and Activity Logs: Record connection status and activity information that the authorized integration makes available. Do not promise a complete online/offline history for arbitrary phone numbers.
+- Incoming Message Archive: Store incoming messages received by the integration, subject to applicable consent, privacy, and retention requirements.
+- Deleted Message Logging: Previously received messages may be retained according to the service's retention policy, but the official API does not provide universal recovery of messages deleted by a sender.
+- Edited Message History: Record edit events and message versions only if the chosen integration exposes the relevant information. Do not promise complete original-message recovery.
+- Media Archive: Store supported incoming images, videos, audio, and documents when permitted and appropriate.
+- Status Management: Provide tools for managing the user's own business status-related content where supported. Do not include covert monitoring of other people's statuses.
+
+4. MEDIA AND MESSAGING TOOLS
+
+- Upload and send supported video files
+- Upload and send supported audio files
+- Send images and documents
+- Manage approved message templates
+- Send supported interactive reply buttons
+- Send supported list messages
+- Schedule eligible media and text messages
+- Generate message drafts with AI
+
+Important limitations:
+- Interactive buttons and list messages are available only for supported message types and within the platform's rules.
+- Converting a standard video into WhatsApp's native Video Note format requires separate technical validation; do not assume the official API supports it.
+- Audio delivery depends on supported formats and message types. Do not claim that an uploaded MP3 can always be sent as a native voice note with the exact WhatsApp microphone and waveform presentation.
+
+5. AI AND AUTOMATION
+
+- Keyword-based auto-replies
+- Gemini AI integration
+- OpenAI integration
+- Custom instructions for each business
+- Customer support chatbot
+- FAQ automation
+- Human handover when needed
+- Scheduled messages
+- Incoming-message webhooks
+- Delivery and read-receipt reporting where available
+
+The AI should respond only within the business's configured scope, respect user preferences, and provide a clear way to reach a human agent.
+
+6. CONTACTS AND CAMPAIGNS
+
+- Contact management
+- Customer tags and segments
+- CSV contact import
+- Opt-in and consent records
+- Compliant bulk messaging to eligible recipients
+- Campaign reports
+- Group and community tools only where the selected API and account explicitly support them
+
+Bulk messaging must follow WhatsApp's current policies, applicable consent requirements, template rules, and rate limits.
+
+7. ADMIN PANEL
+
+- User management
+- Subscription plans and usage limits
+- API configuration
+- Webhook logs
+- Message logs
+- Error monitoring
+- Account suspension controls
+- Security settings
+- Audit trail
+- Basic usage and performance analytics
+
+8. FEATURE FEASIBILITY
+
+Feature: AI auto-replies
+Status: Supported, subject to implementation and policy requirements.
+
+Feature: Keyword auto-replies
+Status: Supported through application logic and incoming-message webhooks.
+
+Feature: Scheduled business messages
+Status: Possible, subject to messaging rules, templates, and applicable time-window requirements.
+
+Feature: Interactive buttons
+Status: Supported for eligible message types.
+
+Feature: List messages
+Status: Supported for eligible message types.
+
+Feature: Sending images, video, and audio
+Status: Supported for eligible formats and message types.
+
+Feature: Delivery status logs
+Status: Available through supported webhooks and events.
+
+Feature: Recovering every message deleted by a sender
+Status: Not generally supported by the official API.
+
+Feature: Secretly saving View Once media
+Status: Not a supported general-purpose official API feature and should not be included.
+
+Feature: Complete online/offline history for any number
+Status: Not available through the official API.
+
+Feature: Always Online or Ghost Mode
+Status: Not available through the official API.
+
+Feature: Fake live location
+Status: Not an official API feature.
+
+Feature: Arbitrary fake quoted replies
+Status: The official API does not guarantee support for fabricated message references.
+
+Feature: Hidden group mentions
+Status: Not a general-purpose official API feature.
+
+Feature: Monitoring profile-picture or About changes for any number
+Status: Not generally available through the official API.
+
+Feature: Scheduling the business's own outgoing messages
+Status: Possible with an appropriate scheduling system and subject to messaging rules.
+
+Feature: AI-generated automatic replies
+Status: Supported through integration with an AI provider and the messaging API.
+
+9. RECOMMENDED TECHNICAL STACK
+
+Frontend:
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+
+Backend:
+- Next.js API routes
+- PostgreSQL hosted on Neon
+- Prisma ORM
+- Auth.js authentication
+
+WhatsApp integration:
+- Official WhatsApp Business Platform Cloud API
+- Webhook verification
+- Incoming-message processing
+- Template management
+- Message-status tracking
+
+AI:
+- Gemini API
+- OpenAI API
+- Per-user AI settings and instructions
+
+Hosting and storage:
+- Vercel for the frontend and suitable serverless APIs
+- Neon PostgreSQL for the database
+- Cloudinary for appropriate media storage, where suitable
+
+Long-running tasks and scheduled jobs may require a suitable queue or scheduling service. Do not assume that serverless functions can run continuously.
+
+10. RECOMMENDED PRODUCT DIRECTION
+
+Recommended version: Hybrid Dashboard.
+
+Build the product around the official WhatsApp Business Platform API, with AI replies, media tools, scheduling, message logs, contact management, analytics, and an admin panel.
+
+This approach is more suitable for a maintainable business product than relying on unsupported or privacy-invasive features. Clearly label any feature that depends on account eligibility, API limitations, or additional technical validation.
+
+11. SECURITY AND PRIVACY REQUIREMENTS
+
+- Keep API tokens and secrets on the server.
+- Never expose access tokens in browser code.
+- Verify incoming webhooks.
+- Apply authentication and role-based authorization.
+- Isolate each customer's data.
+- Validate and limit file uploads.
+- Rate-limit sensitive endpoints.
+- Record administrative actions.
+- Define retention and deletion rules for messages and media.
+- Obtain appropriate consent and follow applicable privacy laws and WhatsApp policies.
+- Do not build covert surveillance, deceptive presence indicators, or features designed to bypass privacy protections.
+
+END OF SPECIFICATION

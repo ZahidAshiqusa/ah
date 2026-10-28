@@ -1,0 +1,16 @@
+{
+  "BOT_NAME": "Urooj Choudhary",
+  "BOT_OWNER": "King Unkown",
+  "AUTOREAD": "false",
+  "AUTOTYPE": "false",
+  "AUTORECORD": "false",
+  "AUTORECORDTYPE": "false",
+  "AUTO_STATUS_REACT": "true",
+  "AUTO_STATUS_REPLY": "false",
+  "AUTO_STATUS_MSG": "Viewed By Urooj Choudhary",
+  "ANTICALL": "off",
+  "BUTTONMODE": "on",
+  "LANGUAGE": "en",
+  "PREFIX": ".",
+  "ALWAYSONLINE": "true"
+}

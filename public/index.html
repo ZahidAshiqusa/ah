@@ -1,0 +1,3612 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Urooj Choudhary - WhatsApp Automation Suite</title>
+  <meta name="description" content="Production-ready WhatsApp Automation Suite with Native Live Location, Button Messenger, Online Tracker, PTV Video Note & Voice Note sender, and Multi-Tenant Account Management." />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#030712" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Urooj Choudhary" />
+  <link rel="icon" type="image/png" href="/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png" />
+
+  <!-- Tailwind CSS via CDN for full styling & responsiveness -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+            whatsapp: {
+              light: '#25D366',
+              green: '#00a884',
+              dark: '#128C7E',
+              darker: '#075E54',
+              teal: '#056162',
+              cardbg: '#0c1317',
+              livebg: '#0d3a2d',
+              stopbtn: '#f87171'
+            }
+          },
+          animation: {
+            'spin-slow': 'spin 12s linear infinite',
+            'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'radar': 'radarSweep 3s linear infinite',
+            'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+          },
+          keyframes: {
+            radarSweep: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #f3f4f6;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1f2937;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+    .shake-anim {
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .radar-sweep {
+      animation: radarSweep 3.5s linear infinite;
+    }
+    @keyframes radarSweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .whatsapp-map-bg {
+      background-color: #111b21;
+      background-image: 
+        radial-gradient(#1e293b 1px, transparent 1px),
+        linear-gradient(to right, rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+      background-size: 20px 20px, 40px 40px, 40px 40px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ========================================================================= -->
+  <!-- 🔐 ADMIN AUTHENTICATION MODAL (Optional Super Admin Gate)                   -->
+  <!-- ========================================================================= -->
+  <div id="authModalOverlay" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+    <div id="authCard" class="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center relative overflow-hidden">
+      <!-- Ambient decorative glow -->
+      <div class="absolute -top-16 -right-16 w-44 h-44 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -left-16 w-44 h-44 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Avatar & Brand Header -->
+      <div class="flex flex-col items-center space-y-2">
+        <div class="relative group">
+          <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-amber-500 via-yellow-300 to-amber-600 shadow-xl shadow-amber-500/25">
+            <img 
+              src="/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png" 
+              alt="Urooj Choudhary" 
+              class="w-full h-full object-cover rounded-full"
+            />
+          </div>
+          <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-slate-950 border border-amber-500/50 text-[11px] font-extrabold text-amber-400 uppercase tracking-wider shadow">
+            Urooj Choudhary
+          </span>
+        </div>
+        <div class="pt-2">
+          <h2 class="text-xl font-extrabold text-white tracking-tight">WhatsApp Automation Suite</h2>
+          <p class="text-xs text-slate-400 mt-1">Owner: <span class="text-amber-400 font-semibold">King Unkown</span> &bull; Production Platform</p>
+        </div>
+      </div>
+
+      <!-- Auth Mode Switcher (Sign In vs Sign Up) -->
+      <div class="flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+        <button 
+          type="button" 
+          onclick="setAuthMode('signin')" 
+          id="authTabBtn-signin" 
+          class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-amber-500 text-slate-950 shadow"
+        >
+          🔑 Sign In
+        </button>
+        <button 
+          type="button" 
+          onclick="setAuthMode('signup')" 
+          id="authTabBtn-signup" 
+          class="flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-400 hover:text-slate-200"
+        >
+          ✨ Create Account
+        </button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="signInForm" onsubmit="handleSignIn(event)" class="space-y-4 text-left">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Username</label>
+          <input 
+            type="text" 
+            id="signInUsername" 
+            placeholder="e.g. Urooj or your username" 
+            required 
+            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="signInPassword" 
+              placeholder="Enter password..." 
+              required 
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition pr-10"
+            />
+            <button 
+              type="button" 
+              onclick="togglePasswordInput('signInPassword')" 
+              class="absolute right-3 top-2.5 text-slate-400 hover:text-amber-400 transition"
+            >
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="signInSubmitBtn"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2"
+        >
+          <span>Sign In to Dashboard</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+
+        <!-- Quick Super Admin Shortcut Button -->
+        <button 
+          type="button" 
+          onclick="quickAdminLogin()" 
+          class="w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-bold text-xs tracking-wide transition flex items-center justify-center gap-2"
+          title="Instant Super Admin login with master credentials (Urooj / Zaid@323232)"
+        >
+          <span>👑 One-Click Super Admin Login (Urooj)</span>
+        </button>
+      </form>
+
+      <!-- Sign Up Form (Initially hidden) -->
+      <form id="signUpForm" onsubmit="handleSignUp(event)" class="space-y-4 text-left hidden">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Choose Username</label>
+          <input 
+            type="text" 
+            id="signUpUsername" 
+            placeholder="Choose username (min 3 chars)" 
+            required 
+            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Choose Password</label>
+          <input 
+            type="password" 
+            id="signUpPassword" 
+            placeholder="Min 5 characters..." 
+            required 
+            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Confirm Password</label>
+          <input 
+            type="password" 
+            id="signUpPasswordConfirm" 
+            placeholder="Re-type password..." 
+            required 
+            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          id="signUpSubmitBtn"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2"
+        >
+          <span>Create Account & Enter</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </button>
+      </form>
+
+      <!-- Inline Feedback Error Display -->
+      <div id="authAlertBox" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 font-medium"></div>
+
+      <div class="text-[11px] text-slate-500 pt-2 border-t border-slate-800 flex items-center justify-between">
+        <span>👑 Owner: <strong class="text-amber-400">King Unkown</strong></span>
+        <span>SQLite Local Multi-Tenant</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 👑 MAIN APPLICATION DASHBOARD                                             -->
+  <!-- ========================================================================= -->
+  
+  <!-- Navigation Header (Compact & Responsive with Options Dropdown) -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+      
+      <!-- Brand & Cat Avatar with Compact Heading -->
+      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <div class="relative shrink-0">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-500 to-yellow-400 shadow-md shadow-amber-500/20 overflow-hidden">
+            <img 
+              src="/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png" 
+              alt="Urooj Choudhary" 
+              class="w-full h-full object-cover rounded-full"
+            />
+          </div>
+          <span class="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-slate-900">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          </span>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <h1 class="font-black text-sm sm:text-base tracking-tight bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent truncate">
+              Urooj Choudhary
+            </h1>
+            <span class="text-[9px] sm:text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold shrink-0">v1.1</span>
+          </div>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 truncate">Owner: <span class="text-amber-400 font-semibold">King Unkown</span> &bull; <span class="hidden xs:inline">WhatsApp Suite</span></p>
+        </div>
+      </div>
+
+      <!-- Right Header: Nav Options Button, Status & Actions -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        
+        <!-- ⚡ DEDICATED NAV OPTIONS BUTTON (Requested by user) -->
+        <div class="relative">
+          <button 
+            type="button"
+            id="navOptionsBtn"
+            onclick="toggleOptionsMenu(event)" 
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-300 font-bold text-xs transition shadow-sm hover:shadow-amber-500/20 active:scale-95 cursor-pointer"
+            title="Open Features & Options Menu"
+          >
+            <span class="text-sm">⚡</span>
+            <span class="font-extrabold tracking-wide">Options</span>
+            <svg id="optionsChevron" class="w-3.5 h-3.5 transition-transform duration-200 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- COMPACT DROPDOWN OPTIONS MENU -->
+          <div 
+            id="headerOptionsMenu" 
+            class="hidden absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl shadow-black/80 backdrop-blur-xl p-2 z-50 transition-all duration-150 animate-in fade-in slide-in-from-top-2"
+          >
+            <!-- Dropdown Header Profile -->
+            <div class="px-3 py-2 border-b border-slate-800/80 mb-1 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <div>
+                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span id="menuUserName">User</span>
+                    <span id="menuUserTag" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-mono">Member</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400">Quick Navigation & Tools</div>
+                </div>
+              </div>
+              <button onclick="closeOptionsMenu()" class="text-slate-500 hover:text-slate-300 text-xs p-1">✕</button>
+            </div>
+
+            <!-- Category: Core Power Tools -->
+            <div class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Core Tools</div>
+            <div class="space-y-0.5">
+              <button onclick="selectOptionTab('location')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-emerald-400 transition text-left group">
+                <span class="flex items-center gap-2"><span>📍</span><span>Native Live Location</span></span>
+                <span class="text-[10px] text-emerald-400/80 font-mono">100% Live</span>
+              </button>
+              <button onclick="selectOptionTab('fakequote')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-cyan-300 transition text-left group">
+                <span class="flex items-center gap-2"><span>🎭</span><span>Fake Quoted Reply</span></span>
+                <span class="text-[9px] bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 px-1.5 py-0.2 rounded-full font-bold">HOT</span>
+              </button>
+              <button onclick="selectOptionTab('scheduled')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-amber-400 transition text-left group">
+                <span class="flex items-center gap-2"><span>⏰</span><span>Scheduled Queue</span></span>
+                <span class="text-[9px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.2 rounded-full font-bold">NEW</span>
+              </button>
+              <button onclick="selectOptionTab('buttons')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-indigo-400 transition text-left group">
+                <span class="flex items-center gap-2"><span>💬</span><span>Button Messenger</span></span>
+                <span class="text-[10px] text-slate-500 font-mono">Buttons</span>
+              </button>
+            </div>
+
+            <!-- Category: Automation & Media -->
+            <div class="px-2 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Automation & Media</div>
+            <div class="space-y-0.5">
+              <button onclick="selectOptionTab('tracker')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-teal-400 transition text-left">
+                <span class="flex items-center gap-2"><span>👁️</span><span>Online Tracker</span></span>
+                <span class="text-[10px] text-slate-500 font-mono">Presence</span>
+              </button>
+              <button onclick="selectOptionTab('media')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-rose-400 transition text-left">
+                <span class="flex items-center gap-2"><span>🎥</span><span>PTV & Voice Notes</span></span>
+                <span class="text-[10px] text-slate-500 font-mono">Push-to-Video</span>
+              </button>
+              <button onclick="selectOptionTab('commands')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-yellow-400 transition text-left">
+                <span class="flex items-center gap-2"><span>⚡</span><span>Command Library</span></span>
+                <span class="text-[10px] text-amber-400/90 font-mono font-bold">236</span>
+              </button>
+            </div>
+
+            <!-- Category: System & Session -->
+            <div class="px-2 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">System & Session</div>
+            <div class="space-y-0.5">
+              <button onclick="selectOptionTab('session')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-sky-400 transition text-left">
+                <span class="flex items-center gap-2"><span>🔗</span><span>Device Pairing & Sessions</span></span>
+                <span class="text-[10px] text-slate-500 font-mono">Pair</span>
+              </button>
+              <button id="menuAdminBtn" onclick="selectOptionTab('admin')" class="w-full hidden items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-amber-300 hover:bg-amber-500/10 transition text-left">
+                <span class="flex items-center gap-2"><span>👑</span><span>Super Admin Console</span></span>
+                <span class="text-[9px] bg-amber-500/30 text-amber-200 px-1.5 py-0.2 rounded font-mono">Urooj</span>
+              </button>
+              <button onclick="selectOptionTab('settings')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="flex items-center gap-2"><span>⚙️</span><span>Bot Settings</span></span>
+              </button>
+              <button onclick="selectOptionTab('logs')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="flex items-center gap-2"><span>📜</span><span>System Logs</span></span>
+              </button>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="pt-2 border-t border-slate-800/80 mt-1 flex items-center gap-2">
+              <button onclick="stopLiveLocationNow(); closeOptionsMenu();" class="flex-1 py-1.5 px-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-bold transition flex items-center justify-center gap-1">
+                <span>🛑 Stop Live</span>
+              </button>
+              <button onclick="handleLogout()" class="flex-1 py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center justify-center gap-1">
+                <span>🚪 Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direct Fake Quote Shortcut Button -->
+        <button 
+          type="button"
+          onclick="switchTab('fakequote')" 
+          class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-teal-500/10 hover:from-cyan-500/30 hover:to-teal-500/20 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition shadow-sm"
+          title="Direct Shortcut: Open Fake Quoted Message Reply Studio"
+        >
+          <span>🎭</span>
+          <span class="inline">Fake Quote</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black uppercase tracking-wider animate-pulse">HOT</span>
+        </button>
+
+        <!-- User identity pill -->
+        <div id="userBadge" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/80 border border-slate-700 text-xs">
+          <span id="userRoleIcon">👤</span>
+          <span id="userNameText" class="font-semibold text-slate-200 truncate max-w-[90px]">User</span>
+          <span id="userRoleTag" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-mono">Member</span>
+        </div>
+
+        <!-- Connection status -->
+        <div id="statusBadge" class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs">
+          <span id="statusIndicator" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="statusText" class="font-medium text-slate-300 text-[11px]">Standby</span>
+        </div>
+
+        <!-- Logout Button -->
+        <button 
+          onclick="handleLogout()" 
+          class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 border border-slate-700 hover:border-rose-500/40 text-xs font-semibold text-slate-300 hover:text-rose-400 transition flex items-center gap-1"
+          title="Sign Out of Dashboard"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          <span class="hidden md:inline">Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- PWA Install Banner -->
+  <div id="pwaInstallBanner" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <div class="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg shrink-0">
+          📲
+        </div>
+        <div>
+          <div class="text-sm font-bold text-white flex items-center gap-2">
+            <span>Install Urooj Choudhary App</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-extrabold uppercase">PWA Mobile</span>
+          </div>
+          <p class="text-xs text-slate-400">Install to your device home screen for quick offline shell access and push alerts.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button onclick="installPwaApp()" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs tracking-wide shadow transition flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Install App</span>
+        </button>
+        <button onclick="dismissPwaBanner()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-semibold transition">
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 mb-16 sm:mb-6">
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden">
+        <div class="text-xs font-medium text-slate-400">Total Commands</div>
+        <div id="statTotalCommands" class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1 font-mono">236</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Ready across 156 plugins</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden">
+        <div class="text-xs font-medium text-slate-400">Active Prefix</div>
+        <div id="statPrefix" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1 font-mono">.</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Command trigger symbol</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden">
+        <div class="text-xs font-medium text-slate-400">WhatsApp Backup</div>
+        <div class="text-lg sm:text-xl font-bold text-sky-400 mt-2 font-mono">+923299931199</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Auto-dispatches clean Session ID</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden">
+        <div class="text-xs font-medium text-slate-400">System Engine</div>
+        <div id="statUptime" class="text-2xl sm:text-3xl font-extrabold text-purple-400 mt-1 font-mono">0m 0s</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">SQLite &bull; Node 22</div>
+      </div>
+    </div>
+
+    <!-- 🌟 HIGH-VISIBILITY FEATURE SPOTLIGHT BANNER (Fake Quoted Reply) -->
+    <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-cyan-950/90 via-slate-900/95 to-indigo-950/70 border-2 border-cyan-500/40 shadow-xl shadow-cyan-950/40 flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+      <!-- Ambient Glow Behind Icon -->
+      <div class="absolute -left-6 -top-6 w-32 h-32 bg-cyan-500/15 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <div class="flex items-center gap-4 w-full md:w-auto relative z-10">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-500/20 border border-cyan-400/50 flex items-center justify-center text-2xl sm:text-3xl shadow-inner shrink-0">
+          🎭
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="text-base sm:text-lg font-black text-white tracking-tight">
+              Fake Quoted Message Reply
+            </h3>
+            <span class="px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm animate-pulse">
+              HOT FEATURE &bull; NEW
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+            Reply to a message that was <strong class="text-cyan-300 font-semibold">never sent</strong>! Generates authentic quoted WhatsApp bubbles, custom sender spoofing, and interactive action buttons.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 relative z-10">
+        <button 
+          type="button" 
+          onclick="switchTab('fakequote')" 
+          class="w-full md:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-cyan-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-lg shadow-cyan-500/25 transition flex items-center justify-center gap-2 transform active:scale-95"
+        >
+          <span>Open Fake Quote Studio</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto custom-scrollbar">
+      <button onclick="switchTab('location')" id="tabBtn-location" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
+        <span>📍</span>
+        <span>Native Live Location</span>
+      </button>
+      <button onclick="switchTab('buttons')" id="tabBtn-buttons" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>💬</span>
+        <span>Button Messenger</span>
+      </button>
+      <button onclick="switchTab('fakequote')" id="tabBtn-fakequote" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2 bg-cyan-500/15 text-cyan-300 border border-cyan-500/35 hover:bg-cyan-500/25 whitespace-nowrap shadow-sm shadow-cyan-950/30">
+        <span class="text-base">🎭</span>
+        <span>Fake Quoted Reply</span>
+        <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">HOT</span>
+      </button>
+      <button onclick="switchTab('scheduled')" id="tabBtn-scheduled" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span class="text-base">⏰</span>
+        <span>Scheduled Queue</span>
+        <span class="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black uppercase">NEW</span>
+      </button>
+      <button onclick="switchTab('tracker')" id="tabBtn-tracker" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>👁️</span>
+        <span>Online Tracker</span>
+      </button>
+      <button onclick="switchTab('media')" id="tabBtn-media" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>🎥</span>
+        <span>PTV & Voice Note</span>
+      </button>
+      <button onclick="switchTab('session')" id="tabBtn-session" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>🔗</span>
+        <span>Device Pairing & My Sessions</span>
+      </button>
+      
+      <!-- Super Admin Console Tab (Exclusively for Urooj) -->
+      <button onclick="switchTab('admin')" id="tabBtn-admin" class="tab-btn hidden px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 whitespace-nowrap">
+        <span>👑</span>
+        <span>Super Admin Console</span>
+      </button>
+
+      <button onclick="switchTab('commands')" id="tabBtn-commands" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>⚡</span>
+        <span>Command Library (236)</span>
+      </button>
+      <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>⚙️</span>
+        <span>Settings</span>
+      </button>
+      <button onclick="switchTab('logs')" id="tabBtn-logs" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
+        <span>📜</span>
+        <span>Live Logs</span>
+      </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 1: 📍 NATIVE LIVE LOCATION (Zero Caption, Stop Button & GPS Toggle) -->
+    <!-- ======================================================================= -->
+    <section id="tab-location" class="tab-content space-y-6">
+      
+      <!-- Active Live Location Tracker Status Alert (If active) -->
+      <div id="activeLiveBanner" class="hidden p-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-lg">
+            <span class="animate-ping absolute w-6 h-6 rounded-full bg-emerald-400/20"></span>
+            📡
+          </div>
+          <div>
+            <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+              <span>((•)) Live Sharing Active</span>
+              <span id="activeLiveTimerCountdown" class="font-mono bg-emerald-900/60 px-2 py-0.5 rounded text-white text-[11px]">00:59:45</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-0.5" id="activeLiveRecipientText">Live location is streaming to recipient.</p>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          onclick="stopLiveLocationNow()" 
+          class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg transition flex items-center gap-2"
+        >
+          <span>🛑 Stop Sharing</span>
+        </button>
+      </div>
+
+      <!-- Quick Feature Callout: Fake Quoted Message Reply -->
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-900/90 via-cyan-950/40 to-slate-900/90 border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-xl shrink-0">
+            🎭
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white flex items-center gap-2">
+              <span>Looking for Fake Quoted Message Reply?</span>
+              <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold uppercase">Ready</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Reply to any message that was never sent with authentic quoted bubble context & interactive buttons.</p>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          onclick="switchTab('fakequote')" 
+          class="w-full sm:w-auto px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs tracking-wide transition shadow flex items-center justify-center gap-1.5 shrink-0"
+        >
+          <span>Switch to Fake Quote Tool</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Location Controls Form -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                <span>📍</span> True WhatsApp Live Location
+              </div>
+              <h2 class="text-xl font-bold text-white mt-1.5">Genuine Live Location Sender</h2>
+              <p class="text-xs text-slate-400">Sends 100% genuine live location with duration countdown, circular avatar, and Stop button. Strictly no caption.</p>
+            </div>
+            <span class="text-xs font-mono text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">Native Baileys</span>
+          </div>
+
+          <!-- Coordinate Mode Selector -->
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Coordinate Source</label>
+              <span id="gpsStatusBadge" class="text-[10px] text-slate-500 font-mono">Select source</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button 
+                type="button" 
+                onclick="fetchRealDeviceGps()" 
+                id="btnUseRealGps"
+                class="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition flex items-center justify-center gap-2"
+              >
+                <span>🛰️ Use My Device Real GPS</span>
+              </button>
+              <button 
+                type="button" 
+                onclick="togglePresetSection()" 
+                class="px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-semibold transition flex items-center justify-center gap-2"
+              >
+                <span>🗺️ Pick Preset Landmark</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Landmark Presets (Expandable) -->
+          <div id="landmarkPresetsWrapper" class="space-y-2">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              🌍 Popular Landmark Coordinates
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button type="button" onclick="selectPresetLandmark('burj')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🏙️</span>
+                <div>
+                  <div class="font-bold text-white">Burj Khalifa</div>
+                  <div class="text-[10px] text-slate-500 font-mono">Dubai, UAE</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPresetLandmark('eiffel')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🗼</span>
+                <div>
+                  <div class="font-bold text-white">Eiffel Tower</div>
+                  <div class="text-[10px] text-slate-500 font-mono">Paris, France</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPresetLandmark('kaaba')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🕋</span>
+                <div>
+                  <div class="font-bold text-white">Kaaba</div>
+                  <div class="text-[10px] text-slate-500 font-mono">Mecca, KSA</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPresetLandmark('timessquare')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🗽</span>
+                <div>
+                  <div class="font-bold text-white">Times Square</div>
+                  <div class="text-[10px] text-slate-500 font-mono">New York, USA</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPresetLandmark('bigben')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🕰️</span>
+                <div>
+                  <div class="font-bold text-white">Big Ben</div>
+                  <div class="text-[10px] text-slate-500 font-mono">London, UK</div>
+                </div>
+              </button>
+              <button type="button" onclick="selectPresetLandmark('badshahi')" class="preset-landmark-btn px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 text-left text-xs text-slate-200 transition flex items-center gap-2 group">
+                <span class="text-base group-hover:scale-110 transition">🕌</span>
+                <div>
+                  <div class="font-bold text-white">Badshahi Mosque</div>
+                  <div class="text-[10px] text-slate-500 font-mono">Lahore, PK</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <form onsubmit="handleSendNativeLiveLocation(event)" class="space-y-4">
+            
+            <!-- Recipient Number -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Target WhatsApp Number
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-mono text-sm">+</span>
+                <input 
+                  type="text" 
+                  id="locRecipient" 
+                  required 
+                  placeholder="923299931199" 
+                  value="923299931199"
+                  class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
+                />
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">Country code without + or spaces (e.g. 923299931199)</p>
+            </div>
+
+            <!-- Coordinates: Latitude & Longitude -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                  <span>Latitude</span>
+                  <span class="text-[10px] font-mono text-slate-500">-90 to +90</span>
+                </label>
+                <input 
+                  type="number" 
+                  step="any"
+                  id="locLat" 
+                  required
+                  placeholder="25.1972" 
+                  value="25.1972"
+                  oninput="updateLocationPreview()"
+                  class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white placeholder-slate-600 focus:border-emerald-500 outline-none"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                  <span>Longitude</span>
+                  <span class="text-[10px] font-mono text-slate-500">-180 to +180</span>
+                </label>
+                <input 
+                  type="number" 
+                  step="any"
+                  id="locLng" 
+                  required
+                  placeholder="55.2744" 
+                  value="55.2744"
+                  oninput="updateLocationPreview()"
+                  class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white placeholder-slate-600 focus:border-emerald-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Live Location Duration Timer Selector -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                ⏱️ Live Duration Timer
+              </label>
+              <div class="grid grid-cols-3 gap-3">
+                <button 
+                  type="button" 
+                  onclick="selectLiveDuration(900, '15 Minutes')" 
+                  id="durationBtn-900" 
+                  class="duration-pill py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 font-semibold text-xs flex flex-col items-center justify-center transition"
+                >
+                  <span class="font-bold text-white">15 Minutes</span>
+                  <span class="text-[10px] text-slate-500 font-mono">Short</span>
+                </button>
+                <button 
+                  type="button" 
+                  onclick="selectLiveDuration(3600, '1 Hour')" 
+                  id="durationBtn-3600" 
+                  class="duration-pill py-2.5 px-3 rounded-xl border border-emerald-500/50 bg-emerald-500/10 text-emerald-400 font-bold text-xs flex flex-col items-center justify-center transition"
+                >
+                  <span class="font-bold text-emerald-400">1 Hour</span>
+                  <span class="text-[10px] text-emerald-400/80 font-mono">Standard</span>
+                </button>
+                <button 
+                  type="button" 
+                  onclick="selectLiveDuration(28800, '8 Hours')" 
+                  id="durationBtn-28800" 
+                  class="duration-pill py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 font-semibold text-xs flex flex-col items-center justify-center transition"
+                >
+                  <span class="font-bold text-white">8 Hours</span>
+                  <span class="text-[10px] text-slate-500 font-mono">Maximum</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Accuracy & Note -->
+            <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+              <span>GPS Accuracy: <strong class="text-emerald-400">15 meters</strong></span>
+              <span class="text-emerald-400 font-semibold">Strictly Zero Caption</span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button 
+                type="submit" 
+                id="sendLiveLocSubmit"
+                class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2"
+              >
+                <span>Dispatch 100% Genuine Live Location</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              </button>
+              <div id="locSendStatus" class="hidden mt-2 p-3 rounded-xl text-xs text-center font-medium"></div>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Right: Mobile WhatsApp Live Location Card (1000% Matching Screenshot) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <div class="flex items-center justify-between text-xs px-1">
+            <span class="font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <span>📱</span> WhatsApp Native UI Match
+            </span>
+            <span class="text-[11px] text-emerald-400 font-mono">Screenshot Identical</span>
+          </div>
+
+          <!-- The Real WhatsApp Live Card (Exact Replica of Screenshot Bottom Message) -->
+          <div class="w-full max-w-sm mx-auto rounded-3xl overflow-hidden bg-[#0c1317] border border-[#202c33] shadow-2xl">
+            
+            <!-- Map Portion -->
+            <div class="relative h-64 w-full whatsapp-map-bg flex items-center justify-center overflow-hidden">
+              
+              <!-- Map decorative roads & grid lines -->
+              <div class="absolute inset-0 opacity-20 pointer-events-none">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="0" y1="80" x2="400" y2="120" stroke="#64748b" stroke-width="3" />
+                  <line x1="120" y1="0" x2="160" y2="300" stroke="#64748b" stroke-width="4" />
+                  <line x1="0" y1="200" x2="400" y2="180" stroke="#475569" stroke-width="2" />
+                  <line x1="280" y1="0" x2="240" y2="300" stroke="#475569" stroke-width="3" />
+                </svg>
+              </div>
+
+              <!-- Centered Circular Contact Avatar on Map (Matching Screenshot) -->
+              <div class="relative z-10 flex flex-col items-center">
+                <!-- Accuracy ripple ring -->
+                <div class="absolute -inset-4 rounded-full bg-sky-500/20 animate-ping"></div>
+                <div class="absolute -inset-2 rounded-full bg-sky-500/30"></div>
+                <!-- Circular Avatar -->
+                <div class="w-16 h-16 rounded-full border-2 border-white shadow-2xl overflow-hidden bg-slate-900 relative">
+                  <img 
+                    src="/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png" 
+                    alt="Contact Avatar" 
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <!-- Google Watermark & Security lock (Bottom Left of Map) -->
+              <div class="absolute bottom-2 left-3 flex items-center gap-1.5 z-10 opacity-90">
+                <span class="text-xs font-bold text-white font-sans tracking-wide">Google</span>
+                <span class="w-5 h-5 rounded-full bg-sky-500 flex items-center justify-center text-[10px] text-white shadow">
+                  🔒
+                </span>
+              </div>
+
+            </div>
+
+            <!-- Bottom Live Location Status Bar & Stop Button (Matching Screenshot) -->
+            <div class="bg-[#0b141a] px-4 py-3 space-y-2 border-t border-[#1f2c34]">
+              
+              <!-- Status line: ((•)) Live until [time] and sent checkmarks -->
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2 text-emerald-400 font-medium">
+                  <span class="text-base animate-pulse">((•))</span>
+                  <span id="previewLiveUntilText" class="font-sans">Live until 6:34 pm</span>
+                </div>
+                <div class="flex items-center gap-1 text-[11px] text-slate-400">
+                  <span id="previewSentTime">6:19 pm</span>
+                  <span class="text-sky-400 font-bold">✓✓</span>
+                </div>
+              </div>
+
+              <!-- The Native "Stop sharing" Button (Dark green pill with red text) -->
+              <div>
+                <button 
+                  type="button" 
+                  onclick="stopLiveLocationNow()"
+                  class="w-full py-2.5 rounded-xl bg-[#0d3a2d] hover:bg-[#124d3c] active:bg-[#092b21] text-[#f87171] font-bold text-sm tracking-wide transition shadow text-center"
+                >
+                  Stop sharing
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Description Callout -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 text-xs text-slate-400 space-y-2">
+            <div class="font-bold text-slate-200 flex items-center gap-1.5">
+              <span>✅</span> 100% Native Protocol Implementation
+            </div>
+            <p>
+              By passing <code class="text-amber-400 bg-slate-950 px-1 py-0.5 rounded">caption: undefined</code> to Baileys <code class="text-emerald-400">liveLocationMessage</code>, WhatsApp natively interprets the stream as a pure GPS live stream with circular avatar and the interactive <span class="text-rose-400 font-semibold">Stop sharing</span> control.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 2: BUTTON MESSENGER                                                 -->
+    <!-- ======================================================================= -->
+    <section id="tab-buttons" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+            <span>💬</span> Interactive Messaging
+          </div>
+          <h2 class="text-xl font-bold text-white mt-1.5">WhatsApp Button Messenger</h2>
+          <p class="text-xs text-slate-400">Send rich interactive template messages with Quick Reply, Call, and URL buttons.</p>
+        </div>
+
+        <!-- Cross-link banner to Fake Quote Reply -->
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 text-xs text-slate-300">
+            <span class="text-lg">🎭</span>
+            <span>Want to attach action buttons to an <strong>unsent quoted message</strong>? Use the Fake Quote Suite.</span>
+          </div>
+          <button type="button" onclick="switchTab('fakequote')" class="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-bold text-xs shrink-0 transition flex items-center justify-center gap-1">
+            <span>Fake Quote Studio</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <form onsubmit="handleSendButtonMessage(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Target Number</label>
+              <input type="text" id="btnRecipient" required placeholder="923299931199" value="923299931199" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Message Title</label>
+              <input type="text" id="btnTitle" placeholder="👑 Urooj Choudhary Suite" value="👑 Urooj Choudhary Suite" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white outline-none focus:border-amber-500" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Message Body</label>
+            <textarea id="btnBody" rows="3" required placeholder="Enter message text..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white outline-none focus:border-amber-500">Welcome to Urooj Choudhary WhatsApp Suite! Select an option below to proceed.</textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Footer Note</label>
+            <input type="text" id="btnFooter" value="👑 Urooj Choudhary • King Unkown" class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none" />
+          </div>
+
+          <!-- Dynamic Button Slots -->
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Interactive Action Buttons (Up to 3)</label>
+              <button type="button" onclick="addButtonSlot()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">+ Add Button</button>
+            </div>
+            <div id="buttonSlotsContainer" class="space-y-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <button type="submit" id="btnSendButtonsSubmit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg transition">
+            Dispatch Button Message
+          </button>
+          <div id="buttonMsgStatus" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB: 🎭 FAKE QUOTED MESSAGE REPLY (UNSENT MESSAGE SPOOFER)              -->
+    <!-- ======================================================================= -->
+    <section id="tab-fakequote" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Configuration Form -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold">
+              <span>🎭</span> WhatsApp Synthetic Protocol
+            </div>
+            <h2 class="text-xl font-bold text-white mt-1.5">Fake Quoted Message Reply</h2>
+            <p class="text-xs text-slate-400">Reply to a message that was never sent. WhatsApp renders it with authentic quoted bubble context.</p>
+          </div>
+
+          <form onsubmit="handleSendFakeQuote(event)" class="space-y-4">
+            
+            <!-- Target Recipient Number -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Target Recipient Number
+              </label>
+              <input 
+                type="text" 
+                id="fqRecipient" 
+                required 
+                placeholder="923299931199" 
+                value="923299931199" 
+                oninput="updateFakeQuotePreview()"
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-cyan-500" 
+              />
+              <p class="text-[11px] text-slate-500 mt-1">Recipient who will receive the message in WhatsApp.</p>
+            </div>
+
+            <!-- Fake Quoted Message Configuration -->
+            <div class="p-4 rounded-2xl bg-slate-950/70 border border-cyan-500/30 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>💬</span> 1. The Fake Unsent Message (Quote)
+                </span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">SYNTHETIC CONTEXT</span>
+              </div>
+
+              <!-- Author Selector -->
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                  Who Sent This Quote? (Original Author)
+                </label>
+                <div class="grid grid-cols-3 gap-2">
+                  <label class="cursor-pointer flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 hover:border-cyan-500/50">
+                    <input type="radio" name="fqAuthorRadio" value="recipient" checked onchange="toggleFqAuthor(this.value); updateFakeQuotePreview();" class="accent-cyan-400">
+                    <span class="font-medium">Recipient</span>
+                  </label>
+                  <label class="cursor-pointer flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 hover:border-cyan-500/50">
+                    <input type="radio" name="fqAuthorRadio" value="custom" onchange="toggleFqAuthor(this.value); updateFakeQuotePreview();" class="accent-cyan-400">
+                    <span class="font-medium">Custom Number</span>
+                  </label>
+                  <label class="cursor-pointer flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 hover:border-cyan-500/50">
+                    <input type="radio" name="fqAuthorRadio" value="me" onchange="toggleFqAuthor(this.value); updateFakeQuotePreview();" class="accent-cyan-400">
+                    <span class="font-medium">Myself</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Custom Author Inputs (hidden by default) -->
+              <div id="fqCustomAuthorBox" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Custom Phone Number</label>
+                  <input 
+                    type="text" 
+                    id="fqCustomSenderNumber" 
+                    placeholder="e.g. 12025550192" 
+                    oninput="updateFakeQuotePreview()"
+                    class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white outline-none focus:border-cyan-500" 
+                  />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Display Name (Optional)</label>
+                  <input 
+                    type="text" 
+                    id="fqCustomSenderName" 
+                    placeholder="e.g. Bank Manager / Habib" 
+                    oninput="updateFakeQuotePreview()"
+                    class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white outline-none focus:border-cyan-500" 
+                  />
+                </div>
+              </div>
+
+              <!-- Preset Loader Dropdown -->
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  ⚡ Quick Quote Template
+                </label>
+                <select 
+                  id="fqPresetSelect" 
+                  onchange="applyFqPreset(this.value)"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 outline-none focus:border-cyan-500"
+                >
+                  <option value="">-- Choose a realistic preset or write below --</option>
+                  <option value="I will transfer the $500 balance to you today.">"I will transfer the $500 balance to you today."</option>
+                  <option value="Deal confirmed! Let's proceed with Urooj Choudhary immediately.">"Deal confirmed! Let's proceed with Urooj Choudhary immediately."</option>
+                  <option value="Yes, please send me the download link and pairing code.">"Yes, please send me the download link and pairing code."</option>
+                  <option value="Order #9821 has been marked as completed.">"Order #9821 has been marked as completed."</option>
+                  <option value="Can you confirm our meeting scheduled for 4:00 PM?">"Can you confirm our meeting scheduled for 4:00 PM?"</option>
+                  <option value="I agree with all terms and conditions stated in the agreement.">"I agree with all terms and conditions stated in the agreement."</option>
+                </select>
+              </div>
+
+              <!-- Fake Quoted Text Area -->
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Fake Message Text (What they supposedly said)
+                </label>
+                <textarea 
+                  id="fqQuoteText" 
+                  rows="2" 
+                  required 
+                  oninput="updateFakeQuotePreview()"
+                  placeholder="Type what was supposedly sent..." 
+                  class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none focus:border-cyan-500"
+                >I will transfer the $500 balance to you today.</textarea>
+              </div>
+            </div>
+
+            <!-- Reply Message Configuration -->
+            <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>✍️</span> 2. Your Reply Message
+                </span>
+                
+                <!-- Toggle Mode -->
+                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
+                  <button 
+                    type="button" 
+                    id="fqModeBtn-buttons" 
+                    onclick="setFqReplyMode('buttons')" 
+                    class="px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition"
+                  >
+                    Action Buttons
+                  </button>
+                  <button 
+                    type="button" 
+                    id="fqModeBtn-text" 
+                    onclick="setFqReplyMode('text')" 
+                    class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition"
+                  >
+                    Plain Text
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Reply Message Body</label>
+                <textarea 
+                  id="fqReplyText" 
+                  rows="3" 
+                  required 
+                  oninput="updateFakeQuotePreview()"
+                  placeholder="Enter your reply text..." 
+                  class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none focus:border-amber-500"
+                >Thank you! Received your confirmation. Click below to verify details or contact us directly.</textarea>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Footer Note (Optional)</label>
+                <input 
+                  type="text" 
+                  id="fqFooterText" 
+                  value="👑 Urooj Choudhary Suite" 
+                  oninput="updateFakeQuotePreview()"
+                  class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white outline-none focus:border-amber-500" 
+                />
+              </div>
+
+              <!-- Interactive Buttons Section -->
+              <div id="fqButtonsConfigSection" class="space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Interactive Action Buttons (Up to 3)</span>
+                  <button type="button" onclick="addFqButtonSlot()" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold">+ Add Button</button>
+                </div>
+                <div id="fqButtonSlotsContainer" class="space-y-2">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="fqSubmitBtn"
+              class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 hover:from-cyan-400 hover:to-emerald-300 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2"
+            >
+              <span>🚀 Dispatch Fake Quoted Reply</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </button>
+            <div id="fqStatus" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+
+          </form>
+        </div>
+
+        <!-- Right Column: Live WhatsApp Quoted Chat Bubble Preview -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="flex items-center justify-between text-xs px-1">
+            <span class="font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <span>📱</span> WhatsApp Live Quoted Preview
+            </span>
+            <span class="text-[11px] text-cyan-400 font-mono">Real-Time</span>
+          </div>
+
+          <!-- Realistic WhatsApp Chat Preview Window -->
+          <div class="w-full max-w-sm mx-auto rounded-3xl overflow-hidden bg-[#0c1317] border border-[#202c33] shadow-2xl p-4 flex flex-col justify-end min-h-[480px] relative">
+            
+            <!-- WhatsApp Chat Background Doodle Texture -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#25d366 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+            <!-- Chat Date Badge -->
+            <div class="text-center my-3 relative z-10">
+              <span class="bg-[#182229] text-[#8696a0] text-[10px] font-semibold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow">
+                Today
+              </span>
+            </div>
+
+            <!-- WhatsApp Message Bubble (Green Sent Bubble) -->
+            <div class="relative z-10 self-end max-w-[92%] rounded-2xl bg-[#005c4b] text-white p-2.5 shadow-md space-y-2 border border-[#005c4b]">
+              
+              <!-- Quoted Context Header Box -->
+              <div class="rounded-xl bg-[#025144] p-2 border-l-4 border-[#25d366] text-xs space-y-0.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span id="previewFqAuthor" class="font-bold text-[#25d366] text-[11px] truncate">+92 329 9931199</span>
+                  <span class="text-[9px] text-[#8696a0] shrink-0 font-mono">Quoted</span>
+                </div>
+                <div id="previewFqQuoteText" class="text-slate-200 text-xs italic line-clamp-2">
+                  "I will transfer the $500 balance to you today."
+                </div>
+              </div>
+
+              <!-- Reply Message Body -->
+              <div id="previewFqReplyText" class="text-xs text-slate-100 whitespace-pre-wrap leading-relaxed">
+                Thank you! Received your confirmation. Click below to verify details or contact us directly.
+              </div>
+
+              <!-- Footer and Timestamp -->
+              <div class="flex items-center justify-between text-[10px] text-[#8696a0] pt-1">
+                <span id="previewFqFooter" class="italic text-[10px] text-slate-300">👑 Urooj Choudhary Suite</span>
+                <div class="flex items-center gap-1 shrink-0 ml-2">
+                  <span id="previewFqTime" class="font-mono">10:45 PM</span>
+                  <span class="text-[#53bdeb]">✓✓</span>
+                </div>
+              </div>
+
+              <!-- Rendered Action Buttons Pills -->
+              <div id="previewFqButtons" class="pt-1.5 space-y-1.5 border-t border-[#007a64]">
+                <!-- Populated via updateFakeQuotePreview -->
+              </div>
+
+            </div>
+
+            <!-- WhatsApp input bar mock at bottom -->
+            <div class="mt-4 pt-2 border-t border-[#202c33] flex items-center gap-2 text-xs text-[#8696a0] relative z-10">
+              <div class="flex-1 bg-[#202c33] rounded-full px-3 py-1.5 text-[11px]">Type a message...</div>
+              <div class="w-7 h-7 rounded-full bg-[#00a884] text-slate-950 flex items-center justify-center font-bold text-xs">➤</div>
+            </div>
+
+          </div>
+
+          <!-- Feature Explanation Badge -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 text-xs text-slate-400 space-y-1.5">
+            <div class="font-bold text-slate-200 flex items-center gap-1.5">
+              <span>🎯</span> How Fake Quoted Reply Works
+            </div>
+            <p>
+              When dispatched, the WhatsApp client constructs a genuine <code class="text-cyan-400 bg-slate-950 px-1 py-0.5 rounded">contextInfo.quotedMessage</code> object. The receiver's WhatsApp phone displays the quote bubble with full tap-to-scroll interaction even though the original message was never actually sent on WhatsApp servers!
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB: ⏰ SCHEDULED MESSAGE QUEUE WITH TIME PICKER                       -->
+    <!-- ======================================================================= -->
+    <section id="tab-scheduled" class="tab-content hidden space-y-6">
+      
+      <!-- Feature Banner & Quick KPI Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending In Queue</div>
+            <div id="statPendingSched" class="text-3xl font-extrabold text-amber-400 mt-1 font-mono">0</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Awaiting dispatch timestamp</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl text-amber-400">
+            ⏳
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sent Today</div>
+            <div id="statSentSched" class="text-3xl font-extrabold text-emerald-400 mt-1 font-mono">0</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Delivered on schedule</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
+            ✅
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Scheduled</div>
+            <div id="statTotalSched" class="text-3xl font-extrabold text-purple-400 mt-1 font-mono">0</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">SQLite automated queue</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-2xl text-purple-400">
+            📊
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Two-Column Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: Schedule New Message Form -->
+        <div class="lg:col-span-5 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div class="border-b border-slate-800 pb-4">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+              <span>⏰</span> Automated Dispatch
+            </div>
+            <h2 class="text-xl font-bold text-white mt-1.5">Schedule WhatsApp Message</h2>
+            <p class="text-xs text-slate-400 mt-1">Queue messages to be sent at an exact future date and time.</p>
+          </div>
+
+          <form onsubmit="handleCreateSchedule(event)" class="space-y-4">
+            <!-- Recipient Phone Input -->
+            <div class="space-y-1">
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Recipient Phone Number / WhatsApp JID
+              </label>
+              <input 
+                type="text" 
+                id="schedRecipient" 
+                required 
+                placeholder="e.g. 923299931199 or +92 329 9931199" 
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+              />
+            </div>
+
+            <!-- Quick Template Selector -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  Quick Message Template
+                </label>
+                <span class="text-[10px] text-slate-500">Optional</span>
+              </div>
+              <select 
+                id="schedTemplateSelect" 
+                onchange="applySchedTemplate(this.value)"
+                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 outline-none focus:border-amber-500"
+              >
+                <option value="">-- Choose a ready template or write below --</option>
+                <option value="Reminder: Your scheduled appointment is confirmed for today. Please let us know if you need to reschedule.">Reminder: Appointment confirmation</option>
+                <option value="Good morning! Here is your daily status report from Urooj Choudhary Automation Suite.">Daily Morning Update</option>
+                <option value="Hello! Following up on our previous discussion regarding the project deliverables.">Project Follow-up</option>
+                <option value="Your order #9821 has been processed and is ready for dispatch.">Order Notification</option>
+                <option value="Special notice: Maintenance window begins in 1 hour. All systems remain operational.">System Alert Notice</option>
+              </select>
+            </div>
+
+            <!-- Message Content Textarea -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  Message Content
+                </label>
+                <span id="schedCharCount" class="text-[10px] font-mono text-slate-500">0 chars</span>
+              </div>
+              <textarea 
+                id="schedMessageText" 
+                rows="4" 
+                required 
+                oninput="document.getElementById('schedCharCount').textContent = this.value.length + ' chars'"
+                placeholder="Type the message to be dispatched automatically..." 
+                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Precision Time Picker -->
+            <div class="space-y-2 p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <label class="block text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center justify-between">
+                <span>📅 Schedule Date & Time</span>
+                <span id="schedSelectedTimeLabel" class="text-[10px] font-mono text-slate-400 font-normal">Select time</span>
+              </label>
+
+              <!-- Native datetime-local input -->
+              <input 
+                type="datetime-local" 
+                id="schedDateTime" 
+                required 
+                onchange="updateSchedTimePreview()"
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500 transition [color-scheme:dark]"
+              />
+
+              <!-- Quick Time Preset Offsets -->
+              <div class="pt-1">
+                <div class="text-[10px] uppercase font-bold text-slate-500 mb-1.5">⚡ Quick Presets:</div>
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" onclick="setScheduleTimeOffset(5)" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-slate-300 hover:text-amber-300 transition">
+                    +5 min
+                  </button>
+                  <button type="button" onclick="setScheduleTimeOffset(15)" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-slate-300 hover:text-amber-300 transition">
+                    +15 min
+                  </button>
+                  <button type="button" onclick="setScheduleTimeOffset(30)" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-slate-300 hover:text-amber-300 transition">
+                    +30 min
+                  </button>
+                  <button type="button" onclick="setScheduleTimeOffset(60)" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-slate-300 hover:text-amber-300 transition">
+                    +1 hour
+                  </button>
+                  <button type="button" onclick="setScheduleTomorrowMorning()" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-slate-300 hover:text-amber-300 transition">
+                    Tomorrow 9:00 AM
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="schedSubmitBtn" 
+              class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-extrabold text-sm tracking-wide shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+            >
+              <span>⏰</span>
+              <span>Queue Message for Auto-Dispatch</span>
+            </button>
+
+            <!-- Status Alert Box -->
+            <div id="schedStatusBox" class="hidden p-3.5 rounded-2xl text-xs font-medium text-center"></div>
+          </form>
+        </div>
+
+        <!-- Right Column: Active Queue & Manager -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>📋 Active Queue</span>
+                <span id="queueBadgeCount" class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-mono">0 pending</span>
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Live countdown &bull; Automatic execution every 5 seconds</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button 
+                type="button" 
+                onclick="loadScheduledQueue()" 
+                class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+              >
+                <span>🔄 Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <button type="button" onclick="setSchedFilter('pending')" id="schedFilter-pending" class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition">
+              Pending
+            </button>
+            <button type="button" onclick="setSchedFilter('sent')" id="schedFilter-sent" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-semibold hover:text-white transition">
+              Sent History
+            </button>
+            <button type="button" onclick="setSchedFilter('all')" id="schedFilter-all" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-semibold hover:text-white transition">
+              All
+            </button>
+          </div>
+
+          <!-- Queue Items List -->
+          <div id="schedQueueContainer" class="space-y-3 min-h-[300px] max-h-[560px] overflow-y-auto custom-scrollbar pr-1">
+            <div class="text-center py-12 text-slate-500 text-xs">
+              <span class="text-2xl block mb-2">⏳</span>
+              Loading scheduled queue...
+            </div>
+          </div>
+
+          <!-- Feature Tip -->
+          <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 flex items-start gap-2.5">
+            <span class="text-amber-400 text-base shrink-0">💡</span>
+            <div>
+              <strong class="text-slate-200">Persistence Guarantee:</strong> All scheduled items are saved to the persistent SQLite database. If the server or browser restarts, pending messages will automatically trigger at their designated time!
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 3: ONLINE TRACKER                                                   -->
+    <!-- ======================================================================= -->
+    <section id="tab-tracker" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold">
+            <span>👁️</span> Real-Time Tracker
+          </div>
+          <h2 class="text-xl font-bold text-white mt-1.5">Online Presence & Activity History</h2>
+          <p class="text-xs text-slate-400">Track when a number comes online, goes offline, types, or records audio in WhatsApp.</p>
+        </div>
+
+        <form onsubmit="handleStartTracking(event)" class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="trackerInputNumber" required placeholder="Enter target number (e.g. 923299931199)" value="923299931199" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-sky-500" />
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm transition">
+            Start Tracking
+          </button>
+        </form>
+
+        <div id="trackerStatus" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+        <!-- Activity History Log Table -->
+        <div class="space-y-2 pt-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Live Presence History</span>
+            <button onclick="fetchTrackerLogs()" class="text-xs text-sky-400 hover:text-sky-300 font-semibold">🔄 Refresh Logs</button>
+          </div>
+          <div class="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-300 h-64 overflow-y-auto custom-scrollbar space-y-1" id="trackerLogsContainer">
+            <div class="text-slate-500">// Enter a phone number above to monitor online presence...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 4: PTV VIDEO NOTE & VOICE NOTE SENDER                               -->
+    <!-- ======================================================================= -->
+    <section id="tab-media" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold">
+            <span>🎥</span> Direct Media Dispatch
+          </div>
+          <h2 class="text-xl font-bold text-white mt-1.5">Push-To-Video (PTV) & Voice Note (PTT)</h2>
+          <p class="text-xs text-slate-400">Transmit video as WhatsApp round video note (PTV) or audio as authentic voice note.</p>
+        </div>
+
+        <form onsubmit="handleSendMedia(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Receiver Number</label>
+              <input type="text" id="mediaRecipient" required placeholder="923299931199" value="923299931199" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-purple-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Media Format</label>
+              <div class="flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+                <button type="button" onclick="setMediaType('ptv')" id="mediaTypeBtn-ptv" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-purple-500 text-slate-950 transition">
+                  🎥 Video Note (PTV)
+                </button>
+                <button type="button" onclick="setMediaType('voice')" id="mediaTypeBtn-voice" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition">
+                  🎙️ Voice Note (PTT)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Upload Media File</label>
+            <input type="file" id="mediaFileInput" onchange="handleMediaFileSelect(event)" accept="video/*,audio/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-500/20 file:text-purple-300 hover:file:bg-purple-500/30 cursor-pointer" />
+          </div>
+
+          <button type="submit" id="mediaSubmitBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg transition">
+            Dispatch Media Note
+          </button>
+          <div id="mediaSendStatus" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 5: DEVICE PAIRING & MY SESSIONS                                     -->
+    <!-- ======================================================================= -->
+    <section id="tab-session" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Pairing Code Generator -->
+        <div class="lg:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+              <span>📱</span> Baileys Linking
+            </div>
+            <h2 class="text-xl font-bold text-white mt-1.5">Pair WhatsApp Number</h2>
+            <p class="text-xs text-slate-400">Generate an 8-character terminal code to link WhatsApp on your phone.</p>
+          </div>
+
+          <form onsubmit="handleRequestPairingCode(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Your WhatsApp Phone Number</label>
+              <input type="text" id="pairPhoneNumber" required placeholder="e.g. 923001234567" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-emerald-500" />
+            </div>
+            <button type="submit" id="pairSubmitBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg transition">
+              Request 8-Digit Pairing Code
+            </button>
+          </form>
+
+          <div id="pairingCodeDisplay" class="hidden p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-center space-y-2">
+            <div class="text-xs text-slate-400">Enter this code on your WhatsApp phone:</div>
+            <div id="pairingCodeValue" class="text-3xl font-extrabold text-emerald-400 font-mono tracking-widest py-1 select-all"></div>
+            <p class="text-[11px] text-slate-500">WhatsApp &gt; Linked Devices &gt; Link with phone number instead</p>
+          </div>
+        </div>
+
+        <!-- Right: My Saved Sessions & Revoke Guard -->
+        <div class="lg:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-white">My Saved Sessions</h2>
+              <p class="text-xs text-slate-400">Persisted locally for 30 days &bull; Clean ID starts with Urooj~</p>
+            </div>
+            <button onclick="fetchMySessions()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">🔄 Refresh</button>
+          </div>
+
+          <!-- Active Session ID Card -->
+          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">Active Session ID</span>
+              <span class="text-emerald-400 font-mono text-[11px]">Clean Format</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 break-all select-all" id="activeSessionIdBox">
+              Loading active session...
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="copyActiveSessionId()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                <span>📋 Copy Token</span>
+              </button>
+              <button onclick="backupSessionToWhatsApp()" class="flex-1 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                <span>📤 Send to +923299931199</span>
+              </button>
+            </div>
+            <div id="sessionBackupStatus" class="hidden text-[11px] text-center font-medium"></div>
+          </div>
+
+          <!-- Revoke Security Gate -->
+          <div class="p-4 rounded-2xl bg-rose-950/20 border border-rose-500/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Session Revocation</span>
+              <span class="text-[10px] text-slate-500">Requires Session ID</span>
+            </div>
+            <p class="text-xs text-slate-400">To terminate and wipe your session credentials, paste the active Session ID starting with <code class="text-amber-400">Urooj~</code>.</p>
+            <form onsubmit="handleRevokeSession(event)" class="space-y-2">
+              <input type="text" id="revokeSessionInput" required placeholder="Paste Session ID (Urooj~...)" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white outline-none focus:border-rose-500" />
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs tracking-wide transition">
+                Confirm & Revoke Session
+              </button>
+            </form>
+            <div id="revokeFeedback" class="hidden text-xs text-center font-medium"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 6: 👑 SUPER ADMIN CONSOLE (Exclusive to Urooj / Zaid@323232)        -->
+    <!-- ======================================================================= -->
+    <section id="tab-admin" class="tab-content hidden space-y-6">
+      
+      <!-- Admin Header Banner -->
+      <div class="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-yellow-500/10 to-transparent border border-amber-500/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-3xl shadow">
+            👑
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-extrabold text-white">Super Admin Command Console</h2>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-extrabold text-[10px] uppercase font-mono">Master Urooj</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Master authority to supervise all registered users, manage multi-tenant sessions, and enforce security policies.</p>
+          </div>
+        </div>
+        <button onclick="fetchAdminOverview()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition flex items-center gap-2">
+          <span>🔄 Refresh Master State</span>
+        </button>
+      </div>
+
+      <!-- Admin Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="text-xs text-slate-400 font-semibold">Registered Users</div>
+          <div id="adminStatUsers" class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono mt-1">1</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">SQLite Accounts</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="text-xs text-slate-400 font-semibold">Stored Sessions</div>
+          <div id="adminStatSessions" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono mt-1">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Linked WhatsApp numbers</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="text-xs text-slate-400 font-semibold">Active Baileys Sockets</div>
+          <div id="adminStatSockets" class="text-2xl sm:text-3xl font-extrabold text-sky-400 font-mono mt-1">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Live WebSocket links</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="text-xs text-slate-400 font-semibold">Admin Passcode</div>
+          <div class="text-base sm:text-lg font-bold text-purple-400 font-mono mt-1">Zaid@323232</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Strictly Protected</div>
+        </div>
+      </div>
+
+      <!-- Users Management Table -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>👥</span> Registered User Accounts
+          </h3>
+          <span class="text-xs text-slate-400 font-mono" id="adminUsersCountLabel">1 User</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+              <tr>
+                <th class="py-3 px-3">ID</th>
+                <th class="py-3 px-3">Username</th>
+                <th class="py-3 px-3">Role</th>
+                <th class="py-3 px-3">Created</th>
+                <th class="py-3 px-3">Sessions</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody" class="divide-y divide-slate-800/60">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- System-Wide Sessions Table -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>📱</span> System-Wide WhatsApp Sessions
+          </h3>
+          <span class="text-xs text-slate-400 font-mono" id="adminSessionsCountLabel">0 Sessions</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+              <tr>
+                <th class="py-3 px-3">Owner</th>
+                <th class="py-3 px-3">Linked Number</th>
+                <th class="py-3 px-3">Session ID</th>
+                <th class="py-3 px-3">Created</th>
+                <th class="py-3 px-3 text-right">Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminSessionsTableBody" class="divide-y divide-slate-800/60">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 7: COMMAND EXPLORER (236 COMMANDS)                                  -->
+    <!-- ======================================================================= -->
+    <section id="tab-commands" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Bot Command Library</h2>
+          <p class="text-xs text-slate-400">All 236 commands loaded across 156 plugins ready for Urooj Choudhary.</p>
+        </div>
+        <div class="w-full sm:w-72 relative">
+          <input 
+            type="text" 
+            id="cmdSearch" 
+            placeholder="Search commands or keywords..." 
+            oninput="filterCommands()"
+            class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-amber-500 transition font-mono"
+          />
+          <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+
+      <!-- Commands Grid -->
+      <div id="commandsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 8: SETTINGS                                                         -->
+    <!-- ======================================================================= -->
+    <section id="tab-settings" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-white">Bot Identity & Automation Config</h2>
+          <p class="text-slate-400 text-xs mt-1">Configure bot triggers, response behaviors, and automation toggles.</p>
+        </div>
+
+        <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Bot Name</label>
+              <input type="text" id="cfgBotName" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:border-amber-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Bot Owner Display Name</label>
+              <input type="text" id="cfgBotOwner" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:border-amber-500 outline-none" />
+            </div>
+          </div>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition">
+            Save Settings
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 9: LIVE SYSTEM LOGS                                                 -->
+    <!-- ======================================================================= -->
+    <section id="tab-logs" class="tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Bot Activity Logs</h2>
+          <p class="text-xs text-slate-400">Real-time system events, presence tracking, and Baileys socket logs.</p>
+        </div>
+        <button onclick="fetchLogs()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">🔄 Refresh Logs</button>
+      </div>
+      <div class="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-300 h-[480px] overflow-y-auto custom-scrollbar space-y-1 shadow-inner" id="logContainer">
+        <div class="text-slate-600">// Connecting to log stream...</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Quick Action Navigation Dock -->
+  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 py-2 px-3 flex items-center justify-around shadow-2xl">
+    <button type="button" onclick="switchTab('location')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition">
+      <span class="text-base">📍</span>
+      <span class="text-[10px] font-medium">Live Loc</span>
+    </button>
+    <button type="button" onclick="switchTab('fakequote')" class="flex flex-col items-center gap-0.5 text-cyan-300 font-extrabold transition relative">
+      <span class="text-base">🎭</span>
+      <span class="text-[10px]">Fake Quote</span>
+      <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+    </button>
+    <button type="button" onclick="switchTab('scheduled')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-400 transition">
+      <span class="text-base">⏰</span>
+      <span class="text-[10px] font-medium">Queue</span>
+    </button>
+    <button type="button" onclick="switchTab('buttons')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-400 transition">
+      <span class="text-base">💬</span>
+      <span class="text-[10px] font-medium">Buttons</span>
+    </button>
+    <button type="button" onclick="switchTab('session')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-sky-400 transition">
+      <span class="text-base">🔗</span>
+      <span class="text-[10px] font-medium">Pairing</span>
+    </button>
+    <button type="button" onclick="switchTab('admin')" id="mobileNavAdminBtn" class="hidden flex flex-col items-center gap-0.5 text-amber-400 transition">
+      <span class="text-base">👑</span>
+      <span class="text-[10px] font-medium">Admin</span>
+    </button>
+  </nav>
+
+  <!-- Global Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-6 mb-14 sm:mb-0 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>👑 Bot Name: <strong class="text-amber-400">Urooj Choudhary</strong> &bull; Owner: <strong class="text-white">King Unkown</strong></div>
+      <div class="font-mono text-[11px] text-slate-400">Backup Target: +923299931199 &bull; SQLite Engine</div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- DASHBOARD JAVASCRIPT APPLICATION LOGIC                                    -->
+  <!-- ========================================================================= -->
+  <script>
+    // State constants
+    const TOKEN_KEY = 'urooj_auth_token';
+    const USER_KEY = 'urooj_user';
+    const DEVICE_KEY = 'urooj_device_id';
+    const PASSCODE_SUPERADMIN = 'Zaid@323232';
+
+    let currentDeviceId = localStorage.getItem(DEVICE_KEY) || null;
+
+    function getOrCreateDeviceId() {
+      if (!currentDeviceId) {
+        try {
+          const rand = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+            .map(b => b.toString(16).padStart(2, '0')).join('');
+          currentDeviceId = 'dev_' + rand;
+        } catch (_) {
+          currentDeviceId = 'dev_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        }
+        localStorage.setItem(DEVICE_KEY, currentDeviceId);
+      }
+      return currentDeviceId;
+    }
+
+    // Automatically attach X-Device-Id to every single network request
+    const _nativeFetch = window.fetch.bind(window);
+    window.fetch = function(url, options) {
+      options = options || {};
+      const devId = getOrCreateDeviceId();
+      if (!options.headers) {
+        options.headers = { 'X-Device-Id': devId };
+      } else if (options.headers instanceof Headers) {
+        if (!options.headers.has('X-Device-Id')) options.headers.set('X-Device-Id', devId);
+      } else if (Array.isArray(options.headers)) {
+        options.headers.push(['X-Device-Id', devId]);
+      } else if (typeof options.headers === 'object') {
+        if (!options.headers['X-Device-Id']) options.headers['X-Device-Id'] = devId;
+      }
+      return _nativeFetch(url, options);
+    };
+
+    let currentUser = null;
+    let currentAuthToken = localStorage.getItem(TOKEN_KEY) || null;
+    let allCommands = [];
+    let currentCategory = 'all';
+    let currentMediaType = 'ptv';
+    let selectedMediaBase64 = null;
+    let selectedDurationSeconds = 3600;
+    let liveCountdownInterval = null;
+    let activeLocationRecipient = null;
+
+    // Landmark coordinates dictionary
+    const LANDMARKS = {
+      burj: { lat: 25.1972, lng: 55.2744, name: 'Burj Khalifa Downtown' },
+      eiffel: { lat: 48.8584, lng: 2.2945, name: 'Eiffel Tower' },
+      kaaba: { lat: 21.4225, lng: 39.8262, name: 'Holy Kaaba Mecca' },
+      timessquare: { lat: 40.7580, lng: -73.9855, name: 'Times Square NYC' },
+      bigben: { lat: 51.5007, lng: -0.1246, name: 'Big Ben London' },
+      badshahi: { lat: 31.5882, lng: 74.3095, name: 'Badshahi Mosque Lahore' }
+    };
+
+    // Button Messenger state
+    let buttonList = [
+      { id: 'btn_1', text: '⚡ Ping Bot', type: 'quick_reply', action: '.ping' },
+      { id: 'btn_2', text: '🔗 Contact Owner', type: 'url', action: 'https://wa.me/923299931199' },
+      { id: 'btn_3', text: '📞 Call Desk', type: 'call', action: '+923299931199' }
+    ];
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // AUTHENTICATION & DEVICE-BOUND ISOLATION ENGINE
+    // ──────────────────────────────────────────────────────────────────────────
+    function setAuthMode(mode) {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      const tabSignIn = document.getElementById('authTabBtn-signin');
+      const tabSignUp = document.getElementById('authTabBtn-signup');
+      const alertBox = document.getElementById('authAlertBox');
+      alertBox.classList.add('hidden');
+
+      if (mode === 'signin') {
+        signInForm.classList.remove('hidden');
+        signUpForm.classList.add('hidden');
+        tabSignIn.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-amber-500 text-slate-950 shadow';
+        tabSignUp.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-400 hover:text-slate-200';
+      } else {
+        signInForm.classList.add('hidden');
+        signUpForm.classList.remove('hidden');
+        tabSignUp.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-emerald-500 text-slate-950 shadow';
+        tabSignIn.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-400 hover:text-slate-200';
+      }
+    }
+
+    function togglePasswordInput(id) {
+      const input = document.getElementById(id);
+      if (input) input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Direct Mobile Startup (Zero Login Barrier)
+    async function checkAuthSession() {
+      const devId = getOrCreateDeviceId();
+      hideAuthModal();
+
+      // Check if user has an active token (e.g. Master Admin Urooj)
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (token) {
+        try {
+          const res = await fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const data = await res.json();
+          if (res.ok && data.authenticated && data.user) {
+            currentUser = data.user;
+            localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+            updateUserUI();
+            fetchStatus();
+            return;
+          }
+        } catch (_) {}
+      }
+
+      // Default: Direct Device-Bound Owner Access
+      const shortId = devId.slice(-6).toUpperCase();
+      currentUser = {
+        id: devId,
+        username: `Device #${shortId}`,
+        role: 'owner',
+        deviceId: devId
+      };
+      localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+      updateUserUI();
+      fetchStatus();
+    }
+
+    function showAuthModal() {
+      document.getElementById('authModalOverlay').classList.remove('hidden');
+      document.getElementById('signInUsername').focus();
+    }
+
+    function hideAuthModal() {
+      const overlay = document.getElementById('authModalOverlay');
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    async function handleSignIn(e) {
+      e.preventDefault();
+      const username = document.getElementById('signInUsername').value.trim();
+      const password = document.getElementById('signInPassword').value.trim();
+      const alertBox = document.getElementById('authAlertBox');
+      const submitBtn = document.getElementById('signInSubmitBtn');
+
+      alertBox.classList.add('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          currentAuthToken = data.token;
+          currentUser = data.user;
+          localStorage.setItem(TOKEN_KEY, data.token);
+          localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+          hideAuthModal();
+          updateUserUI();
+          fetchStatus();
+        } else {
+          showAuthAlert(data.error || 'Invalid credentials');
+        }
+      } catch (err) {
+        showAuthAlert('Network error during sign in: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function handleSignUp(e) {
+      e.preventDefault();
+      const username = document.getElementById('signUpUsername').value.trim();
+      const password = document.getElementById('signUpPassword').value.trim();
+      const confirm = document.getElementById('signUpPasswordConfirm').value.trim();
+      const submitBtn = document.getElementById('signUpSubmitBtn');
+
+      if (password !== confirm) {
+        showAuthAlert('Passwords do not match');
+        return;
+      }
+
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          currentAuthToken = data.token;
+          currentUser = data.user;
+          localStorage.setItem(TOKEN_KEY, data.token);
+          localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+          hideAuthModal();
+          updateUserUI();
+          fetchStatus();
+        } else {
+          showAuthAlert(data.error || 'Sign up failed');
+        }
+      } catch (err) {
+        showAuthAlert('Network error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    function quickAdminLogin() {
+      document.getElementById('signInUsername').value = 'Urooj';
+      document.getElementById('signInPassword').value = PASSCODE_SUPERADMIN;
+      document.getElementById('signInForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+
+    function showAuthAlert(msg) {
+      const alertBox = document.getElementById('authAlertBox');
+      const card = document.getElementById('authCard');
+      alertBox.textContent = '❌ ' + msg;
+      alertBox.classList.remove('hidden');
+      card.classList.remove('shake-anim');
+      void card.offsetWidth;
+      card.classList.add('shake-anim');
+    }
+
+    async function handleLogout() {
+      if (currentAuthToken) {
+        try {
+          await fetch('/api/auth/signout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${currentAuthToken}` }
+          });
+        } catch (_) {}
+      }
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      currentUser = null;
+      currentAuthToken = null;
+      showAuthModal();
+    }
+
+    function updateUserUI() {
+      if (!currentUser) return;
+      const roleIcon = document.getElementById('userRoleIcon');
+      const nameText = document.getElementById('userNameText');
+      const roleTag = document.getElementById('userRoleTag');
+      const adminTabBtn = document.getElementById('tabBtn-admin');
+      const mobileNavAdminBtn = document.getElementById('mobileNavAdminBtn');
+      const menuUserName = document.getElementById('menuUserName');
+      const menuUserTag = document.getElementById('menuUserTag');
+      const menuAdminBtn = document.getElementById('menuAdminBtn');
+
+      nameText.textContent = currentUser.username;
+      if (menuUserName) menuUserName.textContent = currentUser.username;
+
+      if (currentUser.role === 'admin' || currentUser.username.toLowerCase() === 'urooj') {
+        roleIcon.textContent = '👑';
+        roleTag.textContent = 'Super Admin';
+        roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-extrabold uppercase font-mono';
+        if (adminTabBtn) adminTabBtn.classList.remove('hidden');
+        if (mobileNavAdminBtn) mobileNavAdminBtn.classList.remove('hidden');
+        if (menuUserTag) menuUserTag.textContent = 'Super Admin';
+        if (menuAdminBtn) {
+          menuAdminBtn.classList.remove('hidden');
+          menuAdminBtn.classList.add('flex');
+        }
+      } else if (currentUser.role === 'owner') {
+        roleIcon.textContent = '📱';
+        roleTag.textContent = 'Device Bound';
+        roleTag.className = 'text-[9px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase font-mono';
+        if (adminTabBtn) adminTabBtn.classList.add('hidden');
+        if (mobileNavAdminBtn) mobileNavAdminBtn.classList.add('hidden');
+        if (menuUserTag) menuUserTag.textContent = 'Device Bound';
+        if (menuAdminBtn) {
+          menuAdminBtn.classList.add('hidden');
+          menuAdminBtn.classList.remove('flex');
+        }
+      } else {
+        roleIcon.textContent = '👤';
+        roleTag.textContent = 'Member';
+        roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-medium font-mono';
+        if (adminTabBtn) adminTabBtn.classList.add('hidden');
+        if (mobileNavAdminBtn) mobileNavAdminBtn.classList.add('hidden');
+        if (menuUserTag) menuUserTag.textContent = 'Member';
+        if (menuAdminBtn) {
+          menuAdminBtn.classList.add('hidden');
+          menuAdminBtn.classList.remove('flex');
+        }
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ⚡ NAVIGATION OPTIONS DROPDOWN MENU
+    // ──────────────────────────────────────────────────────────────────────────
+    function toggleOptionsMenu(event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const menu = document.getElementById('headerOptionsMenu');
+      const chevron = document.getElementById('optionsChevron');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function closeOptionsMenu() {
+      const menu = document.getElementById('headerOptionsMenu');
+      const chevron = document.getElementById('optionsChevron');
+      if (menu) menu.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+
+    function selectOptionTab(tabId) {
+      closeOptionsMenu();
+      switchTab(tabId);
+    }
+
+    // Dismiss options dropdown on click outside or escape key
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('headerOptionsMenu');
+      const btn = document.getElementById('navOptionsBtn');
+      if (!menu || menu.classList.contains('hidden')) return;
+      if (!menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+        closeOptionsMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeOptionsMenu();
+    });
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // TAB SWITCHING
+    // ──────────────────────────────────────────────────────────────────────────
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove(
+          'bg-amber-500/10', 'bg-amber-500/20', 'text-amber-300', 'text-amber-400', 'border-amber-500/20', 'border-amber-500/30', 'border-amber-500/40',
+          'bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20',
+          'bg-cyan-500/10', 'bg-cyan-500/15', 'bg-cyan-500/20', 'bg-cyan-500/25',
+          'text-cyan-300', 'text-cyan-400', 'border-cyan-500/20', 'border-cyan-500/30', 'border-cyan-500/35', 'border-cyan-500/40'
+        );
+        el.classList.add('text-slate-400');
+      });
+
+      const targetSection = document.getElementById('tab-' + tabId);
+      const targetBtn = document.getElementById('tabBtn-' + tabId);
+
+      if (targetSection) targetSection.classList.remove('hidden');
+      if (targetBtn) {
+        targetBtn.classList.remove('text-slate-400');
+        if (tabId === 'location') {
+          targetBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20');
+        } else if (tabId === 'fakequote') {
+          targetBtn.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40');
+        } else if (tabId === 'scheduled') {
+          targetBtn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+        } else {
+          targetBtn.classList.add('bg-amber-500/10', 'text-amber-400', 'border-amber-500/20');
+        }
+      }
+
+      try {
+        history.replaceState(null, null, '#' + tabId);
+      } catch (_) {}
+
+      // Scroll into view gently so user is positioned directly at the feature
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      if (tabId === 'fakequote') updateFakeQuotePreview();
+      if (tabId === 'scheduled') {
+        loadScheduledQueue();
+        initSchedDefaultTime();
+      }
+      if (tabId === 'admin') fetchAdminOverview();
+      if (tabId === 'session') fetchMySessions();
+      if (tabId === 'logs') fetchLogs();
+      if (tabId === 'tracker') fetchTrackerLogs();
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 📍 100% NATIVE LIVE LOCATION ENGINE
+    // ──────────────────────────────────────────────────────────────────────────
+    function selectLiveDuration(seconds, label) {
+      selectedDurationSeconds = seconds;
+      document.querySelectorAll('.duration-pill').forEach(btn => {
+        btn.classList.remove('border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-400', 'font-bold');
+        btn.classList.add('border-slate-800', 'bg-slate-950', 'text-slate-400');
+      });
+      const activeBtn = document.getElementById('durationBtn-' + seconds);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-800', 'bg-slate-950', 'text-slate-400');
+        activeBtn.classList.add('border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-400', 'font-bold');
+      }
+      updateLocationPreview();
+    }
+
+    function togglePresetSection() {
+      const el = document.getElementById('landmarkPresetsWrapper');
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function selectPresetLandmark(key) {
+      const lm = LANDMARKS[key];
+      if (!lm) return;
+      document.getElementById('locLat').value = lm.lat;
+      document.getElementById('locLng').value = lm.lng;
+      document.getElementById('gpsStatusBadge').textContent = 'Selected: ' + lm.name;
+      document.getElementById('gpsStatusBadge').className = 'text-[10px] text-amber-400 font-mono';
+      updateLocationPreview();
+    }
+
+    function fetchRealDeviceGps() {
+      const badge = document.getElementById('gpsStatusBadge');
+      const btn = document.getElementById('btnUseRealGps');
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+      badge.textContent = '🛰️ Querying device GPS hardware...';
+      badge.className = 'text-[10px] text-sky-400 font-mono animate-pulse';
+      btn.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const acc = Math.round(pos.coords.accuracy);
+          document.getElementById('locLat').value = lat.toFixed(6);
+          document.getElementById('locLng').value = lng.toFixed(6);
+          badge.textContent = `✅ Real GPS Locked: ±${acc}m accuracy`;
+          badge.className = 'text-[10px] text-emerald-400 font-mono font-bold';
+          btn.disabled = false;
+          updateLocationPreview();
+        },
+        (err) => {
+          badge.textContent = '❌ GPS Error: ' + err.message;
+          badge.className = 'text-[10px] text-rose-400 font-mono';
+          btn.disabled = false;
+          alert('Could not retrieve device location: ' + err.message + '. Please ensure location permission is enabled.');
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
+
+    function updateLocationPreview() {
+      const now = new Date();
+      const expiry = new Date(now.getTime() + selectedDurationSeconds * 1000);
+      
+      const formatTime = (d) => {
+        let h = d.getHours();
+        const m = String(d.getMinutes()).padStart(2, '0');
+        const ampm = h >= 12 ? 'pm' : 'am';
+        h = h % 12 || 12;
+        return `${h}:${m} ${ampm}`;
+      };
+
+      const previewLiveText = document.getElementById('previewLiveUntilText');
+      const previewSentTime = document.getElementById('previewSentTime');
+
+      if (previewLiveText) previewLiveText.textContent = `Live until ${formatTime(expiry)}`;
+      if (previewSentTime) previewSentTime.textContent = formatTime(now);
+    }
+
+    async function handleSendNativeLiveLocation(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('locRecipient').value.trim();
+      const latitude = parseFloat(document.getElementById('locLat').value);
+      const longitude = parseFloat(document.getElementById('locLng').value);
+      const submitBtn = document.getElementById('sendLiveLocSubmit');
+      const statusEl = document.getElementById('locSendStatus');
+
+      if (isNaN(latitude) || isNaN(longitude)) {
+        alert('Please enter valid coordinates');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50');
+
+      try {
+        const res = await fetch('/api/location/send-live', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({
+            recipient,
+            latitude,
+            longitude,
+            durationSeconds: selectedDurationSeconds,
+            accuracy: 15
+          })
+        });
+        const data = await res.json();
+        statusEl.classList.remove('hidden');
+
+        if (res.ok && data.success) {
+          statusEl.className = 'mt-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          statusEl.textContent = '✅ ' + data.message;
+          activeLocationRecipient = recipient;
+          startLiveCountdown(selectedDurationSeconds, recipient);
+        } else {
+          statusEl.className = 'mt-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          statusEl.textContent = '❌ ' + (data.error || 'Failed to dispatch live location');
+        }
+      } catch (err) {
+        statusEl.classList.remove('hidden');
+        statusEl.className = 'mt-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        statusEl.textContent = 'Network error: ' + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50');
+      }
+    }
+
+    function startLiveCountdown(durationSeconds, recipient) {
+      clearInterval(liveCountdownInterval);
+      let remaining = durationSeconds;
+      const banner = document.getElementById('activeLiveBanner');
+      const timerText = document.getElementById('activeLiveTimerCountdown');
+      const recipText = document.getElementById('activeLiveRecipientText');
+
+      banner.classList.remove('hidden');
+      if (recipText) recipText.textContent = `Live location is actively transmitting to +${recipient}.`;
+
+      const updateClock = () => {
+        const h = Math.floor(remaining / 3600);
+        const m = Math.floor((remaining % 3600) / 60);
+        const s = remaining % 60;
+        timerText.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      };
+      updateClock();
+
+      liveCountdownInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(liveCountdownInterval);
+          banner.classList.add('hidden');
+        } else {
+          updateClock();
+        }
+      }, 1000);
+    }
+
+    async function stopLiveLocationNow() {
+      try {
+        const res = await fetch('/api/location/stop-live', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({ recipient: activeLocationRecipient || document.getElementById('locRecipient').value.trim() })
+        });
+        const data = await res.json();
+        clearInterval(liveCountdownInterval);
+        document.getElementById('activeLiveBanner')?.classList.add('hidden');
+        const statusEl = document.getElementById('locSendStatus');
+        if (statusEl) {
+          statusEl.classList.remove('hidden');
+          statusEl.className = 'mt-2 p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300 text-center font-medium';
+          statusEl.textContent = '🛑 ' + (data.message || 'Live location sharing stopped.');
+        }
+      } catch (err) {
+        alert('Could not stop sharing: ' + err.message);
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 👑 SUPER ADMIN CONSOLE LOGIC (Strictly Urooj)
+    // ──────────────────────────────────────────────────────────────────────────
+    async function fetchAdminOverview() {
+      if (!currentAuthToken) return;
+      try {
+        const res = await fetch('/api/admin/overview', {
+          headers: { 'Authorization': `Bearer ${currentAuthToken}` }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          document.getElementById('adminStatUsers').textContent = data.totalUsers || 0;
+          document.getElementById('adminStatSessions').textContent = data.totalSessions || 0;
+          document.getElementById('adminStatSockets').textContent = data.activeSockets?.length || 0;
+          document.getElementById('adminUsersCountLabel').textContent = `${data.totalUsers} Registered`;
+          document.getElementById('adminSessionsCountLabel').textContent = `${data.totalSessions} Stored`;
+
+          renderAdminUsers(data.users || []);
+          renderAdminSessions(data.sessions || []);
+        }
+      } catch (err) {
+        console.warn('fetchAdminOverview error:', err.message);
+      }
+    }
+
+    function renderAdminUsers(users) {
+      const tbody = document.getElementById('adminUsersTableBody');
+      if (!tbody) return;
+      if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-slate-500 font-mono">No registered users found</td></tr>';
+        return;
+      }
+      tbody.innerHTML = users.map(u => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="py-3 px-3 font-mono text-slate-400">#${u.id}</td>
+          <td class="py-3 px-3 font-bold ${u.username.toLowerCase() === 'urooj' ? 'text-amber-400 flex items-center gap-1.5' : 'text-slate-200'}">
+            ${u.username.toLowerCase() === 'urooj' ? '👑 ' : ''}${u.username}
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold ${u.role === 'admin' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-slate-800 text-slate-400'}">
+              ${u.role}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-slate-400 font-mono text-[11px]">${(u.created_at || '').substring(0, 10)}</td>
+          <td class="py-3 px-3 font-mono text-emerald-400 font-bold">${u.sessions_count || 0}</td>
+          <td class="py-3 px-3 text-right">
+            ${u.username.toLowerCase() === 'urooj' 
+              ? '<span class="text-slate-600 text-[10px] uppercase font-mono">Master Protected</span>' 
+              : `<button onclick="adminDeleteUser(${u.id}, '${u.username}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[11px] font-semibold transition">Delete</button>`
+            }
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAdminSessions(sessions) {
+      const tbody = document.getElementById('adminSessionsTableBody');
+      if (!tbody) return;
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-mono">No WhatsApp sessions currently stored</td></tr>';
+        return;
+      }
+      tbody.innerHTML = sessions.map(s => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="py-3 px-3 font-semibold text-slate-200">${s.username}</td>
+          <td class="py-3 px-3 font-mono text-emerald-400 font-bold">+${s.clean_number}</td>
+          <td class="py-3 px-3 font-mono text-[11px] text-amber-300 max-w-xs truncate" title="${s.session_id || ''}">
+            ${s.session_id ? s.session_id.substring(0, 24) + '...' : 'Saved Locally'}
+          </td>
+          <td class="py-3 px-3 text-slate-400 font-mono text-[11px]">${(s.created_at || '').substring(0, 10)}</td>
+          <td class="py-3 px-3 text-right space-x-1.5">
+            ${s.session_id ? `<button onclick="copyToClipboard('${s.session_id}', 'Session ID copied!')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px]">Copy</button>` : ''}
+            <button onclick="adminRevokeSession('${s.clean_number}')" class="px-2 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[11px] font-semibold">Revoke</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function adminRevokeSession(cleanNumber) {
+      if (!confirm(`Are you sure you want to force-revoke session for +${cleanNumber}?`)) return;
+      try {
+        const res = await fetch('/api/admin/session/revoke', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentAuthToken}`
+          },
+          body: JSON.stringify({ cleanNumber })
+        });
+        const data = await res.json();
+        alert(data.message || 'Session revoked');
+        fetchAdminOverview();
+      } catch (err) {
+        alert('Failed to revoke session: ' + err.message);
+      }
+    }
+
+    async function adminDeleteUser(id, username) {
+      if (!confirm(`Are you sure you want to delete user account "${username}" and all their sessions?`)) return;
+      try {
+        const res = await fetch(`/api/admin/user/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentAuthToken}` }
+        });
+        const data = await res.json();
+        alert(data.message || 'User deleted');
+        fetchAdminOverview();
+      } catch (err) {
+        alert('Failed to delete user: ' + err.message);
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // BUTTON MESSENGER FUNCTIONS
+    // ──────────────────────────────────────────────────────────────────────────
+    function renderButtonSlots() {
+      const container = document.getElementById('buttonSlotsContainer');
+      if (!container) return;
+      container.innerHTML = buttonList.map((btn, i) => `
+        <div class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <span class="w-6 text-center font-bold text-amber-400">#${i + 1}</span>
+          <input type="text" value="${btn.text}" oninput="updateButtonSlot(${i}, 'text', this.value)" placeholder="Button label" class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white outline-none" />
+          <select onchange="updateButtonSlot(${i}, 'type', this.value)" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white outline-none">
+            <option value="quick_reply" ${btn.type === 'quick_reply' ? 'selected' : ''}>⚡ Quick Reply</option>
+            <option value="url" ${btn.type === 'url' ? 'selected' : ''}>🔗 URL Link</option>
+            <option value="call" ${btn.type === 'call' ? 'selected' : ''}>📞 Phone Call</option>
+          </select>
+          <input type="text" value="${btn.action}" oninput="updateButtonSlot(${i}, 'action', this.value)" placeholder="Command or URL" class="w-32 sm:w-48 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono text-[11px] outline-none" />
+          <button type="button" onclick="removeButtonSlot(${i})" class="text-rose-400 hover:text-rose-300 font-bold px-2">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function addButtonSlot() {
+      if (buttonList.length >= 3) {
+        alert('Maximum 3 buttons supported');
+        return;
+      }
+      buttonList.push({ id: `btn_${buttonList.length + 1}`, text: `Button ${buttonList.length + 1}`, type: 'quick_reply', action: '.menu' });
+      renderButtonSlots();
+    }
+
+    function removeButtonSlot(idx) {
+      buttonList.splice(idx, 1);
+      renderButtonSlots();
+    }
+
+    function updateButtonSlot(idx, key, val) {
+      if (buttonList[idx]) buttonList[idx][key] = val;
+    }
+
+    async function handleSendButtonMessage(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('btnRecipient').value.trim();
+      const title = document.getElementById('btnTitle').value.trim();
+      const body = document.getElementById('btnBody').value.trim();
+      const footer = document.getElementById('btnFooter').value.trim();
+      const statusEl = document.getElementById('buttonMsgStatus');
+
+      try {
+        const res = await fetch('/api/messenger/buttons', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({ recipient, title, body, footer, buttons: buttonList })
+        });
+        const data = await res.json();
+        statusEl.classList.remove('hidden');
+        if (res.ok && data.success) {
+          statusEl.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          statusEl.textContent = '✅ ' + data.message;
+        } else {
+          statusEl.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          statusEl.textContent = '❌ ' + (data.error || 'Failed to dispatch');
+        }
+      } catch (err) {
+        statusEl.classList.remove('hidden');
+        statusEl.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        statusEl.textContent = 'Network error: ' + err.message;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 🎭 FAKE QUOTED MESSAGE REPLY SUITE
+    // ──────────────────────────────────────────────────────────────────────────
+    let fqButtonList = [
+      { id: 'fq_btn_1', text: 'Confirm Deal', type: 'quick_reply', action: '.confirm' },
+      { id: 'fq_btn_2', text: 'Official Website', type: 'url', action: 'https://wa.me/923299931199' }
+    ];
+    let fqReplyMode = 'buttons'; // 'buttons' | 'text'
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function toggleFqAuthor(mode) {
+      const customBox = document.getElementById('fqCustomAuthorBox');
+      if (!customBox) return;
+      if (mode === 'custom') {
+        customBox.classList.remove('hidden');
+      } else {
+        customBox.classList.add('hidden');
+      }
+      updateFakeQuotePreview();
+    }
+
+    function applyFqPreset(presetText) {
+      if (!presetText) return;
+      const quoteInput = document.getElementById('fqQuoteText');
+      if (quoteInput) quoteInput.value = presetText;
+      updateFakeQuotePreview();
+    }
+
+    function setFqReplyMode(mode) {
+      fqReplyMode = mode;
+      const btnBtn = document.getElementById('fqModeBtn-buttons');
+      const textBtn = document.getElementById('fqModeBtn-text');
+      const buttonsSection = document.getElementById('fqButtonsConfigSection');
+
+      if (mode === 'buttons') {
+        if (btnBtn) btnBtn.className = 'px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition';
+        if (textBtn) textBtn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white transition';
+        if (buttonsSection) buttonsSection.classList.remove('hidden');
+      } else {
+        if (textBtn) textBtn.className = 'px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition';
+        if (btnBtn) btnBtn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white transition';
+        if (buttonsSection) buttonsSection.classList.add('hidden');
+      }
+      updateFakeQuotePreview();
+    }
+
+    function renderFqButtonSlots() {
+      const container = document.getElementById('fqButtonSlotsContainer');
+      if (!container) return;
+      container.innerHTML = fqButtonList.map((btn, i) => `
+        <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+          <span class="w-5 text-center font-bold text-cyan-400 font-mono">#${i + 1}</span>
+          <input type="text" value="${escapeHtml(btn.text)}" oninput="updateFqButtonSlot(${i}, 'text', this.value)" placeholder="Button label" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white outline-none focus:border-cyan-500" />
+          <select onchange="updateFqButtonSlot(${i}, 'type', this.value)" class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white outline-none">
+            <option value="quick_reply" ${btn.type === 'quick_reply' ? 'selected' : ''}>⚡ Quick</option>
+            <option value="url" ${btn.type === 'url' ? 'selected' : ''}>🔗 URL</option>
+            <option value="call" ${btn.type === 'call' ? 'selected' : ''}>📞 Call</option>
+          </select>
+          <input type="text" value="${escapeHtml(btn.action)}" oninput="updateFqButtonSlot(${i}, 'action', this.value)" placeholder="URL / Phone" class="w-28 sm:w-36 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white font-mono text-[10px] outline-none" />
+          <button type="button" onclick="removeFqButtonSlot(${i})" class="text-rose-400 hover:text-rose-300 font-bold px-1.5">✕</button>
+        </div>
+      `).join('');
+      updateFakeQuotePreview();
+    }
+
+    function addFqButtonSlot() {
+      if (fqButtonList.length >= 3) {
+        alert('Maximum 3 buttons supported in WhatsApp interactive layout.');
+        return;
+      }
+      fqButtonList.push({ 
+        id: `fq_btn_${fqButtonList.length + 1}`, 
+        text: `Action ${fqButtonList.length + 1}`, 
+        type: 'quick_reply', 
+        action: '.help' 
+      });
+      renderFqButtonSlots();
+    }
+
+    function removeFqButtonSlot(idx) {
+      fqButtonList.splice(idx, 1);
+      renderFqButtonSlots();
+    }
+
+    function updateFqButtonSlot(idx, key, val) {
+      if (fqButtonList[idx]) {
+        fqButtonList[idx][key] = val;
+        updateFakeQuotePreview();
+      }
+    }
+
+    function updateFakeQuotePreview() {
+      const recipient = document.getElementById('fqRecipient')?.value.trim() || '923299931199';
+      const quoteText = document.getElementById('fqQuoteText')?.value || '';
+      const replyText = document.getElementById('fqReplyText')?.value || '';
+      const footerText = document.getElementById('fqFooterText')?.value || '';
+      const authorRadio = document.querySelector('input[name="fqAuthorRadio"]:checked')?.value || 'recipient';
+      const customNum = document.getElementById('fqCustomSenderNumber')?.value.trim() || '';
+      const customName = document.getElementById('fqCustomSenderName')?.value.trim() || '';
+
+      let authorDisplay = '+' + recipient;
+      if (authorRadio === 'me') {
+        authorDisplay = 'You';
+      } else if (authorRadio === 'custom') {
+        authorDisplay = customName ? `${customName} (+${customNum || '12025550192'})` : `+${customNum || '12025550192'}`;
+      } else {
+        authorDisplay = '+' + recipient;
+      }
+
+      const previewAuthor = document.getElementById('previewFqAuthor');
+      const previewQuote = document.getElementById('previewFqQuoteText');
+      const previewReply = document.getElementById('previewFqReplyText');
+      const previewFooter = document.getElementById('previewFqFooter');
+      const previewButtons = document.getElementById('previewFqButtons');
+      const previewTime = document.getElementById('previewFqTime');
+
+      if (previewAuthor) previewAuthor.textContent = authorDisplay;
+      if (previewQuote) previewQuote.textContent = quoteText ? `"${quoteText}"` : '""';
+      if (previewReply) previewReply.textContent = replyText;
+      if (previewFooter) previewFooter.textContent = footerText;
+
+      if (previewTime) {
+        const now = new Date();
+        previewTime.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      if (previewButtons) {
+        if (fqReplyMode === 'buttons' && fqButtonList.length > 0) {
+          previewButtons.classList.remove('hidden');
+          previewButtons.innerHTML = fqButtonList.map(b => {
+            const icon = b.type === 'url' ? '🔗' : b.type === 'call' ? '📞' : '⚡';
+            return `
+              <div class="w-full py-1.5 px-3 rounded-lg bg-[#0c1317]/50 text-center text-xs font-semibold text-[#53bdeb] border border-[#007a64] flex items-center justify-center gap-1.5 shadow-sm">
+                <span>${icon}</span>
+                <span>${escapeHtml(b.text || 'Action')}</span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          previewButtons.classList.add('hidden');
+          previewButtons.innerHTML = '';
+        }
+      }
+    }
+
+    async function handleSendFakeQuote(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('fqRecipient').value.trim();
+      const quoteText = document.getElementById('fqQuoteText').value.trim();
+      const replyText = document.getElementById('fqReplyText').value.trim();
+      const footer = document.getElementById('fqFooterText').value.trim();
+      const authorRadio = document.querySelector('input[name="fqAuthorRadio"]:checked')?.value || 'recipient';
+      const customSenderNumber = document.getElementById('fqCustomSenderNumber')?.value.trim() || '';
+      const customSenderName = document.getElementById('fqCustomSenderName')?.value.trim() || '';
+      const statusEl = document.getElementById('fqStatus');
+      const submitBtn = document.getElementById('fqSubmitBtn');
+
+      if (!recipient || !quoteText || !replyText) {
+        alert('Please fill in recipient, quoted message, and reply text.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-60');
+
+      try {
+        const res = await fetch('/api/messenger/fake-quote', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({
+            recipient,
+            quoteText,
+            quoteSender: authorRadio,
+            customSenderNumber,
+            customSenderName,
+            replyText,
+            replyType: fqReplyMode,
+            buttons: fqReplyMode === 'buttons' ? fqButtonList : [],
+            footer
+          })
+        });
+
+        const data = await res.json();
+        statusEl.classList.remove('hidden');
+
+        if (res.ok && data.success) {
+          statusEl.className = 'p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-300 text-center font-medium';
+          statusEl.innerHTML = `
+            <div>✅ <strong>${data.message}</strong></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">Author: <span class="text-cyan-400 font-semibold">${data.spoofedSender}</span> &bull; Quoted ID: <span class="font-mono text-slate-300">${data.fakeMessageId || 'N/A'}</span></div>
+          `;
+        } else {
+          statusEl.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          statusEl.textContent = '❌ ' + (data.error || 'Failed to dispatch fake quoted message');
+        }
+      } catch (err) {
+        statusEl.classList.remove('hidden');
+        statusEl.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        statusEl.textContent = 'Network error: ' + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60');
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ⏰ SCHEDULED MESSAGE QUEUE LOGIC
+    // ──────────────────────────────────────────────────────────────────────────
+    let scheduledQueue = [];
+    let schedFilter = 'pending'; // 'pending' | 'sent' | 'all'
+    let schedCountdownInterval = null;
+
+    function initSchedDefaultTime() {
+      const timeInput = document.getElementById('schedDateTime');
+      if (timeInput && !timeInput.value) {
+        setScheduleTimeOffset(15);
+      }
+    }
+
+    function setScheduleTimeOffset(minutes) {
+      const now = new Date(Date.now() + minutes * 60 * 1000);
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const str = `${year}-${month}-${day}T${hours}:${mins}`;
+      const timeInput = document.getElementById('schedDateTime');
+      if (timeInput) {
+        timeInput.value = str;
+        updateSchedTimePreview();
+      }
+    }
+
+    function setScheduleTomorrowMorning() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0);
+      const year = tomorrow.getFullYear();
+      const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      const day = String(tomorrow.getDate()).padStart(2, '0');
+      const str = `${year}-${month}-${day}T09:00`;
+      const timeInput = document.getElementById('schedDateTime');
+      if (timeInput) {
+        timeInput.value = str;
+        updateSchedTimePreview();
+      }
+    }
+
+    function updateSchedTimePreview() {
+      const timeInput = document.getElementById('schedDateTime');
+      const label = document.getElementById('schedSelectedTimeLabel');
+      if (!timeInput || !label) return;
+      if (!timeInput.value) {
+        label.textContent = 'Select time';
+        return;
+      }
+      const target = new Date(timeInput.value).getTime();
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        label.textContent = '⚠️ Time must be in future';
+        label.className = 'text-[10px] font-mono text-rose-400 font-bold';
+      } else {
+        const mins = Math.round(diff / 60000);
+        if (mins < 60) {
+          label.textContent = `In ~${mins} min${mins === 1 ? '' : 's'}`;
+        } else {
+          const hrs = (diff / 3600000).toFixed(1);
+          label.textContent = `In ~${hrs} hour${hrs === '1.0' ? '' : 's'}`;
+        }
+        label.className = 'text-[10px] font-mono text-amber-400 font-bold';
+      }
+    }
+
+    function applySchedTemplate(text) {
+      if (!text) return;
+      const area = document.getElementById('schedMessageText');
+      if (area) {
+        area.value = text;
+        const count = document.getElementById('schedCharCount');
+        if (count) count.textContent = text.length + ' chars';
+      }
+    }
+
+    function setSchedFilter(filter) {
+      schedFilter = filter;
+      ['pending', 'sent', 'all'].forEach(f => {
+        const btn = document.getElementById('schedFilter-' + f);
+        if (btn) {
+          if (f === filter) {
+            btn.className = 'px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition';
+          } else {
+            btn.className = 'px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-semibold hover:text-white transition';
+          }
+        }
+      });
+      renderScheduledQueue();
+    }
+
+    async function loadScheduledQueue() {
+      try {
+        const res = await fetch('/api/scheduled', {
+          headers: {
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          }
+        });
+        const data = await res.json();
+        if (data && Array.isArray(data.queue)) {
+          scheduledQueue = data.queue;
+          renderScheduledQueue();
+          updateSchedKPIs();
+        }
+      } catch (err) {
+        console.warn('Failed to load scheduled queue:', err.message);
+      }
+    }
+
+    function updateSchedKPIs() {
+      const pendingCount = scheduledQueue.filter(q => q.status === 'pending').length;
+      const sentCount = scheduledQueue.filter(q => q.status === 'sent').length;
+      const totalCount = scheduledQueue.length;
+
+      const pEl = document.getElementById('statPendingSched');
+      const sEl = document.getElementById('statSentSched');
+      const tEl = document.getElementById('statTotalSched');
+      const bEl = document.getElementById('queueBadgeCount');
+
+      if (pEl) pEl.textContent = pendingCount;
+      if (sEl) sEl.textContent = sentCount;
+      if (tEl) tEl.textContent = totalCount;
+      if (bEl) bEl.textContent = `${pendingCount} pending`;
+    }
+
+    function formatCountdown(targetMs) {
+      const diff = targetMs - Date.now();
+      if (diff <= 0) return 'Executing now...';
+      const sec = Math.floor(diff / 1000) % 60;
+      const min = Math.floor(diff / 60000) % 60;
+      const hrs = Math.floor(diff / 3600000);
+      if (hrs > 0) {
+        return `${hrs}h ${String(min).padStart(2, '0')}m ${String(sec).padStart(2, '0')}s`;
+      }
+      return `${min}m ${String(sec).padStart(2, '0')}s`;
+    }
+
+    function renderScheduledQueue() {
+      const container = document.getElementById('schedQueueContainer');
+      if (!container) return;
+
+      let filtered = scheduledQueue;
+      if (schedFilter === 'pending') {
+        filtered = scheduledQueue.filter(item => item.status === 'pending');
+      } else if (schedFilter === 'sent') {
+        filtered = scheduledQueue.filter(item => item.status === 'sent');
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-xs bg-slate-950/40 rounded-2xl border border-dashed border-slate-800">
+            <span class="text-3xl block mb-2">📭</span>
+            No scheduled messages found in <strong>${schedFilter}</strong> view.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isPending = item.status === 'pending';
+        const isSent = item.status === 'sent';
+        const isFailed = item.status === 'failed';
+        const dateObj = new Date(item.scheduled_time);
+        const formattedDate = dateObj.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const cleanRecipient = String(item.recipient || '').replace('@s.whatsapp.net', '');
+
+        let statusBadge = '';
+        if (isPending) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+              <span class="countdown-clock" data-target="${item.scheduled_time}">⏳ in ${formatCountdown(item.scheduled_time)}</span>
+            </span>
+          `;
+        } else if (isSent) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-bold">
+              <span>✅ Sent</span>
+            </span>
+          `;
+        } else {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold">
+              <span>❌ Failed</span>
+            </span>
+          `;
+        }
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-950/80 border ${isPending ? 'border-amber-500/30 shadow-md shadow-amber-950/20' : 'border-slate-800'} space-y-2.5 transition">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">📱</span>
+                <div>
+                  <span class="font-mono font-bold text-xs text-white">+${cleanRecipient}</span>
+                  <span class="text-[10px] text-slate-500 block">Scheduled for: <strong class="text-slate-300 font-mono">${formattedDate}</strong></span>
+                </div>
+              </div>
+              <div class="shrink-0">
+                ${statusBadge}
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 whitespace-pre-wrap line-clamp-3">
+              ${escapeHtml(item.message_text)}
+            </div>
+
+            ${isPending ? `
+              <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-800">
+                <button 
+                  type="button" 
+                  onclick="handleSendNowScheduled(${item.id})"
+                  class="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="Trigger instant delivery right now"
+                >
+                  <span>Send Now ⚡</span>
+                </button>
+                <button 
+                  type="button" 
+                  onclick="handleCancelScheduled(${item.id})"
+                  class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-rose-500/20 border border-slate-700 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 text-xs font-semibold transition flex items-center gap-1 cursor-pointer"
+                  title="Cancel and remove from queue"
+                >
+                  <span>Cancel 🗑️</span>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Tick countdown timers every 1s
+    if (!schedCountdownInterval) {
+      schedCountdownInterval = setInterval(() => {
+        document.querySelectorAll('.countdown-clock').forEach(el => {
+          const target = Number(el.dataset.target);
+          if (target) {
+            el.textContent = '⏳ in ' + formatCountdown(target);
+            if (target <= Date.now()) {
+              loadScheduledQueue();
+            }
+          }
+        });
+      }, 1000);
+    }
+
+    async function handleCreateSchedule(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('schedRecipient').value.trim();
+      const messageText = document.getElementById('schedMessageText').value.trim();
+      const timeVal = document.getElementById('schedDateTime').value;
+      const statusBox = document.getElementById('schedStatusBox');
+      const submitBtn = document.getElementById('schedSubmitBtn');
+
+      if (!recipient) {
+        alert('Please enter a recipient phone number.');
+        return;
+      }
+      if (!messageText) {
+        alert('Please enter message text.');
+        return;
+      }
+      if (!timeVal) {
+        alert('Please select a schedule date and time.');
+        return;
+      }
+
+      const scheduledTime = new Date(timeVal).getTime();
+      if (scheduledTime <= Date.now()) {
+        alert('Scheduled time must be in the future. Please pick a future date and time.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 text-center font-medium animate-pulse';
+      statusBox.textContent = '⏳ Registering scheduled message into queue...';
+
+      try {
+        const res = await fetch('/api/scheduled', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({
+            recipient,
+            messageText,
+            scheduledTime,
+            messageType: 'text'
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          statusBox.className = 'p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          statusBox.textContent = '✅ ' + data.message;
+          document.getElementById('schedMessageText').value = '';
+          const count = document.getElementById('schedCharCount');
+          if (count) count.textContent = '0 chars';
+          loadScheduledQueue();
+        } else {
+          statusBox.className = 'p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          statusBox.textContent = '❌ ' + (data.error || 'Failed to schedule message');
+        }
+      } catch (err) {
+        statusBox.className = 'p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        statusBox.textContent = 'Network error: ' + err.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function handleSendNowScheduled(id) {
+      if (!confirm('Dispatch this scheduled message right now?')) return;
+      try {
+        const res = await fetch(`/api/scheduled/${id}/send-now`, {
+          method: 'POST',
+          headers: {
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          loadScheduledQueue();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to dispatch'));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    }
+
+    async function handleCancelScheduled(id) {
+      if (!confirm('Cancel and remove this scheduled message?')) return;
+      try {
+        const res = await fetch(`/api/scheduled/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          loadScheduledQueue();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to cancel'));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ONLINE TRACKER
+    // ──────────────────────────────────────────────────────────────────────────
+    async function handleStartTracking(e) {
+      e.preventDefault();
+      const number = document.getElementById('trackerInputNumber').value.trim();
+      const status = document.getElementById('trackerStatus');
+      try {
+        const res = await fetch('/api/tracker/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ number })
+        });
+        const data = await res.json();
+        status.classList.remove('hidden');
+        if (res.ok && data.success) {
+          status.className = 'p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 text-xs text-sky-400 font-medium';
+          status.textContent = '✅ ' + data.message;
+          fetchTrackerLogs();
+        } else {
+          status.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 font-medium';
+          status.textContent = '❌ ' + (data.error || 'Tracking error');
+        }
+      } catch (err) {
+        status.classList.remove('hidden');
+        status.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 font-medium';
+        status.textContent = 'Network error: ' + err.message;
+      }
+    }
+
+    async function fetchTrackerLogs() {
+      const number = document.getElementById('trackerInputNumber').value.trim();
+      try {
+        const res = await fetch(`/api/tracker/logs?number=${encodeURIComponent(number)}`);
+        const data = await res.json();
+        const container = document.getElementById('trackerLogsContainer');
+        if (!data.logs || data.logs.length === 0) {
+          container.innerHTML = '<div class="text-slate-500">// No presence events recorded yet. Waiting for target status change...</div>';
+          return;
+        }
+        container.innerHTML = data.logs.map(log => `
+          <div class="flex items-center justify-between py-1 border-b border-slate-900">
+            <span class="text-slate-400 font-mono text-[11px]">${log.time || log.iso}</span>
+            <span class="font-bold ${log.status === 'available' ? 'text-emerald-400' : log.status === 'composing' ? 'text-amber-400' : 'text-slate-400'}">
+              ${log.status.toUpperCase()}
+            </span>
+            <span class="text-slate-500 text-[10px] font-mono">+${log.number}</span>
+          </div>
+        `).join('');
+      } catch (_) {}
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // PTV & VOICE NOTE SENDER
+    // ──────────────────────────────────────────────────────────────────────────
+    function setMediaType(type) {
+      currentMediaType = type;
+      const ptvBtn = document.getElementById('mediaTypeBtn-ptv');
+      const voiceBtn = document.getElementById('mediaTypeBtn-voice');
+      if (type === 'ptv') {
+        ptvBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-purple-500 text-slate-950 transition';
+        voiceBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition';
+      } else {
+        voiceBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-purple-500 text-slate-950 transition';
+        ptvBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition';
+      }
+    }
+
+    function handleMediaFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedMediaBase64 = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleSendMedia(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('mediaRecipient').value.trim();
+      const status = document.getElementById('mediaSendStatus');
+
+      if (!selectedMediaBase64) {
+        alert('Please choose a media file first');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/media/send', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({
+            recipient,
+            type: currentMediaType,
+            mediaData: selectedMediaBase64
+          })
+        });
+        const data = await res.json();
+        status.classList.remove('hidden');
+        if (res.ok && data.success) {
+          status.className = 'p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 text-xs text-purple-400 font-medium';
+          status.textContent = '✅ ' + data.message;
+        } else {
+          status.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 font-medium';
+          status.textContent = '❌ ' + (data.error || 'Failed to dispatch media note');
+        }
+      } catch (err) {
+        status.classList.remove('hidden');
+        status.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 font-medium';
+        status.textContent = 'Network error: ' + err.message;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // DEVICE PAIRING & SESSIONS
+    // ──────────────────────────────────────────────────────────────────────────
+    async function handleRequestPairingCode(e) {
+      e.preventDefault();
+      const phoneNumber = document.getElementById('pairPhoneNumber').value.trim();
+      const submitBtn = document.getElementById('pairSubmitBtn');
+      const display = document.getElementById('pairingCodeDisplay');
+      const codeVal = document.getElementById('pairingCodeValue');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Requesting Code...';
+
+      try {
+        const res = await fetch('/api/pair', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({ phoneNumber })
+        });
+        const data = await res.json();
+        if (res.ok && data.code) {
+          display.classList.remove('hidden');
+          codeVal.textContent = data.code;
+        } else {
+          alert(data.message || data.error || 'Could not generate code');
+        }
+      } catch (err) {
+        alert('Pairing request error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request 8-Digit Pairing Code';
+      }
+    }
+
+    async function fetchMySessions() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        const box = document.getElementById('activeSessionIdBox');
+        if (data.activeSessionId) {
+          box.textContent = data.activeSessionId;
+        } else if (data.connectedSessions?.length > 0) {
+          box.textContent = `Session active for +${data.connectedSessions[0]}`;
+        } else {
+          box.textContent = 'No active WhatsApp session linked. Request pairing code on left.';
+        }
+      } catch (_) {}
+    }
+
+    function copyActiveSessionId() {
+      const text = document.getElementById('activeSessionIdBox').textContent.trim();
+      if (!text || text.includes('No active')) {
+        alert('No active session ID to copy');
+        return;
+      }
+      copyToClipboard(text, 'Session ID copied to clipboard!');
+    }
+
+    async function backupSessionToWhatsApp() {
+      const status = document.getElementById('sessionBackupStatus');
+      try {
+        const res = await fetch('/api/session/backup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetNumber: '923299931199' })
+        });
+        const data = await res.json();
+        status.classList.remove('hidden');
+        if (res.ok && data.success) {
+          status.className = 'text-[11px] text-center font-bold text-emerald-400';
+          status.textContent = '✅ ' + data.message;
+        } else {
+          status.className = 'text-[11px] text-center font-bold text-rose-400';
+          status.textContent = '❌ ' + (data.error || 'Failed to dispatch backup');
+        }
+      } catch (err) {
+        status.classList.remove('hidden');
+        status.className = 'text-[11px] text-center font-bold text-rose-400';
+        status.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    async function handleRevokeSession(e) {
+      e.preventDefault();
+      const input = document.getElementById('revokeSessionInput');
+      const feedback = document.getElementById('revokeFeedback');
+      const sessionId = input.value.trim();
+
+      feedback.classList.remove('hidden');
+      feedback.textContent = 'Verifying and revoking...';
+
+      try {
+        const res = await fetch('/api/session/revoke', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          feedback.className = 'text-xs text-center font-bold text-emerald-400';
+          feedback.textContent = '✅ ' + data.message;
+          input.value = '';
+          fetchMySessions();
+        } else {
+          feedback.className = 'text-xs text-center font-bold text-rose-400';
+          feedback.textContent = '❌ ' + (data.error || 'Failed to revoke session');
+        }
+      } catch (err) {
+        feedback.className = 'text-xs text-center font-bold text-rose-400';
+        feedback.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // UTILITY HELPERS
+    // ──────────────────────────────────────────────────────────────────────────
+    function copyToClipboard(text, msg = 'Copied!') {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(msg);
+      }).catch(() => {
+        prompt('Copy this token:', text);
+      });
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (data.status === 'running') {
+          document.getElementById('statusText').textContent = data.connectedSessions?.length > 0 
+            ? `Connected (+${data.connectedSessions[0]})` 
+            : 'Standby (Ready to Pair)';
+          document.getElementById('statusIndicator').className = data.connectedSessions?.length > 0
+            ? 'w-2 h-2 rounded-full bg-emerald-400'
+            : 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+          document.getElementById('statUptime').textContent = data.uptimeFormatted || '0m 0s';
+        }
+      } catch (_) {}
+    }
+
+    async function fetchCommands() {
+      try {
+        const res = await fetch('/api/plugins');
+        const list = await res.json();
+        allCommands = list || [];
+        renderCommands();
+      } catch (_) {}
+    }
+
+    function renderCommands() {
+      const grid = document.getElementById('commandsGrid');
+      if (!grid) return;
+      grid.innerHTML = allCommands.slice(0, 36).map(cmd => `
+        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-1">
+          <div class="font-bold text-amber-400 font-mono">.${cmd.name}</div>
+          <p class="text-slate-400 text-[11px] line-clamp-2">${cmd.desc || 'No description available'}</p>
+        </div>
+      `).join('');
+    }
+
+    async function fetchLogs() {
+      try {
+        const res = await fetch('/api/logs');
+        const data = await res.json();
+        const container = document.getElementById('logContainer');
+        if (data.logs && container) {
+          container.innerHTML = data.logs.slice(-100).map(l => `<div>${l}</div>`).join('');
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (_) {}
+    }
+
+    async function saveSettings(e) {
+      e.preventDefault();
+      const botName = document.getElementById('cfgBotName').value.trim();
+      const botOwner = document.getElementById('cfgBotOwner').value.trim();
+      try {
+        const res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ botName, botOwner })
+        });
+        const data = await res.json();
+        alert(data.message || 'Settings saved');
+      } catch (err) {
+        alert('Failed to save settings: ' + err.message);
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // PWA INSTALLATION SUPPORT
+    // ──────────────────────────────────────────────────────────────────────────
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner && !sessionStorage.getItem('pwa_banner_dismissed')) {
+        banner.classList.remove('hidden');
+      }
+    });
+
+    async function installPwaApp() {
+      if (!deferredPrompt) {
+        alert('To install on your mobile device:\n\n• iOS: Tap Share ➔ "Add to Home Screen"\n• Android/Chrome: Tap Menu ➔ "Install App"');
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('pwaInstallBanner')?.classList.add('hidden');
+    }
+
+    function dismissPwaBanner() {
+      document.getElementById('pwaInstallBanner')?.classList.add('hidden');
+      sessionStorage.setItem('pwa_banner_dismissed', '1');
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // INITIALIZATION RUNNER
+    // ──────────────────────────────────────────────────────────────────────────
+    checkAuthSession();
+    renderButtonSlots();
+    renderFqButtonSlots();
+    updateFakeQuotePreview();
+    fetchCommands();
+    updateLocationPreview();
+    setInterval(fetchStatus, 8000);
+
+    // Initial hash routing support
+    if (window.location.hash) {
+      const initialTab = window.location.hash.replace('#', '');
+      if (document.getElementById('tab-' + initialTab)) {
+        setTimeout(() => switchTab(initialTab), 150);
+      }
+    }
+    window.addEventListener('hashchange', () => {
+      const activeHash = window.location.hash.replace('#', '');
+      if (document.getElementById('tab-' + activeHash)) {
+        switchTab(activeHash);
+      }
+    });
+  </script>
+</body>
+</html>
