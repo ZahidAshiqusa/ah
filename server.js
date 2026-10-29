@@ -345,39 +345,52 @@ app.get('/api/plugins', (req, res) => {
     }
 });
 
-// Device Pairing Code Generation
-app.post('/api/pair', async (req, res) => {
+// Device Pairing Code Generation (Supports both /api/pair and /api/session/pair)
+const handlePairingRequest = async (req, res) => {
     const { phoneNumber } = req.body;
     if (!phoneNumber) {
-        return res.status(400).json({ error: 'Phone number is required' });
+        return res.status(400).json({ error: 'WhatsApp phone number is required (e.g. 923299931199)' });
     }
-    const cleanNumber = String(phoneNumber).replace(/\D/g, '');
+    let cleanNumber = String(phoneNumber).replace(/\D/g, '');
+    if (cleanNumber.startsWith('00')) cleanNumber = cleanNumber.substring(2);
+    if (cleanNumber.startsWith('0') && cleanNumber.length === 11) {
+        cleanNumber = '92' + cleanNumber.substring(1);
+    }
     if (!cleanNumber || cleanNumber.length < 7) {
-        return res.status(400).json({ error: 'Invalid phone number format' });
+        return res.status(400).json({ error: 'Invalid phone number format. Please include country code (e.g. 923299931199).' });
     }
 
     if (!sessionManager || typeof sessionManager.generatePairingCode !== 'function') {
-        return res.status(500).json({ error: 'Session manager not available' });
+        return res.status(500).json({ error: 'Session manager engine not available' });
     }
 
     try {
-        console.log(`[dashboard] Generating pairing code for +${cleanNumber}...`);
-        const code = await sessionManager.generatePairingCode(cleanNumber);
+        console.log(`[dashboard] 📱 Generating 8-digit pairing code for +${cleanNumber}...`);
+        const result = await sessionManager.generatePairingCode(cleanNumber);
         
         // Associate session with logged in user if available
         if (req.user) {
             database.linkUserSession(req.user.id, cleanNumber, null);
         }
 
-        if (!code) {
-          return res.json({ message: 'This number is already registered and session is running!' });
+        if (result && typeof result === 'object' && result.alreadyConnected) {
+            return res.json({ 
+                success: true, 
+                alreadyConnected: true,
+                message: result.message || `Number +${cleanNumber} is already registered and session is running!`,
+                cleanNumber
+            });
         }
-        res.json({ code, cleanNumber });
+
+        res.json({ success: true, code: result, cleanNumber });
     } catch (err) {
         console.error(`[dashboard] Pairing failed for +${cleanNumber}:`, err.message);
         res.status(500).json({ error: err.message || 'Failed to generate pairing code' });
     }
-});
+};
+
+app.post('/api/pair', handlePairingRequest);
+app.post('/api/session/pair', handlePairingRequest);
 
 // 2. WHATSAPP BUTTON MESSENGER
 app.post('/api/messenger/buttons', async (req, res) => {
@@ -839,6 +852,142 @@ app.get('/api/location/active', (req, res) => {
 });
 
 // 6. SESSION MANAGEMENT & BACKUP
+// ⚡ Session Activator (Enforce < 50 words length constraint)
+app.post('/api/session/activate', async (req, res) => {
+    const { sessionId, phoneNumber } = req.body || {};
+    if (!sessionId || !String(sessionId).trim()) {
+        return res.status(400).json({ error: 'Session ID is required to activate WhatsApp session' });
+    }
+
+    const words = String(sessionId).trim().split(/\s+/).filter(Boolean);
+    if (words.length > 50) {
+        return res.status(400).json({ 
+            error: `Session ID cannot be longer than 50 words (received ${words.length} words). Please use a compact session format.` 
+        });
+    }
+
+    if (!sessionManager || typeof sessionManager.activateSession !== 'function') {
+        return res.status(500).json({ error: 'Session manager engine not available' });
+    }
+
+    try {
+        const result = await sessionManager.activateSession(String(sessionId).trim(), phoneNumber);
+        if (req.user && result.cleanNumber) {
+            database.linkUserSession(req.user.id, result.cleanNumber, result.sessionId);
+        }
+        res.json(result);
+    } catch (err) {
+        console.error('[session] Activation error:', err.message);
+        res.status(400).json({ error: err.message || 'Failed to activate session' });
+    }
+});
+
+// 🗑️ Delete Session by Mobile Phone Number
+app.post('/api/session/delete-by-number', async (req, res) => {
+    const { phoneNumber } = req.body || {};
+    if (!phoneNumber) {
+        return res.status(400).json({ error: 'Mobile phone number is required to delete session' });
+    }
+
+    if (!sessionManager || typeof sessionManager.deleteSessionByNumber !== 'function') {
+        return res.status(500).json({ error: 'Session manager engine not available' });
+    }
+
+    try {
+        const result = await sessionManager.deleteSessionByNumber(phoneNumber);
+        if (result.cleanNumber) {
+            if (typeof database.deleteUserSessionsByNumber === 'function') {
+                database.deleteUserSessionsByNumber(result.cleanNumber);
+            }
+            if (req.user) {
+                database.removeUserSession(req.user.id, result.cleanNumber);
+            }
+        }
+        res.json(result);
+    } catch (err) {
+        console.error('[session] Delete by number error:', err.message);
+        res.status(400).json({ error: err.message || 'Failed to delete session' });
+    }
+});
+
+// ⚠️ Clear All WhatsApp Sessions & Reset Engine
+app.post('/api/session/clear-all', async (req, res) => {
+    if (!sessionManager || typeof sessionManager.clearAllSessions !== 'function') {
+        return res.status(500).json({ error: 'Session manager engine not available' });
+    }
+
+    try {
+        const result = await sessionManager.clearAllSessions();
+        if (typeof database.clearAllUserSessions === 'function') {
+            database.clearAllUserSessions();
+        }
+        res.json(result);
+    } catch (err) {
+        console.error('[session] Clear all error:', err.message);
+        res.status(500).json({ error: err.message || 'Failed to clear all sessions' });
+    }
+});
+
+// Fetch My Sessions with connection status and compact IDs
+app.get('/api/session/my-sessions', (req, res) => {
+    try {
+        const userId = req.user ? req.user.id : null;
+        let sessions = [];
+        try {
+            sessions = database.getUserSessions(userId || 1);
+        } catch (_) {}
+
+        const activeSockets = sessionManager ? sessionManager.getActiveSessions() : [];
+        const sessionBase = path.join(__dirname, 'session');
+
+        // Augment with live status and ensure compact session IDs
+        const augmented = (sessions || []).map(s => {
+            const isConnected = activeSockets.includes(s.clean_number);
+            let sId = s.session_id;
+            if (sessionManager && typeof sessionManager.getSessionIdForNumber === 'function') {
+                sId = sessionManager.getSessionIdForNumber(s.clean_number) || sId;
+            }
+            return {
+                ...s,
+                session_id: sId,
+                connected: isConnected,
+                status: isConnected ? 'active' : 'standby'
+            };
+        });
+
+        // Also add any active socket sessions on disk not in DB
+        if (fs.existsSync(sessionBase)) {
+            try {
+                const dirs = fs.readdirSync(sessionBase);
+                for (const d of dirs) {
+                    if (!/^\d+$/.test(d)) continue;
+                    if (!augmented.some(a => a.clean_number === d)) {
+                        const isConn = activeSockets.includes(d);
+                        const sId = sessionManager?.getSessionIdForNumber(d) || `Urooj~${d}`;
+                        augmented.push({
+                            id: 'local_' + d,
+                            clean_number: d,
+                            session_id: sId,
+                            connected: isConn,
+                            status: isConn ? 'active' : 'standby',
+                            created_at: new Date().toISOString()
+                        });
+                    }
+                }
+            } catch (_) {}
+        }
+
+        res.json({
+            success: true,
+            sessions: augmented,
+            activeCount: activeSockets.length,
+            activeSockets
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Delete Session
 app.post('/api/session/delete', async (req, res) => {
     try {
@@ -1088,6 +1237,166 @@ app.post('/api/scheduled/:id/send-now', async (req, res) => {
     }
 });
 
+// ── VIEW-ONCE DOWNLOADER & DELETED MESSAGE FETCHER VAULT API ─────────────
+const vaultInterceptor = require('./lib/vaultInterceptor');
+
+// List captured View-Once & Deleted items + stats + interceptor settings
+app.get('/api/vault/items', (req, res) => {
+    try {
+        const { captureType, chatType, mediaType, search } = req.query || {};
+        const items = database.getRecoveredItems({
+            captureType,
+            chatType,
+            mediaType,
+            search
+        });
+        const stats = database.getRecoveredStats();
+        const settings = database.getInterceptorSettings();
+        res.json({
+            success: true,
+            items,
+            stats,
+            settings
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Interceptor Settings
+app.get('/api/vault/settings', (req, res) => {
+    try {
+        const settings = database.getInterceptorSettings();
+        res.json({ success: true, settings });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update Interceptor Settings
+app.post('/api/vault/settings', (req, res) => {
+    try {
+        const updated = database.updateInterceptorSettings(req.body || {});
+        console.log(`[vault] ⚙️ Interceptor settings updated: ViewOnce=${updated.enableViewOnce}, AntiDelete=${updated.enableAntiDelete}, AutoDM=${updated.autoForwardDm} (-> +${updated.targetDmNumber})`);
+        res.json({
+            success: true,
+            message: 'Interceptor & Auto-Forward settings saved!',
+            settings: updated
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Stream or Download Unlocked Media File
+app.get('/api/vault/media/:id', (req, res) => {
+    try {
+        const item = database.getRecoveredItemById(req.params.id);
+        if (!item) {
+            return res.status(404).json({ error: 'Vault item not found' });
+        }
+
+        const filePath = item.file_name ? vaultInterceptor.getVaultFilePath(item.file_name) : null;
+        if (filePath && fs.existsSync(filePath)) {
+            const mime = item.mime_type || 'application/octet-stream';
+            res.setHeader('Content-Type', mime);
+            if (req.query.download === '1' || req.query.download === 'true') {
+                res.setHeader('Content-Disposition', `attachment; filename="${item.file_name}"`);
+            }
+            return res.sendFile(filePath);
+        }
+
+        // If text-only item is downloaded as a .txt transcript
+        if (req.query.download === '1' || req.query.download === 'true') {
+            const transcript =
+                `=== UROOJ CHOUDHARY VAULT TRANSCRIPT ===\n` +
+                `Type: ${item.capture_type === 'view_once' ? 'View-Once Media' : 'Recovered Deleted Message'}\n` +
+                `Sender: ${item.sender_name} (${item.sender_jid})\n` +
+                `Chat Source: ${item.chat_type.toUpperCase()} (${item.chat_jid})\n` +
+                `Captured At: ${item.captured_at}\n` +
+                `Content:\n${item.text_content || '(No text content)'}\n`;
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            res.setHeader('Content-Disposition', `attachment; filename="vault_item_${item.id}.txt"`);
+            return res.send(transcript);
+        }
+
+        return res.status(404).json({ error: 'Media file not found on disk' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Forward Unlocked View-Once or Recovered Message to WhatsApp DM
+app.post('/api/vault/forward/:id', async (req, res) => {
+    try {
+        const targetNumber = req.body?.targetNumber;
+        const sock = sessionManager ? sessionManager.getActiveSocket() : null;
+        const result = await vaultInterceptor.forwardVaultItemToWhatsApp(req.params.id, targetNumber, sock);
+        res.json(result);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// Trigger Manual / Sample Capture (for testing View-Once Unlock & Anti-Delete Recovery)
+app.post('/api/vault/test-capture', async (req, res) => {
+    try {
+        const sock = sessionManager ? sessionManager.getActiveSocket() : null;
+        const item = await vaultInterceptor.triggerManualOrTestCapture(req.body || {}, sock);
+        const stats = database.getRecoveredStats();
+        res.json({
+            success: true,
+            message: item.capture_type === 'view_once'
+                ? 'View-Once media unlocked and saved to Vault!'
+                : 'Deleted message recovered and saved to Vault!',
+            item,
+            stats
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete Single Vault Item
+app.delete('/api/vault/items/:id', (req, res) => {
+    try {
+        const removed = database.deleteRecoveredItem(req.params.id);
+        if (removed && removed.file_name) {
+            vaultInterceptor.deleteVaultFile(removed.file_name);
+        }
+        const stats = database.getRecoveredStats();
+        res.json({
+            success: true,
+            message: `Vault item #${req.params.id} deleted.`,
+            stats
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Clear Vault Items (All, View-Once only, or Deleted only)
+app.delete('/api/vault/clear', (req, res) => {
+    try {
+        const captureType = req.query.captureType || req.body?.captureType || 'all';
+        const removedRows = database.clearRecoveredItems(captureType);
+        for (const r of removedRows) {
+            if (r.file_name) {
+                vaultInterceptor.deleteVaultFile(r.file_name);
+            }
+        }
+        const stats = database.getRecoveredStats();
+        res.json({
+            success: true,
+            deletedCount: removedRows.length,
+            message: `Cleared ${removedRows.length} item(s) from the Vault.`,
+            stats
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // 8. LIVE LOGS & SETTINGS
 app.get('/api/logs', (req, res) => {
     res.json({ logs: logBuffer });
@@ -1125,6 +1434,18 @@ app.post('/api/settings', (req, res) => {
         res.json({ success: true, message: 'Settings saved successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Failed to write config: ' + err.message });
+    }
+});
+
+// Direct Android APK Download Endpoint
+app.get('/download/apk', (req, res) => {
+    const apkPath = path.join(__dirname, 'public/downloads/urooj-choudhary.apk');
+    if (fs.existsSync(apkPath)) {
+        res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+        res.setHeader('Content-Disposition', 'attachment; filename="urooj-choudhary-v1.1.apk"');
+        res.sendFile(apkPath);
+    } else {
+        res.status(404).send('APK file not found');
     }
 });
 

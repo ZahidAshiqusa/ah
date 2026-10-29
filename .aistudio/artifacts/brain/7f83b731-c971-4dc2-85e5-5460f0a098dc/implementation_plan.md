@@ -1,64 +1,142 @@
-# Implementation Plan: Standalone React Native Android App with Embedded Local Server & Device-Bound WhatsApp Session
+# View-Once Downloader & Deleted Message Fetcher
 
-Convert the WhatsApp automation suite into a standalone **Android Mobile Application** with an **embedded local server** runtime, eliminating cloud multi-tenancy, removing startup login barriers, and securing all WhatsApp sessions exclusively inside the user's physical device.
+A real-time WhatsApp media and message recovery suite that intercepts View-Once photos, videos, and voice notes alongside "Deleted for Everyone" messages across all private chats and groups, storing them in a searchable Web Dashboard Vault with one-click file downloads while automatically forwarding recovered content to your personal WhatsApp DM.
 
----
+## User Review & Critical Decisions
 
-## 1. Architectural Strategy
-
-### A. Zero Startup Login & Direct Device-Bound Activation
-- **Remove Auth Modal on Launch**:
-  - The app will no longer prompt for username/password sign-in or account registration.
-  - On launch, the app retrieves or generates a unique, persistent **Device Identity Token (`deviceId`)** stored locally on the phone (`AsyncStorage` / `localStorage`).
-- **Complete Session Isolation**:
-  - Every session, credential key (`creds.json`), and database record is quarantined by `deviceId`.
-  - External web visitors cannot access, inspect, or send messages through someone else's phone number or WhatsApp account.
-  - Direct 1-tap entry straight into **WhatsApp Pairing & Automation Dashboard**.
-
-### B. Local Embedded Server inside Android App
-- **Architecture**:
-  - The Node.js Baileys execution engine is packaged into a local embedded server (`nodejs-mobile-react-native` / local Android foreground service) binding strictly to `127.0.0.1:3000`.
-  - The React Native mobile frontend communicates over local device loopback (`http://localhost:3000`), ensuring all cryptographic tokens, live location streams, and fake quoted message dispatches remain 100% on the physical device.
-- **Project Structure**:
-  - Standalone React Native codebase: `App.tsx`, `package.json`, `android/app/src/main/AndroidManifest.xml`, `android/app/build.gradle`.
-  - Embedded server worker containing Baileys, SQLite database, and the scheduler queue.
+> [!IMPORTANT]
+> The architecture below incorporates your confirmed preferences from the clarification phase:
+> - **Confirmed Delivery & Access Mode**: Dual delivery — all intercepted View-Once media and revoked messages are persisted in the **Web Dashboard Vault** (with inline preview and one-click download) AND **auto-forwarded to your WhatsApp DM**.
+> - **Confirmed Capture Scope**: Full coverage across **both Private Chats and Group Chats** for all media types (photos, videos, voice notes/audio, documents) and text messages.
 
 ---
 
-## 2. Technical Implementation Steps
+## 1. Overview & Core Concept
 
-### 1. Update Core Application (`server.js` & `lib/database.js`)
-- **Device-Scoped Session Engine**:
-  - Update session manager to bind sessions strictly to the client's `X-Device-Id` header.
-  - Store session credentials in `data/sessions/<device_id>/` instead of a shared global directory.
-  - Update `/api/auth/me` to automatically acknowledge device-bound authentication.
-- **Remove Startup Passcode / Sign-in Enforcement**:
-  - Auto-authorize requests presenting a valid `X-Device-Id`.
-  - Keep Super Admin endpoints securely reserved if accessed with the master passcode `Zaid@323232`.
-
-### 2. Update Frontend Dashboard (`public/index.html`)
-- **Disable Startup Login Screen**:
-  - Hide the startup authentication modal (`#authModal`) by default.
-  - Auto-generate or restore a secure 32-character `device_uuid` from local device storage on first boot.
-  - Attach `X-Device-Id: <device_uuid>` to all API requests automatically.
-- **Direct Pairing on Startup**:
-  - When the app is opened, it immediately presents the **Device Pairing** and **Native Live Location** studio.
-  - Display a "Device Bound: [Phone Fingerprint]" badge in the header ensuring the user knows their session is completely private.
-
-### 3. Generate Standalone React Native Android Project Files
-- **Mobile Project Directory Structure**:
-  - `mobile/package.json`: React Native 0.76+ dependencies (`react-native`, `@react-native-async-storage/async-storage`, `react-native-webview`, `nodejs-mobile-react-native`).
-  - `mobile/App.tsx`: Full native Android wrapper with embedded local server lifecycle management, network state monitoring, and native notification/foreground service support.
-  - `mobile/android/app/src/main/AndroidManifest.xml`: Android permissions for Internet, Wake Lock, Foreground Service, Fine Location, and Local Storage.
-  - `mobile/android/app/build.gradle`: Android APK build configuration with Hermes engine and local node assets.
+- **What It Does**:
+  1. **View-Once Downloader**: Automatically detects incoming View-Once messages (`viewOnceMessage`, `viewOnceMessageV2`, `viewOnceMessageV2Extension`, and media with `viewOnce: true`), decrypts the media stream via Baileys before it expires, strips the single-view lock, saves the media file locally, and forwards an unlocked copy to your WhatsApp DM.
+  2. **Deleted Message Fetcher (Anti-Delete)**: Caches incoming text and media messages across private and group conversations. The moment a sender triggers "Delete for Everyone" (`protocolMessage` REVOKE), the engine matches the revoked message ID, preserves the original text and decrypted media in the permanent recovery log, and sends a recovery alert to your WhatsApp DM.
+- **Target Audience / Persona**: WhatsApp power users and device owners managing their linked WhatsApp session who need permanent archival and instant recovery of ephemeral or revoked communications.
+- **Key Value**: Zero-loss visibility into ephemeral View-Once media and deleted messages without requiring manual intervention at the moment a message arrives, paired with a permanent browser-accessible media vault.
 
 ---
 
-## 3. Verification & Testing
-1. **Compilation & Syntax**:
-   - Run `lint_applet` and `compile_applet` to verify clean builds.
-2. **Direct Entry & Device Isolation Test**:
-   - Load the application in a fresh incognito / clean storage session: confirm zero login modals appear and device enters straight into dashboard.
-   - Verify `X-Device-Id` generation and per-device session isolation in database and file system.
-3. **End-to-End Feature Verification**:
-   - Verify Native Live Location, Fake Quoted Reply, and Scheduled Message Queue operate seamlessly on the device-bound instance.
+## 2. User Experience & Visual Design
+
+- **Key User Flows**:
+  1. **Launching the Service**: User opens the **All Services** drawer in the top navigation bar and selects **View-Once Downloader** or **Deleted Msg Fetcher** (accessible as a unified **Recovery & Vault Suite** with dedicated sub-views and direct service shortcuts).
+  2. **Configuring Interceptor & DM Auto-Forwarding**: At the top of the workspace, a control bar lets the user toggle **Auto-Unlock View-Once**, **Auto-Capture Deleted Messages**, and **Auto-Forward to WhatsApp DM**, plus specify the target forwarding number (defaulting to the connected owner number).
+  3. **Browsing & Downloading from the Web Vault**:
+     - Users filter captured items by **View-Once Media** vs. **Deleted Messages**, **Chat Type** (All, Private Chats, Group Chats), **Content Type** (Photos, Videos, Voice/Audio, Text), or search by sender phone number, contact name, or message text.
+     - Media items render with an inline preview player (image lightbox, HTML5 video player, or audio waveform/player) alongside unboxed metadata (`Sender · Chat Source · Timestamp · File Size`).
+     - Each item provides a **Download File** button, a **Forward to WhatsApp** button, and a **Delete Record** button.
+  4. **On-Demand / Manual Lookup & Test Capture**: Users can scan recent cached chat messages by phone number to manually unlock a View-Once item or trigger a test capture to verify vault and DM forwarding pipelines immediately.
+
+- **Visual Identity & Theme**:
+  - **Aesthetic Direction**: High-contrast dark SaaS telemetry & media vault workspace matching the existing slate-and-amber interface, adhering to single-elevation card depth and unboxed metadata discipline.
+  - **Color Palette & Mood**:
+    - `--background`: Deep Slate (`#020617` / `bg-slate-950`)
+    - `--surface`: Elevated Slate (`#0f172a` / `bg-slate-900`) with hairline borders (`border-slate-800`)
+    - `--primary`: Amber Gold (`#f59e0b`) for View-Once actions and primary CTAs
+    - `--accent`: Cyan/Rose accents (`#06b6d4` / `#f43f5e`) for Deleted Message recovery indicators and semantic states
+  - **Typography & Hierarchy**: Clean sans headings paired with `font-mono tabular-nums` for phone numbers, message IDs, file sizes, and capture timestamps.
+  - **Interactive Feedback & Motion**: Instant segmented filter transitions ($\le 150\text{ms}$), inline skeleton states during vault refresh, and non-blocking toast/status feedback on media downloads and WhatsApp re-dispatches.
+
+---
+
+## 3. Key Product Decisions & Trade-Offs
+
+- **Decision 1: Eager Media Decryption for View-Once & Anti-Delete Cache**
+  - *Chosen Approach*: Immediately download and decrypt View-Once media upon `messages.upsert` and maintain a rolling media/text cache for recent incoming messages so revoked media can still be recovered after deletion.
+  - *Why*: WhatsApp CDN media keys and links can become inaccessible once a message is revoked or opened. Eager decryption guarantees 100% file availability in the Web Vault.
+  - *Alternatives Considered*: Lazy decryption only when the user clicks download in the web UI (rejected because revoked messages or expired media URLs fail to decrypt later).
+
+- **Decision 2: Persistent SQLite Index + Local Vault Storage**
+  - *Chosen Approach*: Store structured metadata in SQLite (`recovered_messages` and `interceptor_settings` tables) and binary media files in a dedicated `/data/vault/` directory served via authenticated/streamed Express routes.
+  - *Why*: Keeps the SQLite database fast and lightweight while allowing direct browser streaming and `Content-Disposition: attachment` downloads for large video and audio files.
+
+---
+
+## 4. Technical Architecture & Data Strategy
+
+### Architecture & Component Diagram
+
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                        BAILEYS SOCKET EVENT STREAM                         │
+│         sock.ev.on('messages.upsert')  &  sock.ev.on('messages.update')    │
+└───────────────────┬────────────────────────────────────┬───────────────────┘
+                    │                                    │
+                    ▼                                    ▼
+┌──────────────────────────────────────┐  ┌──────────────────────────────────┐
+│     VIEW-ONCE INTERCEPTOR ENGINE     │  │   DELETED MSG FETCHER ENGINE     │
+│ • Detects viewOnceMessage / V2 / Ext │  │ • Rolling cache of incoming msgs │
+│ • Decrypts image/video/audio stream  │  │ • Detects protocolMessage REVOKE │
+│ • Strips viewOnce flag               │  │ • Matches original msg by key.id │
+└───────────────────┬──────────────────┘  └──────────────┬───────────────────┘
+                    │                                    │
+                    └─────────────────┬──────────────────┘
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│                   PERSISTENCE & AUTO-FORWARD DISPATCHER                    │
+│  1. Save media buffer to /data/vault/<id>.<ext>                            │
+│  2. Insert record into SQLite (recovered_items & interceptor_config)       │
+│  3. Auto-Forward unlocked media / recovered text to Owner WhatsApp DM      │
+└─────────────────────────────────────┬──────────────────────────────────────┘
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│                      EXPRESS REST API (/api/vault/*)                       │
+│  • GET    /api/vault/items          (List/filter View-Once & Deleted)      │
+│  • GET    /api/vault/media/:id      (Stream/download decrypted file)       │
+│  • POST   /api/vault/settings       (Toggle interceptors & DM target)      │
+│  • POST   /api/vault/forward/:id    (Re-send item to any WhatsApp number)  │
+│  • DELETE /api/vault/items/:id      (Delete item or clear vault)           │
+└─────────────────────────────────────┬──────────────────────────────────────┘
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│                     WEB DASHBOARD VAULT & RECOVERY UI                      │
+│  ┌──────────────────────────┬──────────────────────────┬────────────────┐  │
+│  │ Interceptor Settings Bar │ Segmented Filter & Search│ Media Lightbox │  │
+│  │ (View-Once / Anti-Delete │ (All · View-Once ·       │ & One-Click    │  │
+│  │  / DM Target Number)     │  Deleted · Group/Private)│ Download / Fwd │  │
+│  └──────────────────────────┴──────────────────────────┴────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Data Model & State
+
+1. **`recovered_items` (SQLite Table)**:
+   - `id`: Primary key
+   - `message_id`: Original WhatsApp stanza ID
+   - `session_number`: Connected bot/owner phone number
+   - `capture_type`: `'view_once'` | `'deleted'`
+   - `chat_jid`: Remote JID (`...s.whatsapp.net` or `...g.us`)
+   - `chat_type`: `'private'` | `'group'`
+   - `sender_jid`: Participant/sender JID
+   - `sender_name`: PushName or formatted number
+   - `media_type`: `'text'` | `'image'` | `'video'` | `'audio'` | `'document'`
+   - `text_content`: Message text or media caption
+   - `file_name`: Stored filename in `/data/vault/`
+   - `mime_type`: Media MIME type (`image/jpeg`, `video/mp4`, `audio/ogg`, etc.)
+   - `file_size`: Size in bytes
+   - `forwarded_to_dm`: Boolean flag (`0` or `1`)
+   - `original_timestamp`: Epoch ms when originally sent
+   - `captured_at`: ISO timestamp when unlocked or revoked
+
+2. **`interceptor_settings` (Settings Store)**:
+   - `enableViewOnce`: Boolean (default `true`)
+   - `enableAntiDelete`: Boolean (default `true`)
+   - `autoForwardDm`: Boolean (default `true`)
+   - `targetDmNumber`: Target WhatsApp number for DM delivery
+
+### Interactive Component & State Mapping
+
+- **All Services Drawer Cards**: Two prominent service cards (**View-Once Downloader** and **Deleted Msg Fetcher**) open the Recovery Vault workspace pre-filtered to the selected mode.
+- **Interceptor Config Controls**: Toggle switches and target DM number input immediately persist via `POST /api/vault/settings` and update the live interceptor state without restarting the socket.
+- **Segmented Filter & Search Bar**: Client-side and API-backed filtering across Capture Type (`All`, `View-Once`, `Deleted`), Chat Source (`All`, `Private`, `Group`), Media Type (`All`, `Photo`, `Video`, `Audio`, `Text`), and keyword search.
+- **Vault Item Actions**:
+  - **Download**: Triggers native file download via `/api/vault/media/:id?download=1`.
+  - **Forward to WhatsApp**: Sends the unlocked media or recovered text to any specified WhatsApp number via `/api/vault/forward/:id`.
+  - **Delete / Clear All**: Removes individual records or wipes the vault with confirmation.

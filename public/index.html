@@ -299,152 +299,295 @@
         </div>
       </div>
 
-      <!-- Right Header: Nav Options Button, Status & Actions -->
-      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <!-- Right Header: All Services Button & Direct APK Download -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         
-        <!-- ⚡ DEDICATED NAV OPTIONS BUTTON (Requested by user) -->
-        <div class="relative">
-          <button 
-            type="button"
-            id="navOptionsBtn"
-            onclick="toggleOptionsMenu(event)" 
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-300 font-bold text-xs transition shadow-sm hover:shadow-amber-500/20 active:scale-95 cursor-pointer"
-            title="Open Features & Options Menu"
-          >
-            <span class="text-sm">⚡</span>
-            <span class="font-extrabold tracking-wide">Options</span>
-            <svg id="optionsChevron" class="w-3.5 h-3.5 transition-transform duration-200 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          <!-- COMPACT DROPDOWN OPTIONS MENU -->
-          <div 
-            id="headerOptionsMenu" 
-            class="hidden absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl shadow-black/80 backdrop-blur-xl p-2 z-50 transition-all duration-150 animate-in fade-in slide-in-from-top-2"
-          >
-            <!-- Dropdown Header Profile -->
-            <div class="px-3 py-2 border-b border-slate-800/80 mb-1 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-base">👑</span>
-                <div>
-                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
-                    <span id="menuUserName">User</span>
-                    <span id="menuUserTag" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-mono">Member</span>
-                  </div>
-                  <div class="text-[10px] text-slate-400">Quick Navigation & Tools</div>
-                </div>
-              </div>
-              <button onclick="closeOptionsMenu()" class="text-slate-500 hover:text-slate-300 text-xs p-1">✕</button>
-            </div>
-
-            <!-- Category: Core Power Tools -->
-            <div class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Core Tools</div>
-            <div class="space-y-0.5">
-              <button onclick="selectOptionTab('location')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-emerald-400 transition text-left group">
-                <span class="flex items-center gap-2"><span>📍</span><span>Native Live Location</span></span>
-                <span class="text-[10px] text-emerald-400/80 font-mono">100% Live</span>
-              </button>
-              <button onclick="selectOptionTab('fakequote')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-cyan-300 transition text-left group">
-                <span class="flex items-center gap-2"><span>🎭</span><span>Fake Quoted Reply</span></span>
-                <span class="text-[9px] bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 px-1.5 py-0.2 rounded-full font-bold">HOT</span>
-              </button>
-              <button onclick="selectOptionTab('scheduled')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-amber-400 transition text-left group">
-                <span class="flex items-center gap-2"><span>⏰</span><span>Scheduled Queue</span></span>
-                <span class="text-[9px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.2 rounded-full font-bold">NEW</span>
-              </button>
-              <button onclick="selectOptionTab('buttons')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-indigo-400 transition text-left group">
-                <span class="flex items-center gap-2"><span>💬</span><span>Button Messenger</span></span>
-                <span class="text-[10px] text-slate-500 font-mono">Buttons</span>
-              </button>
-            </div>
-
-            <!-- Category: Automation & Media -->
-            <div class="px-2 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Automation & Media</div>
-            <div class="space-y-0.5">
-              <button onclick="selectOptionTab('tracker')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-teal-400 transition text-left">
-                <span class="flex items-center gap-2"><span>👁️</span><span>Online Tracker</span></span>
-                <span class="text-[10px] text-slate-500 font-mono">Presence</span>
-              </button>
-              <button onclick="selectOptionTab('media')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-rose-400 transition text-left">
-                <span class="flex items-center gap-2"><span>🎥</span><span>PTV & Voice Notes</span></span>
-                <span class="text-[10px] text-slate-500 font-mono">Push-to-Video</span>
-              </button>
-              <button onclick="selectOptionTab('commands')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-yellow-400 transition text-left">
-                <span class="flex items-center gap-2"><span>⚡</span><span>Command Library</span></span>
-                <span class="text-[10px] text-amber-400/90 font-mono font-bold">236</span>
-              </button>
-            </div>
-
-            <!-- Category: System & Session -->
-            <div class="px-2 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">System & Session</div>
-            <div class="space-y-0.5">
-              <button onclick="selectOptionTab('session')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 hover:text-sky-400 transition text-left">
-                <span class="flex items-center gap-2"><span>🔗</span><span>Device Pairing & Sessions</span></span>
-                <span class="text-[10px] text-slate-500 font-mono">Pair</span>
-              </button>
-              <button id="menuAdminBtn" onclick="selectOptionTab('admin')" class="w-full hidden items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-amber-300 hover:bg-amber-500/10 transition text-left">
-                <span class="flex items-center gap-2"><span>👑</span><span>Super Admin Console</span></span>
-                <span class="text-[9px] bg-amber-500/30 text-amber-200 px-1.5 py-0.2 rounded font-mono">Urooj</span>
-              </button>
-              <button onclick="selectOptionTab('settings')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="flex items-center gap-2"><span>⚙️</span><span>Bot Settings</span></span>
-              </button>
-              <button onclick="selectOptionTab('logs')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="flex items-center gap-2"><span>📜</span><span>System Logs</span></span>
-              </button>
-            </div>
-
-            <!-- Bottom Actions -->
-            <div class="pt-2 border-t border-slate-800/80 mt-1 flex items-center gap-2">
-              <button onclick="stopLiveLocationNow(); closeOptionsMenu();" class="flex-1 py-1.5 px-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-bold transition flex items-center justify-center gap-1">
-                <span>🛑 Stop Live</span>
-              </button>
-              <button onclick="handleLogout()" class="flex-1 py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center justify-center gap-1">
-                <span>🚪 Sign Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Direct Fake Quote Shortcut Button -->
+        <!-- ⚡ PRIMARY ALL SERVICES BUTTON (Requested by user) -->
         <button 
-          type="button"
-          onclick="switchTab('fakequote')" 
-          class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-teal-500/10 hover:from-cyan-500/30 hover:to-teal-500/20 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition shadow-sm"
-          title="Direct Shortcut: Open Fake Quoted Message Reply Studio"
+          type="button" 
+          id="servicesToggleBtn" 
+          onclick="openServicesDrawer()" 
+          class="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 transition active:scale-95 cursor-pointer ring-2 ring-amber-400/40"
+          title="Open All WhatsApp Services Drawer"
         >
-          <span>🎭</span>
-          <span class="inline">Fake Quote</span>
-          <span class="px-1.5 py-0.2 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black uppercase tracking-wider animate-pulse">HOT</span>
+          <span class="text-base sm:text-lg">⚡</span>
+          <span>All Services ☰</span>
         </button>
 
-        <!-- User identity pill -->
-        <div id="userBadge" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/80 border border-slate-700 text-xs">
-          <span id="userRoleIcon">👤</span>
-          <span id="userNameText" class="font-semibold text-slate-200 truncate max-w-[90px]">User</span>
-          <span id="userRoleTag" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-mono">Member</span>
+        <!-- 📲 DIRECT ANDROID APK DOWNLOAD BUTTON -->
+        <a 
+          href="/download/apk" 
+          download="urooj-choudhary-v1.1.apk"
+          class="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border border-emerald-500/40 text-emerald-300 font-bold text-xs sm:text-xs transition shadow-sm hover:shadow-emerald-950/40"
+          title="Download and Install Android APK directly to your phone"
+        >
+          <span class="text-sm">📲</span>
+          <span class="hidden sm:inline font-mono">Download</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-emerald-400 text-slate-950 text-[9px] font-black uppercase tracking-wider">APK</span>
+        </a>
+
+        <!-- Device Identity Status Pill -->
+        <div id="userBadge" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/80 border border-slate-700 text-xs">
+          <span id="userRoleIcon">📱</span>
+          <span id="userNameText" class="font-bold text-slate-200 text-xs"></span>
+          <span id="userRoleTag" class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold">Device Bound</span>
         </div>
 
-        <!-- Connection status -->
+        <!-- Connection status indicator -->
         <div id="statusBadge" class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs">
           <span id="statusIndicator" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span id="statusText" class="font-medium text-slate-300 text-[11px]">Standby</span>
         </div>
-
-        <!-- Logout Button -->
-        <button 
-          onclick="handleLogout()" 
-          class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 border border-slate-700 hover:border-rose-500/40 text-xs font-semibold text-slate-300 hover:text-rose-400 transition flex items-center gap-1"
-          title="Sign Out of Dashboard"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-          <span class="hidden md:inline">Sign Out</span>
-        </button>
       </div>
 
     </div>
   </header>
+
+  <!-- ========================================================================= -->
+  <!-- ⚡ FULL-SCREEN SERVICES DRAWER (Single Hub for All WhatsApp Services)     -->
+  <!-- ========================================================================= -->
+  <div 
+    id="servicesDrawer" 
+    class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-2xl flex flex-col p-4 sm:p-8 overflow-y-auto animate-in fade-in duration-200"
+  >
+    <div class="max-w-6xl w-full mx-auto space-y-6">
+      
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 shadow-lg shadow-amber-500/20 shrink-0">
+            <img src="/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png" alt="Urooj Choudhary" class="w-full h-full object-cover rounded-2xl" />
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">All WhatsApp Services</h2>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">v1.1</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Select any service to control your device-bound WhatsApp instance</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a 
+            href="/download/apk" 
+            download="urooj-choudhary-v1.1.apk"
+            class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition shadow"
+          >
+            <span>📲 Download .APK</span>
+          </a>
+          <button 
+            type="button" 
+            onclick="closeServicesDrawer()" 
+            class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow"
+          >
+            <span>✕ Close</span>
+            <span class="text-[10px] text-slate-500 font-mono hidden sm:inline">(Esc)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category 1: 🚀 Core Automation Suite -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+          <span>🚀 Core Automation Tools</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          
+          <!-- 1. Native Live Location -->
+          <div 
+            onclick="selectService('location')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 shadow-sm hover:shadow-lg hover:shadow-emerald-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">📍</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-mono font-bold">100% Live</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-emerald-300 transition">Native Live Location</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Genuine live location with real-time countdown, instant stop button, and zero caption.</p>
+          </div>
+
+          <!-- 2. Fake Quoted Reply -->
+          <div 
+            onclick="selectService('fakequote')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-cyan-950/40 border border-slate-800 hover:border-cyan-500/50 shadow-sm hover:shadow-lg hover:shadow-cyan-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🎭</span>
+              <span class="px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-[9px] font-black uppercase animate-pulse">HOT</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-cyan-300 transition">Fake Quoted Reply</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Quote messages that were never sent! Supports interactive buttons and custom sender spoofing.</p>
+          </div>
+
+          <!-- 3. Scheduled Message Queue -->
+          <div 
+            onclick="selectService('scheduled')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-amber-950/40 border border-slate-800 hover:border-amber-500/50 shadow-sm hover:shadow-lg hover:shadow-amber-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">⏰</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[9px] font-black uppercase">NEW</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-amber-300 transition">Scheduled Queue</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Queue WhatsApp messages with date & time picker, presets, live timers, and SQLite persistence.</p>
+          </div>
+
+          <!-- 4. Button Messenger -->
+          <div 
+            onclick="selectService('buttons')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-indigo-950/40 border border-slate-800 hover:border-indigo-500/50 shadow-sm hover:shadow-lg hover:shadow-indigo-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">💬</span>
+              <span class="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[9px] font-mono font-bold">Buttons</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-indigo-300 transition">Button Messenger</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Send WhatsApp messages with interactive Quick Reply, URL link, and Direct Phone Call pills.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Category 2: 🛠️ Monitoring, Recovery & Media Suite -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <span>🛠️ Monitoring, Recovery &amp; Media Suite</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          
+          <!-- View-Once Downloader -->
+          <div 
+            onclick="openVaultWithFilter('view_once')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 shadow-sm hover:shadow-lg hover:shadow-amber-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🔓</span>
+              <span class="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider">Auto-Unlock</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-amber-300 transition">View-Once Downloader</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Decrypt &amp; download disappearing View-Once photos, videos, and voice notes with auto-DM forward.</p>
+          </div>
+
+          <!-- Deleted Message Fetcher -->
+          <div 
+            onclick="openVaultWithFilter('deleted')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-rose-950/40 border border-rose-500/40 hover:border-rose-400 shadow-sm hover:shadow-lg hover:shadow-rose-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🗑️</span>
+              <span class="text-[10px] font-mono font-bold text-rose-400 uppercase tracking-wider">Anti-Delete</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-rose-300 transition">Deleted Msg Fetcher</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Intercept &amp; recover "Delete for Everyone" texts and media across private chats and groups.</p>
+          </div>
+
+          <!-- 5. Online Tracker -->
+          <div 
+            onclick="selectService('tracker')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-teal-950/40 border border-slate-800 hover:border-teal-500/50 shadow-sm hover:shadow-lg hover:shadow-teal-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">👁️</span>
+              <span class="px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[9px] font-mono font-bold">Presence</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-teal-300 transition">Online Tracker</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Track any contact's online sessions, typing status, and audio recording timestamps in real-time.</p>
+          </div>
+
+          <!-- 6. PTV & Voice Notes -->
+          <div 
+            onclick="selectService('media')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 shadow-sm hover:shadow-lg hover:shadow-rose-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🎥</span>
+              <span class="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[9px] font-mono font-bold">Push-to-Video</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-rose-300 transition">PTV &amp; Voice Notes</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Send authentic circular Push-To-Video notes and Push-To-Talk voice recordings.</p>
+          </div>
+
+          <!-- 7. Command Library -->
+          <div 
+            onclick="selectService('commands')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-yellow-950/40 border border-slate-800 hover:border-yellow-500/50 shadow-sm hover:shadow-lg hover:shadow-yellow-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">⚡</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[9px] font-mono font-bold">236 Ready</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-yellow-300 transition">Command Library</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Explore 236 active commands across 156 plugins with instant execution.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Category 3: 🔐 Device Session & System Management -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <span>🔐 Device Session & System</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          
+          <!-- 8. Device Pairing -->
+          <div 
+            onclick="selectService('session')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 shadow-sm hover:shadow-lg hover:shadow-sky-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🔗</span>
+              <span class="px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[9px] font-mono font-bold">Pairing</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-sky-300 transition">Pairing & Sessions</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Link your WhatsApp number using an 8-digit terminal pairing code. Stored locally.</p>
+          </div>
+
+          <!-- 9. Download APK -->
+          <a 
+            href="/download/apk" 
+            download="urooj-choudhary-v1.1.apk"
+            class="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/70 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 shadow-sm hover:shadow-lg hover:shadow-emerald-950/40 transition cursor-pointer group block"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">📲</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 text-[9px] font-mono font-black uppercase">INSTALL</span>
+            </div>
+            <h3 class="font-bold text-sm text-emerald-300 group-hover:text-white transition">Download Android APK</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Install directly on your phone with zero web sharing and embedded device engine.</p>
+          </a>
+
+          <!-- 10. Super Admin Console -->
+          <div 
+            onclick="selectService('admin')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-amber-950/40 border border-slate-800 hover:border-amber-500/50 shadow-sm hover:shadow-lg hover:shadow-amber-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">👑</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-mono font-bold">Urooj</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-amber-300 transition">Super Admin Console</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Reserved console for Master Admin Urooj (passcode: Zaid@323232) to view and manage sessions.</p>
+          </div>
+
+          <!-- 11. Settings & Logs -->
+          <div 
+            onclick="selectService('settings')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 shadow-sm transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">⚙️</span>
+              <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[9px] font-mono">Config</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-slate-200 transition">Settings & System</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Tune command trigger prefix, autoread, presence status, and inspect live activity logs.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- PWA Install Banner -->
   <div id="pwaInstallBanner" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -500,93 +643,53 @@
       </div>
     </div>
 
-    <!-- 🌟 HIGH-VISIBILITY FEATURE SPOTLIGHT BANNER (Fake Quoted Reply) -->
-    <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-cyan-950/90 via-slate-900/95 to-indigo-950/70 border-2 border-cyan-500/40 shadow-xl shadow-cyan-950/40 flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
-      <!-- Ambient Glow Behind Icon -->
-      <div class="absolute -left-6 -top-6 w-32 h-32 bg-cyan-500/15 rounded-full blur-2xl pointer-events-none"></div>
-      
-      <div class="flex items-center gap-4 w-full md:w-auto relative z-10">
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-500/20 border border-cyan-400/50 flex items-center justify-center text-2xl sm:text-3xl shadow-inner shrink-0">
-          🎭
+    <!-- ⚡ ACTIVE SERVICE CONTROL BAR (Navigation is cleanly driven by "⚡ All Services ☰") -->
+    <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div id="activeServiceIcon" class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl shrink-0">
+          📍
         </div>
-        <div>
+        <div class="min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
-            <h3 class="text-base sm:text-lg font-black text-white tracking-tight">
-              Fake Quoted Message Reply
-            </h3>
-            <span class="px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm animate-pulse">
-              HOT FEATURE &bull; NEW
-            </span>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Current Service:</span>
+            <span id="activeServiceTitle" class="text-sm sm:text-base font-bold text-white truncate">Native Live Location</span>
+            <span id="activeServiceBadge" class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">100% Genuine GPS</span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-            Reply to a message that was <strong class="text-cyan-300 font-semibold">never sent</strong>! Generates authentic quoted WhatsApp bubbles, custom sender spoofing, and interactive action buttons.
-          </p>
+          <p id="activeServiceDesc" class="text-xs text-slate-400 truncate mt-0.5">Real-time GPS with countdown, instant stop button, and strictly zero caption</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 relative z-10">
+      <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 flex-wrap">
         <button 
           type="button" 
-          onclick="switchTab('fakequote')" 
-          class="w-full md:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-cyan-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-lg shadow-cyan-500/25 transition flex items-center justify-center gap-2 transform active:scale-95"
+          onclick="openVaultWithFilter('view_once')" 
+          class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
         >
-          <span>Open Fake Quote Studio</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          <span>🔓 View-Once</span>
         </button>
+        <button 
+          type="button" 
+          onclick="openVaultWithFilter('deleted')" 
+          class="px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+        >
+          <span>🗑️ Deleted Msgs</span>
+        </button>
+        <button 
+          type="button" 
+          onclick="openServicesDrawer()" 
+          class="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 whitespace-nowrap shrink-0"
+        >
+          <span>⚡ All Services ☰</span>
+        </button>
+        <a 
+          href="/download/apk" 
+          download="urooj-choudhary-v1.1.apk" 
+          class="px-3.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shrink-0"
+          title="Download Android APK"
+        >
+          <span>📲 .APK</span>
+        </a>
       </div>
-    </div>
-
-    <!-- Navigation Tabs Bar -->
-    <div class="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto custom-scrollbar">
-      <button onclick="switchTab('location')" id="tabBtn-location" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
-        <span>📍</span>
-        <span>Native Live Location</span>
-      </button>
-      <button onclick="switchTab('buttons')" id="tabBtn-buttons" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>💬</span>
-        <span>Button Messenger</span>
-      </button>
-      <button onclick="switchTab('fakequote')" id="tabBtn-fakequote" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2 bg-cyan-500/15 text-cyan-300 border border-cyan-500/35 hover:bg-cyan-500/25 whitespace-nowrap shadow-sm shadow-cyan-950/30">
-        <span class="text-base">🎭</span>
-        <span>Fake Quoted Reply</span>
-        <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">HOT</span>
-      </button>
-      <button onclick="switchTab('scheduled')" id="tabBtn-scheduled" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span class="text-base">⏰</span>
-        <span>Scheduled Queue</span>
-        <span class="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black uppercase">NEW</span>
-      </button>
-      <button onclick="switchTab('tracker')" id="tabBtn-tracker" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>👁️</span>
-        <span>Online Tracker</span>
-      </button>
-      <button onclick="switchTab('media')" id="tabBtn-media" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>🎥</span>
-        <span>PTV & Voice Note</span>
-      </button>
-      <button onclick="switchTab('session')" id="tabBtn-session" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>🔗</span>
-        <span>Device Pairing & My Sessions</span>
-      </button>
-      
-      <!-- Super Admin Console Tab (Exclusively for Urooj) -->
-      <button onclick="switchTab('admin')" id="tabBtn-admin" class="tab-btn hidden px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 whitespace-nowrap">
-        <span>👑</span>
-        <span>Super Admin Console</span>
-      </button>
-
-      <button onclick="switchTab('commands')" id="tabBtn-commands" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>⚡</span>
-        <span>Command Library (236)</span>
-      </button>
-      <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>⚙️</span>
-        <span>Settings</span>
-      </button>
-      <button onclick="switchTab('logs')" id="tabBtn-logs" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 whitespace-nowrap">
-        <span>📜</span>
-        <span>Live Logs</span>
-      </button>
     </div>
 
     <!-- ======================================================================= -->
@@ -615,30 +718,6 @@
           class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg transition flex items-center gap-2"
         >
           <span>🛑 Stop Sharing</span>
-        </button>
-      </div>
-
-      <!-- Quick Feature Callout: Fake Quoted Message Reply -->
-      <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-900/90 via-cyan-950/40 to-slate-900/90 border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-xl shrink-0">
-            🎭
-          </div>
-          <div>
-            <div class="text-xs font-bold text-white flex items-center gap-2">
-              <span>Looking for Fake Quoted Message Reply?</span>
-              <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold uppercase">Ready</span>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-0.5">Reply to any message that was never sent with authentic quoted bubble context & interactive buttons.</p>
-          </div>
-        </div>
-        <button 
-          type="button" 
-          onclick="switchTab('fakequote')" 
-          class="w-full sm:w-auto px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs tracking-wide transition shadow flex items-center justify-center gap-1.5 shrink-0"
-        >
-          <span>Switch to Fake Quote Tool</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
 
@@ -1593,79 +1672,285 @@
     <!-- TAB 5: DEVICE PAIRING & MY SESSIONS                                     -->
     <!-- ======================================================================= -->
     <section id="tab-session" class="tab-content hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- Left: Pairing Code Generator -->
-        <div class="lg:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+      
+      <!-- Top Overview Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
           <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-              <span>📱</span> Baileys Linking
-            </div>
-            <h2 class="text-xl font-bold text-white mt-1.5">Pair WhatsApp Number</h2>
-            <p class="text-xs text-slate-400">Generate an 8-character terminal code to link WhatsApp on your phone.</p>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Socket Sessions</div>
+            <div id="statSessionSocketsCount" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1 font-mono">0</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Live Baileys links</div>
           </div>
-
-          <form onsubmit="handleRequestPairingCode(event)" class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Your WhatsApp Phone Number</label>
-              <input type="text" id="pairPhoneNumber" required placeholder="e.g. 923001234567" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-emerald-500" />
-            </div>
-            <button type="submit" id="pairSubmitBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg transition">
-              Request 8-Digit Pairing Code
-            </button>
-          </form>
-
-          <div id="pairingCodeDisplay" class="hidden p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-center space-y-2">
-            <div class="text-xs text-slate-400">Enter this code on your WhatsApp phone:</div>
-            <div id="pairingCodeValue" class="text-3xl font-extrabold text-emerald-400 font-mono tracking-widest py-1 select-all"></div>
-            <p class="text-[11px] text-slate-500">WhatsApp &gt; Linked Devices &gt; Link with phone number instead</p>
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
+            📡
           </div>
         </div>
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Session Format</div>
+            <div class="text-lg sm:text-xl font-bold text-amber-400 mt-1 font-mono">&lt; 50 Words</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Compact token standard</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl text-amber-400">
+            ⚡
+          </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-sm relative overflow-hidden flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Purge Protection</div>
+            <div class="text-lg sm:text-xl font-bold text-rose-400 mt-1 font-mono">Instant Wipe</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Delete by phone number</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-2xl text-rose-400">
+            🗑️
+          </div>
+        </div>
+      </div>
 
-        <!-- Right: My Saved Sessions & Revoke Guard -->
-        <div class="lg:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
-          <div class="flex items-center justify-between">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Pairing Code & Session Activator -->
+        <div class="lg:col-span-6 space-y-6">
+
+          <!-- 1. Pairing Code Generator -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
             <div>
-              <h2 class="text-xl font-bold text-white">My Saved Sessions</h2>
-              <p class="text-xs text-slate-400">Persisted locally for 30 days &bull; Clean ID starts with Urooj~</p>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                <span>📱</span> Baileys Linking
+              </div>
+              <h2 class="text-xl font-bold text-white mt-1.5">Pair WhatsApp Number</h2>
+              <p class="text-xs text-slate-400">Request an authentic 8-digit terminal pairing code to link your WhatsApp.</p>
             </div>
-            <button onclick="fetchMySessions()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold">🔄 Refresh</button>
-          </div>
 
-          <!-- Active Session ID Card -->
-          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400 font-semibold uppercase tracking-wider">Active Session ID</span>
-              <span class="text-emerald-400 font-mono text-[11px]">Clean Format</span>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 break-all select-all" id="activeSessionIdBox">
-              Loading active session...
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="copyActiveSessionId()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center justify-center gap-1.5">
-                <span>📋 Copy Token</span>
-              </button>
-              <button onclick="backupSessionToWhatsApp()" class="flex-1 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition flex items-center justify-center gap-1.5">
-                <span>📤 Send to +923299931199</span>
-              </button>
-            </div>
-            <div id="sessionBackupStatus" class="hidden text-[11px] text-center font-medium"></div>
-          </div>
-
-          <!-- Revoke Security Gate -->
-          <div class="p-4 rounded-2xl bg-rose-950/20 border border-rose-500/30 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Session Revocation</span>
-              <span class="text-[10px] text-slate-500">Requires Session ID</span>
-            </div>
-            <p class="text-xs text-slate-400">To terminate and wipe your session credentials, paste the active Session ID starting with <code class="text-amber-400">Urooj~</code>.</p>
-            <form onsubmit="handleRevokeSession(event)" class="space-y-2">
-              <input type="text" id="revokeSessionInput" required placeholder="Paste Session ID (Urooj~...)" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white outline-none focus:border-rose-500" />
-              <button type="submit" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs tracking-wide transition">
-                Confirm & Revoke Session
+            <form onsubmit="handleRequestPairingCode(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">WhatsApp Mobile Phone Number</label>
+                <input 
+                  type="text" 
+                  id="pairPhoneNumber" 
+                  required 
+                  placeholder="e.g. 923299931199 or 03299931199" 
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-white outline-none focus:border-emerald-500 transition" 
+                />
+                <span class="text-[10px] text-slate-500 mt-1 block">Include country code (e.g. 92 for Pakistan). Leading 0 will be auto-normalized.</span>
+              </div>
+              <button 
+                type="submit" 
+                id="pairSubmitBtn" 
+                class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black text-sm tracking-wide shadow-lg transition active:scale-95 cursor-pointer"
+              >
+                Request 8-Digit Pairing Code
               </button>
             </form>
-            <div id="revokeFeedback" class="hidden text-xs text-center font-medium"></div>
+
+            <div id="pairStatusBox" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+
+            <div id="pairingCodeDisplay" class="hidden p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-center space-y-2.5 shadow-lg">
+              <div class="text-xs text-slate-400">Enter this 8-digit code on your WhatsApp phone:</div>
+              <div id="pairingCodeValue" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono tracking-widest py-1 select-all"></div>
+              <p class="text-[11px] text-slate-400">Open WhatsApp &gt; Linked Devices &gt; Link with phone number instead</p>
+              <button 
+                type="button" 
+                onclick="copyPairingCode()" 
+                class="px-4 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition inline-flex items-center gap-1.5"
+              >
+                <span>📋 Copy 8-Digit Code</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. ⚡ SESSION ACTIVATOR (Requested by User) -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+                  <span>⚡</span> Instant Connect
+                </div>
+                <h2 class="text-xl font-bold text-white mt-1.5">Session Activator</h2>
+                <p class="text-xs text-slate-400">Paste your session ID to connect and activate your WhatsApp engine immediately.</p>
+              </div>
+              <span id="sessionWordCounter" class="text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">
+                0 / 50 words
+              </span>
+            </div>
+
+            <form onsubmit="handleActivateSession(event)" class="space-y-4">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                    WhatsApp Session ID
+                  </label>
+                  <span class="text-[10px] text-amber-400 font-mono font-bold">Must be under 50 words</span>
+                </div>
+                <textarea 
+                  id="activatorSessionId" 
+                  rows="2" 
+                  required 
+                  oninput="updateSessionWordCount(this.value)"
+                  placeholder="Paste Session ID (e.g. Urooj~923299931199~k82f1x)" 
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-amber-300 placeholder-slate-600 outline-none focus:border-amber-500 transition resize-none"
+                ></textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Associated Mobile Number <span class="text-[10px] text-slate-500 font-normal lowercase">(optional if in Session ID)</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="activatorPhoneNumber" 
+                  placeholder="e.g. 923299931199" 
+                  class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white outline-none focus:border-amber-500 transition" 
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                id="activatorSubmitBtn" 
+                class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-amber-500/20 transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>⚡ Activate WhatsApp Session</span>
+              </button>
+            </form>
+
+            <div id="activatorFeedback" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Active Session ID, Delete by Mobile Number & Saved Sessions -->
+        <div class="lg:col-span-6 space-y-6">
+
+          <!-- 1. Active Session ID Display Card -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-xl font-bold text-white">Active Session Details</h2>
+                <p class="text-xs text-slate-400">Strictly compact session ID (&le; 50 words) for easy backup.</p>
+              </div>
+              <button onclick="fetchMySessions()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold cursor-pointer">🔄 Refresh</button>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">Current Session ID</span>
+                <span id="activeSessionWordCount" class="text-emerald-400 font-mono text-[10px] font-bold">1 Word</span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 break-all select-all" id="activeSessionIdBox">
+                Loading active session...
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="copyActiveSessionId()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                  <span>📋 Copy Token</span>
+                </button>
+                <button onclick="backupSessionToWhatsApp()" class="flex-1 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                  <span>📤 Send to +923299931199</span>
+                </button>
+              </div>
+              <div id="sessionBackupStatus" class="hidden text-[11px] text-center font-medium"></div>
+            </div>
+          </div>
+
+          <!-- 2. 🗑️ DELETE SESSION BY MOBILE NUMBER (Requested by User) -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
+                  <span>🗑️</span> Phone Number Purge
+                </div>
+                <h2 class="text-xl font-bold text-white mt-1.5">Delete Session by Mobile Number</h2>
+                <p class="text-xs text-slate-400">Instantly disconnect socket, wipe session files, and remove database records for a number.</p>
+              </div>
+            </div>
+
+            <form onsubmit="handleDeleteSessionByNumber(event)" class="space-y-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Mobile Number to Delete
+                </label>
+                <input 
+                  type="text" 
+                  id="deletePhoneInput" 
+                  required 
+                  placeholder="e.g. 923299931199 or +92 329 9931199" 
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white outline-none focus:border-rose-500 transition" 
+                />
+              </div>
+              <button 
+                type="submit" 
+                id="deletePhoneSubmitBtn" 
+                class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-rose-950/40 transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>🗑️ Delete WhatsApp Session</span>
+              </button>
+            </form>
+
+            <div id="deleteByPhoneFeedback" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
+          </div>
+
+          <!-- 3. Saved Sessions Table with Quick Activate / Delete -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-4">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                  <span>📱</span> Linked Devices &amp; Sessions
+                </h3>
+                <span id="savedSessionsCountLabel" class="text-xs text-slate-400 font-mono">0 Linked</span>
+              </div>
+              <button 
+                type="button" 
+                onclick="promptClearAllSessions()" 
+                class="px-3 py-1.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                title="Wipe and clear all active WhatsApp sessions"
+              >
+                <span>⚠️ Clear All</span>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+                  <tr>
+                    <th class="py-2.5 px-2">Phone Number</th>
+                    <th class="py-2.5 px-2">Session ID</th>
+                    <th class="py-2.5 px-2">Status</th>
+                    <th class="py-2.5 px-2 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="savedSessionsTableBody" class="divide-y divide-slate-800/60 font-mono">
+                  <tr>
+                    <td colspan="4" class="py-4 text-center text-slate-500">Loading saved sessions...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 4. ⚠️ DANGER ZONE: CLEAR ALL SESSIONS (Complete Wipe & Reset Engine) -->
+          <div class="bg-rose-950/20 border border-rose-500/30 rounded-3xl p-6 sm:p-7 space-y-4 relative overflow-hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                  <span>⚠️</span> Danger Zone &bull; Reset Engine
+                </div>
+                <h2 class="text-xl font-bold text-white mt-1.5">Clear All WhatsApp Sessions</h2>
+                <p class="text-xs text-rose-200/70 mt-1 leading-relaxed">
+                  Disconnects all live Baileys sockets, permanently purges credentials from disk, and resets database mappings. Use this if your sessions are stuck or you want a completely clean state.
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-1">
+              <button 
+                type="button" 
+                id="clearAllSessionsBtn"
+                onclick="promptClearAllSessions()" 
+                class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 hover:from-rose-500 hover:to-red-500 text-white font-black text-sm tracking-wide shadow-xl shadow-rose-950/60 transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>⚠️ Clear All Sessions &amp; Reset Engine</span>
+              </button>
+            </div>
+            <div id="clearAllFeedback" class="hidden p-3 rounded-xl text-xs text-center font-medium"></div>
           </div>
 
         </div>
@@ -1847,44 +2132,256 @@
       </div>
     </section>
 
+    <!-- ======================================================================= -->
+    <!-- TAB 10: 🔓 VIEW-ONCE DOWNLOADER & 🗑️ DELETED MESSAGE FETCHER VAULT     -->
+    <!-- ======================================================================= -->
+    <section id="tab-vault" class="tab-content hidden space-y-6">
+      
+      <!-- Top Control & Auto-Forward Configuration Bar -->
+      <div class="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🔓</span>
+              <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">View-Once Downloader &amp; Deleted Message Fetcher</h2>
+            </div>
+            <p class="text-xs text-slate-400 max-w-2xl">
+              Real-time Baileys interceptor that automatically unlocks disappearing View-Once media (photos, videos, voice notes) and recovers "Delete for Everyone" messages across private and group chats.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap shrink-0">
+            <button
+              type="button"
+              onclick="triggerVaultCapture('view_once')"
+              class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow"
+            >
+              <span>🔓 Unlock / Test View-Once</span>
+            </button>
+            <button
+              type="button"
+              onclick="triggerVaultCapture('deleted')"
+              class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer shadow"
+            >
+              <span>🗑️ Fetch / Test Deleted Msg</span>
+            </button>
+            <button
+              type="button"
+              onclick="fetchVaultItems()"
+              class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              <span>🔄 Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interceptor Settings Form -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+          <!-- Toggle 1: View-Once Auto-Unlock -->
+          <label class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/90 cursor-pointer hover:border-amber-500/40 transition">
+            <div class="pr-2">
+              <div class="text-xs font-bold text-white">View-Once Downloader</div>
+              <div class="text-[11px] text-slate-400">Auto-decrypt photos, videos &amp; voice</div>
+            </div>
+            <input type="checkbox" id="toggleViewOnce" checked onchange="saveVaultSettings()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0" />
+          </label>
+
+          <!-- Toggle 2: Anti-Delete Interceptor -->
+          <label class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/90 cursor-pointer hover:border-rose-500/40 transition">
+            <div class="pr-2">
+              <div class="text-xs font-bold text-white">Anti-Delete Fetcher</div>
+              <div class="text-[11px] text-slate-400">Capture revoked texts &amp; attachments</div>
+            </div>
+            <input type="checkbox" id="toggleAntiDelete" checked onchange="saveVaultSettings()" class="w-4 h-4 accent-rose-500 rounded cursor-pointer shrink-0" />
+          </label>
+
+          <!-- Toggle 3: Auto-Forward to WhatsApp DM -->
+          <label class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/90 cursor-pointer hover:border-emerald-500/40 transition">
+            <div class="pr-2">
+              <div class="text-xs font-bold text-white">Auto-Forward to DM</div>
+              <div class="text-[11px] text-slate-400">Send unlocked copies to WhatsApp</div>
+            </div>
+            <input type="checkbox" id="toggleAutoForwardDm" checked onchange="saveVaultSettings()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer shrink-0" />
+          </label>
+
+          <!-- Target DM Phone Number -->
+          <div class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/90">
+            <div class="flex-1 min-w-0">
+              <label for="vaultTargetDmInput" class="block text-[10px] font-mono uppercase text-slate-400">Target DM Number</label>
+              <input
+                type="text"
+                id="vaultTargetDmInput"
+                value="923299931199"
+                placeholder="923299931199"
+                class="w-full bg-transparent text-xs font-mono text-white focus:outline-none mt-0.5"
+              />
+            </div>
+            <button
+              type="button"
+              onclick="saveVaultSettings(true)"
+              class="px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              Save DM
+            </button>
+          </div>
+        </div>
+
+        <div id="vaultSettingsStatus" class="hidden text-xs font-medium px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300"></div>
+      </div>
+
+      <!-- Vault KPI Metrics Row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Total Vault Captures</div>
+          <div id="vaultStatTotal" class="text-2xl font-extrabold text-white mt-1 font-mono tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Private DMs &amp; Group Chats</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">View-Once Unlocked</div>
+          <div id="vaultStatViewOnce" class="text-2xl font-extrabold text-amber-400 mt-1 font-mono tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Photos, Videos &amp; Voice Notes</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Deleted Msgs Recovered</div>
+          <div id="vaultStatDeleted" class="text-2xl font-extrabold text-rose-400 mt-1 font-mono tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Intercepted before wipe</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Forwarded to WhatsApp DM</div>
+          <div id="vaultStatForwarded" class="text-2xl font-extrabold text-emerald-400 mt-1 font-mono tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Delivered to owner number</div>
+        </div>
+      </div>
+
+      <!-- Filter & Search Bar -->
+      <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+        <!-- Segmented Capture Type Buttons -->
+        <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 overflow-x-auto">
+          <button
+            type="button"
+            id="vaultTabBtn-all"
+            onclick="setVaultCaptureFilter('all')"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer bg-amber-500 text-slate-950"
+          >
+            All Captures
+          </button>
+          <button
+            type="button"
+            id="vaultTabBtn-view_once"
+            onclick="setVaultCaptureFilter('view_once')"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white"
+          >
+            🔓 View-Once Media
+          </button>
+          <button
+            type="button"
+            id="vaultTabBtn-deleted"
+            onclick="setVaultCaptureFilter('deleted')"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white"
+          >
+            🗑️ Deleted Messages
+          </button>
+        </div>
+
+        <!-- Secondary Filters & Clear Action -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select
+            id="vaultChatTypeFilter"
+            onchange="fetchVaultItems()"
+            class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+          >
+            <option value="all">All Sources (DMs + Groups)</option>
+            <option value="private">Private Chats Only</option>
+            <option value="group">Group Chats Only</option>
+          </select>
+
+          <select
+            id="vaultMediaTypeFilter"
+            onchange="fetchVaultItems()"
+            class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+          >
+            <option value="all">All Media &amp; Text</option>
+            <option value="image">Photos / Images</option>
+            <option value="video">Videos</option>
+            <option value="audio">Voice / Audio</option>
+            <option value="text">Text Messages</option>
+          </select>
+
+          <input
+            type="text"
+            id="vaultSearchInput"
+            oninput="fetchVaultItems()"
+            placeholder="Search sender, number, or text..."
+            class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 min-w-[200px]"
+          />
+
+          <button
+            type="button"
+            onclick="clearAllVaultItems()"
+            class="px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            🧹 Clear Vault
+          </button>
+        </div>
+      </div>
+
+      <!-- Vault Items Grid -->
+      <div id="vaultItemsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Populated dynamically by renderVaultItems() -->
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- Mobile Bottom Quick Action Navigation Dock -->
-  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 py-2 px-3 flex items-center justify-around shadow-2xl">
-    <button type="button" onclick="switchTab('location')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition">
-      <span class="text-base">📍</span>
-      <span class="text-[10px] font-medium">Live Loc</span>
-    </button>
-    <button type="button" onclick="switchTab('fakequote')" class="flex flex-col items-center gap-0.5 text-cyan-300 font-extrabold transition relative">
-      <span class="text-base">🎭</span>
-      <span class="text-[10px]">Fake Quote</span>
-      <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-    </button>
-    <button type="button" onclick="switchTab('scheduled')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-400 transition">
-      <span class="text-base">⏰</span>
-      <span class="text-[10px] font-medium">Queue</span>
-    </button>
-    <button type="button" onclick="switchTab('buttons')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-400 transition">
-      <span class="text-base">💬</span>
-      <span class="text-[10px] font-medium">Buttons</span>
-    </button>
-    <button type="button" onclick="switchTab('session')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-sky-400 transition">
-      <span class="text-base">🔗</span>
-      <span class="text-[10px] font-medium">Pairing</span>
-    </button>
-    <button type="button" onclick="switchTab('admin')" id="mobileNavAdminBtn" class="hidden flex flex-col items-center gap-0.5 text-amber-400 transition">
-      <span class="text-base">👑</span>
-      <span class="text-[10px] font-medium">Admin</span>
-    </button>
-  </nav>
-
   <!-- Global Footer -->
-  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-6 mb-14 sm:mb-0 text-center text-xs text-slate-500">
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-6 mb-0 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <div>👑 Bot Name: <strong class="text-amber-400">Urooj Choudhary</strong> &bull; Owner: <strong class="text-white">King Unkown</strong></div>
       <div class="font-mono text-[11px] text-slate-400">Backup Target: +923299931199 &bull; SQLite Engine</div>
     </div>
   </footer>
+
+  <!-- In-DOM Confirmation Modal (Accessible & Sandbox-Safe: Replaces window.confirm) -->
+  <div id="sessionConfirmModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-all duration-200">
+    <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5">
+      <div class="flex items-start gap-4">
+        <div id="modalIconBox" class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-2xl shrink-0">
+          ⚠️
+        </div>
+        <div class="space-y-1">
+          <h3 id="modalTitle" class="text-lg font-bold text-white">Delete WhatsApp Session</h3>
+          <p id="modalMessage" class="text-xs text-slate-400 leading-relaxed">
+            Are you sure you want to proceed?
+          </p>
+        </div>
+      </div>
+      
+      <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs font-mono space-y-1" id="modalTargetDetails">
+        <span class="text-rose-400 font-bold block text-[11px] uppercase tracking-wider">⚠️ Irreversible Action</span>
+        <span id="modalTargetText" class="text-slate-300 block text-xs break-all">Target: All sockets and credentials</span>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button 
+          type="button" 
+          id="modalCancelBtn" 
+          onclick="closeConfirmModal()" 
+          class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          id="modalConfirmBtn" 
+          onclick="executeConfirmedAction()" 
+          class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black tracking-wide shadow-lg shadow-rose-950/50 transition cursor-pointer flex items-center gap-1.5"
+        >
+          <span>Confirm Action</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- DASHBOARD JAVASCRIPT APPLICATION LOGIC                                    -->
@@ -2150,13 +2647,18 @@
       const menuUserTag = document.getElementById('menuUserTag');
       const menuAdminBtn = document.getElementById('menuAdminBtn');
 
-      nameText.textContent = currentUser.username;
-      if (menuUserName) menuUserName.textContent = currentUser.username;
+      if (nameText) nameText.textContent = currentUser.username || '';
+      if (menuUserName) menuUserName.textContent = currentUser.username || '';
 
-      if (currentUser.role === 'admin' || currentUser.username.toLowerCase() === 'urooj') {
-        roleIcon.textContent = '👑';
-        roleTag.textContent = 'Super Admin';
-        roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-extrabold uppercase font-mono';
+      const isAdmin = currentUser.role === 'admin' || (currentUser.username && currentUser.username.toLowerCase() === 'urooj');
+      const isOwner = currentUser.role === 'owner';
+
+      if (isAdmin) {
+        if (roleIcon) roleIcon.textContent = '👑';
+        if (roleTag) {
+          roleTag.textContent = 'Super Admin';
+          roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-extrabold uppercase font-mono';
+        }
         if (adminTabBtn) adminTabBtn.classList.remove('hidden');
         if (mobileNavAdminBtn) mobileNavAdminBtn.classList.remove('hidden');
         if (menuUserTag) menuUserTag.textContent = 'Super Admin';
@@ -2164,10 +2666,12 @@
           menuAdminBtn.classList.remove('hidden');
           menuAdminBtn.classList.add('flex');
         }
-      } else if (currentUser.role === 'owner') {
-        roleIcon.textContent = '📱';
-        roleTag.textContent = 'Device Bound';
-        roleTag.className = 'text-[9px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase font-mono';
+      } else if (isOwner) {
+        if (roleIcon) roleIcon.textContent = '📱';
+        if (roleTag) {
+          roleTag.textContent = 'Device Bound';
+          roleTag.className = 'text-[9px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase font-mono';
+        }
         if (adminTabBtn) adminTabBtn.classList.add('hidden');
         if (mobileNavAdminBtn) mobileNavAdminBtn.classList.add('hidden');
         if (menuUserTag) menuUserTag.textContent = 'Device Bound';
@@ -2176,9 +2680,11 @@
           menuAdminBtn.classList.remove('flex');
         }
       } else {
-        roleIcon.textContent = '👤';
-        roleTag.textContent = 'Member';
-        roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-medium font-mono';
+        if (roleIcon) roleIcon.textContent = '👤';
+        if (roleTag) {
+          roleTag.textContent = 'Member';
+          roleTag.className = 'text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-medium font-mono';
+        }
         if (adminTabBtn) adminTabBtn.classList.add('hidden');
         if (mobileNavAdminBtn) mobileNavAdminBtn.classList.add('hidden');
         if (menuUserTag) menuUserTag.textContent = 'Member';
@@ -2190,82 +2696,137 @@
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // ⚡ NAVIGATION OPTIONS DROPDOWN MENU
+    // ⚡ FULL-SCREEN ALL SERVICES DRAWER NAVIGATION
     // ──────────────────────────────────────────────────────────────────────────
-    function toggleOptionsMenu(event) {
-      if (event) {
-        event.stopPropagation();
-        event.preventDefault();
+    const SERVICE_CATALOG = {
+      location: { 
+        title: 'Native Live Location', 
+        icon: '📍', 
+        badge: '100% Genuine GPS', 
+        desc: 'Real-time GPS with countdown, instant stop button, and strictly zero caption' 
+      },
+      fakequote: { 
+        title: 'Fake Quoted Reply', 
+        icon: '🎭', 
+        badge: 'Synthetic Quote', 
+        desc: 'Reply to never-sent messages with authentic quoted bubble context & interactive buttons' 
+      },
+      scheduled: { 
+        title: 'Scheduled Message Queue', 
+        icon: '⏰', 
+        badge: 'Auto-Dispatcher', 
+        desc: 'Queue WhatsApp messages with date & time picker, presets, and live countdown timers' 
+      },
+      buttons: { 
+        title: 'Button Messenger', 
+        icon: '💬', 
+        badge: 'Interactive', 
+        desc: 'Send messages with quick reply, URL link, and direct phone call pills' 
+      },
+      tracker: { 
+        title: 'Online Tracker', 
+        icon: '👁️', 
+        badge: 'Presence Monitor', 
+        desc: 'Track contacts online sessions, typing events, and voice recording activity' 
+      },
+      media: { 
+        title: 'PTV & Voice Notes', 
+        icon: '🎥', 
+        badge: 'Push-To-Video', 
+        desc: 'Send authentic circular Push-To-Video notes and authentic voice notes' 
+      },
+      session: { 
+        title: 'Device Pairing & Sessions', 
+        icon: '🔗', 
+        badge: 'Pairing Code', 
+        desc: 'Connect WhatsApp via 8-digit pairing code stored locally on your device' 
+      },
+      admin: { 
+        title: 'Super Admin Console', 
+        icon: '👑', 
+        badge: 'Master Only', 
+        desc: 'Manage system-wide sessions, users, and security settings' 
+      },
+      commands: { 
+        title: 'Command Library', 
+        icon: '⚡', 
+        badge: '236 Commands', 
+        desc: 'Explore and execute 236 commands across 156 plugins' 
+      },
+      settings: { 
+        title: 'Settings & Config', 
+        icon: '⚙️', 
+        badge: 'Configuration', 
+        desc: 'Set command prefix, autoread, presence status, and session parameters' 
+      },
+      logs: { 
+        title: 'Live Activity Logs', 
+        icon: '📜', 
+        badge: 'Realtime', 
+        desc: 'Live event stream of incoming messages, commands, and device triggers' 
+      },
+      vault: {
+        title: 'View-Once & Anti-Delete Vault',
+        icon: '🔓',
+        badge: 'Auto-Interceptor',
+        desc: 'Download disappearing View-Once media and fetch deleted messages across DMs & groups'
       }
-      const menu = document.getElementById('headerOptionsMenu');
-      const chevron = document.getElementById('optionsChevron');
-      if (!menu) return;
-      const isHidden = menu.classList.contains('hidden');
-      if (isHidden) {
-        menu.classList.remove('hidden');
-        if (chevron) chevron.classList.add('rotate-180');
-      } else {
-        menu.classList.add('hidden');
-        if (chevron) chevron.classList.remove('rotate-180');
+    };
+
+    function openVaultWithFilter(filterType = 'all') {
+      closeServicesDrawer();
+      switchTab('vault');
+      setVaultCaptureFilter(filterType);
+    }
+
+    function openServicesDrawer() {
+      const drawer = document.getElementById('servicesDrawer');
+      if (drawer) {
+        drawer.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
       }
     }
 
-    function closeOptionsMenu() {
-      const menu = document.getElementById('headerOptionsMenu');
-      const chevron = document.getElementById('optionsChevron');
-      if (menu) menu.classList.add('hidden');
-      if (chevron) chevron.classList.remove('rotate-180');
-    }
-
-    function selectOptionTab(tabId) {
-      closeOptionsMenu();
-      switchTab(tabId);
-    }
-
-    // Dismiss options dropdown on click outside or escape key
-    document.addEventListener('click', (e) => {
-      const menu = document.getElementById('headerOptionsMenu');
-      const btn = document.getElementById('navOptionsBtn');
-      if (!menu || menu.classList.contains('hidden')) return;
-      if (!menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
-        closeOptionsMenu();
+    function closeServicesDrawer() {
+      const drawer = document.getElementById('servicesDrawer');
+      if (drawer) {
+        drawer.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
       }
-    });
+    }
 
+    function selectService(serviceId) {
+      closeServicesDrawer();
+      switchTab(serviceId);
+    }
+
+    // Dismiss services drawer on Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeOptionsMenu();
+      if (e.key === 'Escape') {
+        closeServicesDrawer();
+      }
     });
 
     // ──────────────────────────────────────────────────────────────────────────
-    // TAB SWITCHING
+    // TAB SWITCHING (Synchronized with Active Service Control Bar)
     // ──────────────────────────────────────────────────────────────────────────
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove(
-          'bg-amber-500/10', 'bg-amber-500/20', 'text-amber-300', 'text-amber-400', 'border-amber-500/20', 'border-amber-500/30', 'border-amber-500/40',
-          'bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20',
-          'bg-cyan-500/10', 'bg-cyan-500/15', 'bg-cyan-500/20', 'bg-cyan-500/25',
-          'text-cyan-300', 'text-cyan-400', 'border-cyan-500/20', 'border-cyan-500/30', 'border-cyan-500/35', 'border-cyan-500/40'
-        );
-        el.classList.add('text-slate-400');
-      });
 
       const targetSection = document.getElementById('tab-' + tabId);
-      const targetBtn = document.getElementById('tabBtn-' + tabId);
-
       if (targetSection) targetSection.classList.remove('hidden');
-      if (targetBtn) {
-        targetBtn.classList.remove('text-slate-400');
-        if (tabId === 'location') {
-          targetBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20');
-        } else if (tabId === 'fakequote') {
-          targetBtn.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40');
-        } else if (tabId === 'scheduled') {
-          targetBtn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
-        } else {
-          targetBtn.classList.add('bg-amber-500/10', 'text-amber-400', 'border-amber-500/20');
-        }
+
+      // Update Active Service Control Bar
+      const info = SERVICE_CATALOG[tabId];
+      if (info) {
+        const iconEl = document.getElementById('activeServiceIcon');
+        const titleEl = document.getElementById('activeServiceTitle');
+        const badgeEl = document.getElementById('activeServiceBadge');
+        const descEl = document.getElementById('activeServiceDesc');
+        if (iconEl) iconEl.textContent = info.icon;
+        if (titleEl) titleEl.textContent = info.title;
+        if (badgeEl) badgeEl.textContent = info.badge;
+        if (descEl) descEl.textContent = info.desc;
       }
 
       try {
@@ -2286,6 +2847,7 @@
       if (tabId === 'session') fetchMySessions();
       if (tabId === 'logs') fetchLogs();
       if (tabId === 'tracker') fetchTrackerLogs();
+      if (tabId === 'vault') fetchVaultItems();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -2313,10 +2875,15 @@
     function selectPresetLandmark(key) {
       const lm = LANDMARKS[key];
       if (!lm) return;
-      document.getElementById('locLat').value = lm.lat;
-      document.getElementById('locLng').value = lm.lng;
-      document.getElementById('gpsStatusBadge').textContent = 'Selected: ' + lm.name;
-      document.getElementById('gpsStatusBadge').className = 'text-[10px] text-amber-400 font-mono';
+      const latEl = document.getElementById('locLat');
+      const lngEl = document.getElementById('locLng');
+      if (latEl) latEl.value = lm.lat;
+      if (lngEl) lngEl.value = lm.lng;
+      const badge = document.getElementById('gpsStatusBadge');
+      if (badge) {
+        badge.textContent = 'Selected: ' + lm.name;
+        badge.className = 'text-[10px] text-amber-400 font-mono';
+      }
       updateLocationPreview();
     }
 
@@ -2489,11 +3056,16 @@
         });
         const data = await res.json();
         if (res.ok && data.success) {
-          document.getElementById('adminStatUsers').textContent = data.totalUsers || 0;
-          document.getElementById('adminStatSessions').textContent = data.totalSessions || 0;
-          document.getElementById('adminStatSockets').textContent = data.activeSockets?.length || 0;
-          document.getElementById('adminUsersCountLabel').textContent = `${data.totalUsers} Registered`;
-          document.getElementById('adminSessionsCountLabel').textContent = `${data.totalSessions} Stored`;
+          const uEl = document.getElementById('adminStatUsers');
+          if (uEl) uEl.textContent = data.totalUsers || 0;
+          const sEl = document.getElementById('adminStatSessions');
+          if (sEl) sEl.textContent = data.totalSessions || 0;
+          const skEl = document.getElementById('adminStatSockets');
+          if (skEl) skEl.textContent = data.activeSockets?.length || 0;
+          const ulEl = document.getElementById('adminUsersCountLabel');
+          if (ulEl) ulEl.textContent = `${data.totalUsers || 0} Registered`;
+          const slEl = document.getElementById('adminSessionsCountLabel');
+          if (slEl) slEl.textContent = `${data.totalSessions || 0} Stored`;
 
           renderAdminUsers(data.users || []);
           renderAdminSessions(data.sessions || []);
@@ -3354,17 +3926,52 @@
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // DEVICE PAIRING & SESSIONS
+    // 📱 DEVICE PAIRING, ⚡ SESSION ACTIVATOR & 🗑️ DELETE CONTROLS
     // ──────────────────────────────────────────────────────────────────────────
+
+    // Real-time word counter (< 50 words constraint)
+    function updateSessionWordCount(val) {
+      const counterEl = document.getElementById('sessionWordCounter');
+      const submitBtn = document.getElementById('activatorSubmitBtn');
+      const words = (val || '').trim().split(/\s+/).filter(Boolean);
+      const count = words.length;
+
+      if (counterEl) {
+        counterEl.textContent = `${count} / 50 words`;
+        if (count > 50) {
+          counterEl.className = 'text-[11px] font-mono px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/40 font-bold animate-pulse';
+          if (submitBtn) submitBtn.disabled = true;
+        } else if (count > 40) {
+          counterEl.className = 'text-[11px] font-mono px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/40 font-semibold';
+          if (submitBtn) submitBtn.disabled = false;
+        } else {
+          counterEl.className = 'text-[11px] font-mono px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400';
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      }
+    }
+
+    // 1. Pairing Code Request (Reliable with 8-character output)
     async function handleRequestPairingCode(e) {
       e.preventDefault();
-      const phoneNumber = document.getElementById('pairPhoneNumber').value.trim();
+      const phoneInput = document.getElementById('pairPhoneNumber');
       const submitBtn = document.getElementById('pairSubmitBtn');
       const display = document.getElementById('pairingCodeDisplay');
       const codeVal = document.getElementById('pairingCodeValue');
+      const statusBox = document.getElementById('pairStatusBox');
+
+      const phoneNumber = phoneInput.value.trim();
+      if (!phoneNumber) {
+        alert('Please enter your WhatsApp mobile phone number');
+        return;
+      }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Requesting Code...';
+      submitBtn.classList.add('opacity-60');
+      submitBtn.innerHTML = '<span>⏳ Contacting WhatsApp Server...</span>';
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 text-center font-medium animate-pulse';
+      statusBox.textContent = 'Initiating Baileys handshake and generating 8-digit terminal code...';
 
       try {
         const res = await fetch('/api/pair', {
@@ -3376,100 +3983,380 @@
           body: JSON.stringify({ phoneNumber })
         });
         const data = await res.json();
+
         if (res.ok && data.code) {
           display.classList.remove('hidden');
           codeVal.textContent = data.code;
+          statusBox.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          statusBox.textContent = '✅ Pairing code generated! Link it on your WhatsApp mobile app now.';
+        } else if (data.alreadyConnected) {
+          statusBox.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          statusBox.textContent = '✅ ' + (data.message || 'This WhatsApp number is already connected and active!');
+          fetchMySessions();
         } else {
-          alert(data.message || data.error || 'Could not generate code');
+          statusBox.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          statusBox.textContent = '❌ ' + (data.error || data.message || 'Could not generate pairing code. Please verify phone number.');
         }
       } catch (err) {
-        alert('Pairing request error: ' + err.message);
+        statusBox.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        statusBox.textContent = 'Network error: ' + err.message;
       } finally {
         submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60');
         submitBtn.textContent = 'Request 8-Digit Pairing Code';
       }
     }
 
-    async function fetchMySessions() {
-      try {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-        const box = document.getElementById('activeSessionIdBox');
-        if (data.activeSessionId) {
-          box.textContent = data.activeSessionId;
-        } else if (data.connectedSessions?.length > 0) {
-          box.textContent = `Session active for +${data.connectedSessions[0]}`;
-        } else {
-          box.textContent = 'No active WhatsApp session linked. Request pairing code on left.';
-        }
-      } catch (_) {}
+    function copyPairingCode() {
+      const code = document.getElementById('pairingCodeValue')?.textContent?.trim() || '';
+      if (!code) return;
+      copyToClipboard(code, '8-Digit Pairing Code copied to clipboard!');
     }
 
-    function copyActiveSessionId() {
-      const text = document.getElementById('activeSessionIdBox').textContent.trim();
-      if (!text || text.includes('No active')) {
-        alert('No active session ID to copy');
+    // 2. ⚡ Session Activator Handler (< 50 words validated)
+    async function handleActivateSession(e) {
+      e.preventDefault();
+      const sessionInput = document.getElementById('activatorSessionId');
+      const phoneInput = document.getElementById('activatorPhoneNumber');
+      const submitBtn = document.getElementById('activatorSubmitBtn');
+      const feedback = document.getElementById('activatorFeedback');
+
+      const sessionId = sessionInput.value.trim();
+      const phoneNumber = phoneInput.value.trim();
+
+      const words = sessionId.split(/\s+/).filter(Boolean);
+      if (words.length > 50) {
+        feedback.classList.remove('hidden');
+        feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        feedback.textContent = `❌ Session ID cannot be longer than 50 words (currently ${words.length} words).`;
         return;
       }
-      copyToClipboard(text, 'Session ID copied to clipboard!');
-    }
 
-    async function backupSessionToWhatsApp() {
-      const status = document.getElementById('sessionBackupStatus');
-      try {
-        const res = await fetch('/api/session/backup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ targetNumber: '923299931199' })
-        });
-        const data = await res.json();
-        status.classList.remove('hidden');
-        if (res.ok && data.success) {
-          status.className = 'text-[11px] text-center font-bold text-emerald-400';
-          status.textContent = '✅ ' + data.message;
-        } else {
-          status.className = 'text-[11px] text-center font-bold text-rose-400';
-          status.textContent = '❌ ' + (data.error || 'Failed to dispatch backup');
-        }
-      } catch (err) {
-        status.classList.remove('hidden');
-        status.className = 'text-[11px] text-center font-bold text-rose-400';
-        status.textContent = 'Error: ' + err.message;
-      }
-    }
-
-    async function handleRevokeSession(e) {
-      e.preventDefault();
-      const input = document.getElementById('revokeSessionInput');
-      const feedback = document.getElementById('revokeFeedback');
-      const sessionId = input.value.trim();
-
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-60');
+      submitBtn.innerHTML = '<span>⚡ Activating WhatsApp Socket...</span>';
       feedback.classList.remove('hidden');
-      feedback.textContent = 'Verifying and revoking...';
+      feedback.className = 'p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 text-center font-medium animate-pulse';
+      feedback.textContent = 'Validating compact session token and starting socket engine...';
 
       try {
-        const res = await fetch('/api/session/revoke', {
+        const res = await fetch('/api/session/activate', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
           },
-          body: JSON.stringify({ sessionId })
+          body: JSON.stringify({ sessionId, phoneNumber })
         });
         const data = await res.json();
+
         if (res.ok && data.success) {
-          feedback.className = 'text-xs text-center font-bold text-emerald-400';
-          feedback.textContent = '✅ ' + data.message;
-          input.value = '';
+          feedback.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+          feedback.textContent = '✅ ' + (data.message || 'WhatsApp session activated successfully!');
+          sessionInput.value = '';
+          phoneInput.value = '';
+          updateSessionWordCount('');
+          fetchStatus();
           fetchMySessions();
         } else {
-          feedback.className = 'text-xs text-center font-bold text-rose-400';
-          feedback.textContent = '❌ ' + (data.error || 'Failed to revoke session');
+          feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          feedback.textContent = '❌ ' + (data.error || 'Failed to activate session');
         }
       } catch (err) {
-        feedback.className = 'text-xs text-center font-bold text-rose-400';
-        feedback.textContent = 'Error: ' + err.message;
+        feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+        feedback.textContent = 'Network error: ' + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60');
+        submitBtn.innerHTML = '<span>⚡ Activate WhatsApp Session</span>';
       }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 🪟 IN-DOM CONFIRMATION MODAL LOGIC (Accessible & Sandbox-Safe)
+    // ──────────────────────────────────────────────────────────────────────────
+    let pendingModalAction = null;
+
+    function openConfirmModal(config) {
+      const modal = document.getElementById('sessionConfirmModal');
+      const title = document.getElementById('modalTitle');
+      const msg = document.getElementById('modalMessage');
+      const target = document.getElementById('modalTargetText');
+      const btn = document.getElementById('modalConfirmBtn');
+      
+      if (title) title.textContent = config.title || 'Confirm Action';
+      if (msg) msg.textContent = config.message || 'Are you sure you want to proceed?';
+      if (target) target.textContent = config.target || 'Selected WhatsApp Session';
+      if (btn) {
+        btn.innerHTML = `<span>${config.confirmLabel || 'Confirm Action'}</span>`;
+        btn.className = config.confirmClass || 'px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black tracking-wide shadow-lg shadow-rose-950/50 transition cursor-pointer flex items-center gap-1.5';
+      }
+      
+      pendingModalAction = config.onConfirm;
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('sessionConfirmModal');
+      if (modal) modal.classList.add('hidden');
+      pendingModalAction = null;
+    }
+
+    async function executeConfirmedAction() {
+      if (typeof pendingModalAction === 'function') {
+        const action = pendingModalAction;
+        closeConfirmModal();
+        await action();
+      } else {
+        closeConfirmModal();
+      }
+    }
+
+    // 3. 🗑️ Delete Session by Mobile Phone Number
+    function handleDeleteSessionByNumber(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const input = document.getElementById('deletePhoneInput');
+      const phoneNumber = input ? input.value.trim() : '';
+
+      if (!phoneNumber) {
+        const feedback = document.getElementById('deleteByPhoneFeedback');
+        if (feedback) {
+          feedback.classList.remove('hidden');
+          feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          feedback.textContent = 'Please enter a mobile phone number to delete.';
+        }
+        return;
+      }
+
+      openConfirmModal({
+        title: 'Delete WhatsApp Session',
+        message: `Permanently disconnect socket, delete session files from disk, and remove database records for +${phoneNumber}?`,
+        target: `Mobile Number: +${phoneNumber}`,
+        confirmLabel: 'Confirm & Delete Session',
+        onConfirm: () => performDeleteSessionByNumber(phoneNumber)
+      });
+    }
+
+    async function performDeleteSessionByNumber(phoneNumber) {
+      const input = document.getElementById('deletePhoneInput');
+      const submitBtn = document.getElementById('deletePhoneSubmitBtn');
+      const feedback = document.getElementById('deleteByPhoneFeedback');
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-60');
+      }
+      if (feedback) {
+        feedback.classList.remove('hidden');
+        feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 text-center font-medium animate-pulse';
+        feedback.textContent = `Terminating socket and wiping session files for +${phoneNumber}...`;
+      }
+
+      try {
+        const res = await fetch('/api/session/delete-by-number', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          },
+          body: JSON.stringify({ phoneNumber })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (feedback) {
+            feedback.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+            feedback.textContent = '✅ ' + (data.message || `Session for +${phoneNumber} deleted successfully!`);
+          }
+          if (input) input.value = '';
+          fetchStatus();
+          fetchMySessions();
+        } else {
+          if (feedback) {
+            feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+            feedback.textContent = '❌ ' + (data.error || 'Failed to delete session');
+          }
+        }
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          feedback.textContent = 'Network error: ' + err.message;
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-60');
+        }
+      }
+    }
+
+    // 4. ⚠️ CLEAR ALL SESSIONS HANDLER
+    function promptClearAllSessions() {
+      openConfirmModal({
+        title: '⚠️ Clear ALL WhatsApp Sessions',
+        message: 'Are you sure you want to wipe ALL sessions? This will terminate all running Baileys sockets, erase all credential folders from disk, and clear all database rows.',
+        target: 'Full System Reset: All active sockets, disk credentials, and saved sessions',
+        confirmLabel: '⚠️ Clear All Sessions Now',
+        confirmClass: 'px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-black tracking-wide shadow-lg shadow-red-950/60 transition cursor-pointer flex items-center gap-1.5',
+        onConfirm: () => performClearAllSessions()
+      });
+    }
+
+    async function performClearAllSessions() {
+      const btn = document.getElementById('clearAllSessionsBtn');
+      const feedback = document.getElementById('clearAllFeedback');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-60');
+      }
+      if (feedback) {
+        feedback.classList.remove('hidden');
+        feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 text-center font-medium animate-pulse';
+        feedback.textContent = 'Terminating all sockets and wiping disk folders...';
+      }
+
+      try {
+        const res = await fetch('/api/session/clear-all', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          }
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (feedback) {
+            feedback.className = 'p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 text-center font-medium';
+            feedback.textContent = '✅ ' + (data.message || 'All sessions have been permanently cleared.');
+          }
+          const box = document.getElementById('activeSessionIdBox');
+          if (box) box.textContent = 'No active session. Pair your number or activate a session.';
+          const wordCountEl = document.getElementById('activeSessionWordCount');
+          if (wordCountEl) wordCountEl.textContent = '0 Words';
+          fetchStatus();
+          fetchMySessions();
+        } else {
+          if (feedback) {
+            feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+            feedback.textContent = '❌ ' + (data.error || 'Failed to clear all sessions');
+          }
+        }
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-400 text-center font-medium';
+          feedback.textContent = 'Network error: ' + err.message;
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-60');
+        }
+      }
+    }
+
+    // 5. Fetch and render Saved Sessions list with 1-click Activate & Delete
+    async function fetchMySessions() {
+      try {
+        const res = await fetch('/api/session/my-sessions', {
+          headers: { 'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : '' }
+        });
+        const data = await res.json();
+
+        const box = document.getElementById('activeSessionIdBox');
+        const countBadge = document.getElementById('savedSessionsCountLabel');
+        const socketsBadge = document.getElementById('statSessionSocketsCount');
+        const wordCountEl = document.getElementById('activeSessionWordCount');
+        const tbody = document.getElementById('savedSessionsTableBody');
+
+        if (socketsBadge) socketsBadge.textContent = data.activeCount || 0;
+        if (countBadge) countBadge.textContent = `${data.sessions?.length || 0} Linked`;
+
+        // Update active session box with compact session ID
+        if (data.sessions && data.sessions.length > 0) {
+          const first = data.sessions[0];
+          if (box) box.textContent = first.session_id || `Urooj~${first.clean_number}`;
+          if (wordCountEl) {
+            const w = (box.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+            wordCountEl.textContent = `${w} Word${w === 1 ? '' : 's'}`;
+          }
+        } else {
+          if (box) box.textContent = 'No active session. Pair your number or activate a session.';
+          if (wordCountEl) wordCountEl.textContent = '0 Words';
+        }
+
+        // Render table rows
+        if (tbody) {
+          if (!data.sessions || data.sessions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-500 font-mono">No linked sessions found. Request pairing code to link.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = data.sessions.map(s => {
+            const isConn = s.connected;
+            const shortSid = (s.session_id || '').length > 28 
+              ? (s.session_id.substring(0, 24) + '...') 
+              : (s.session_id || '-');
+
+            return `
+              <tr class="hover:bg-slate-900/60 transition">
+                <td class="py-3 px-2 font-bold text-slate-200">
+                  +${s.clean_number}
+                </td>
+                <td class="py-3 px-2 text-amber-300 font-mono text-[11px] truncate max-w-[140px]" title="${escapeHtml(s.session_id || '')}">
+                  ${escapeHtml(shortSid)}
+                </td>
+                <td class="py-3 px-2">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase ${isConn ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'}">
+                    <span class="w-1.5 h-1.5 rounded-full ${isConn ? 'bg-emerald-400' : 'bg-slate-500'}"></span>
+                    ${isConn ? 'Connected' : 'Standby'}
+                  </span>
+                </td>
+                <td class="py-3 px-2 text-right">
+                  <div class="inline-flex items-center gap-1.5">
+                    <button 
+                      type="button" 
+                      onclick="quickActivateSession('${escapeHtml(s.session_id || '')}', '${s.clean_number}')" 
+                      title="Activate this WhatsApp session"
+                      class="px-2 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>⚡</span>
+                      <span class="hidden sm:inline">Activate</span>
+                    </button>
+                    <button 
+                      type="button" 
+                      onclick="quickDeleteSession('${s.clean_number}')" 
+                      title="Delete this WhatsApp session"
+                      class="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>🗑️</span>
+                      <span class="hidden sm:inline">Delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.warn('fetchMySessions error:', err.message);
+      }
+    }
+
+    // Quick 1-click activate from table
+    async function quickActivateSession(sessionId, cleanNumber) {
+      document.getElementById('activatorSessionId').value = sessionId;
+      document.getElementById('activatorPhoneNumber').value = cleanNumber;
+      updateSessionWordCount(sessionId);
+      const fakeEvent = { preventDefault: () => {} };
+      await handleActivateSession(fakeEvent);
+    }
+
+    // Quick 1-click delete from table (modal-driven)
+    function quickDeleteSession(cleanNumber) {
+      document.getElementById('deletePhoneInput').value = cleanNumber;
+      handleDeleteSessionByNumber();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -3488,13 +4375,22 @@
         const res = await fetch('/api/status');
         const data = await res.json();
         if (data.status === 'running') {
-          document.getElementById('statusText').textContent = data.connectedSessions?.length > 0 
-            ? `Connected (+${data.connectedSessions[0]})` 
-            : 'Standby (Ready to Pair)';
-          document.getElementById('statusIndicator').className = data.connectedSessions?.length > 0
-            ? 'w-2 h-2 rounded-full bg-emerald-400'
-            : 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
-          document.getElementById('statUptime').textContent = data.uptimeFormatted || '0m 0s';
+          const statusText = document.getElementById('statusText');
+          if (statusText) {
+            statusText.textContent = data.connectedSessions?.length > 0 
+              ? `Connected (+${data.connectedSessions[0]})` 
+              : 'Standby (Ready to Pair)';
+          }
+          const statusIndicator = document.getElementById('statusIndicator');
+          if (statusIndicator) {
+            statusIndicator.className = data.connectedSessions?.length > 0
+              ? 'w-2 h-2 rounded-full bg-emerald-400'
+              : 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+          }
+          const statUptime = document.getElementById('statUptime');
+          if (statUptime) {
+            statUptime.textContent = data.uptimeFormatted || '0m 0s';
+          }
         }
       } catch (_) {}
     }
@@ -3584,6 +4480,310 @@
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // 🔓 VIEW-ONCE DOWNLOADER & 🗑️ DELETED MESSAGE FETCHER VAULT CONTROLLER
+    // ──────────────────────────────────────────────────────────────────────────
+    let currentVaultCaptureFilter = 'all';
+    let cachedVaultItems = [];
+
+    function setVaultCaptureFilter(filterType) {
+      currentVaultCaptureFilter = filterType || 'all';
+      ['all', 'view_once', 'deleted'].forEach(type => {
+        const btn = document.getElementById('vaultTabBtn-' + type);
+        if (!btn) return;
+        if (type === currentVaultCaptureFilter) {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer bg-amber-500 text-slate-950 shadow';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white';
+        }
+      });
+      fetchVaultItems();
+    }
+
+    function formatBytes(bytes) {
+      const b = Number(bytes || 0);
+      if (!b || b <= 0) return 'Text';
+      if (b < 1024) return b + ' B';
+      if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+      return (b / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function escapeHtmlSafe(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function fetchVaultItems() {
+      try {
+        const chatType = document.getElementById('vaultChatTypeFilter')?.value || 'all';
+        const mediaType = document.getElementById('vaultMediaTypeFilter')?.value || 'all';
+        const search = document.getElementById('vaultSearchInput')?.value || '';
+
+        const params = new URLSearchParams({
+          captureType: currentVaultCaptureFilter,
+          chatType,
+          mediaType,
+          search
+        });
+
+        const res = await fetch('/api/vault/items?' + params.toString());
+        const data = await res.json();
+        if (!data.success) return;
+
+        cachedVaultItems = data.items || [];
+
+        // Update KPI Stats
+        if (data.stats) {
+          const elTotal = document.getElementById('vaultStatTotal');
+          const elVo = document.getElementById('vaultStatViewOnce');
+          const elDel = document.getElementById('vaultStatDeleted');
+          const elFwd = document.getElementById('vaultStatForwarded');
+          if (elTotal) elTotal.textContent = data.stats.total ?? 0;
+          if (elVo) elVo.textContent = data.stats.viewOnce ?? 0;
+          if (elDel) elDel.textContent = data.stats.deleted ?? 0;
+          if (elFwd) elFwd.textContent = data.stats.forwarded ?? 0;
+        }
+
+        // Sync Settings Controls
+        if (data.settings) {
+          const tVo = document.getElementById('toggleViewOnce');
+          const tDel = document.getElementById('toggleAntiDelete');
+          const tDm = document.getElementById('toggleAutoForwardDm');
+          const dmInput = document.getElementById('vaultTargetDmInput');
+          if (tVo) tVo.checked = !!data.settings.enableViewOnce;
+          if (tDel) tDel.checked = !!data.settings.enableAntiDelete;
+          if (tDm) tDm.checked = !!data.settings.autoForwardDm;
+          if (dmInput && document.activeElement !== dmInput && data.settings.targetDmNumber) {
+            dmInput.value = data.settings.targetDmNumber;
+          }
+        }
+
+        renderVaultItems(cachedVaultItems);
+      } catch (err) {
+        console.warn('[vault] fetchVaultItems error:', err.message);
+      }
+    }
+
+    function renderVaultItems(items) {
+      const grid = document.getElementById('vaultItemsGrid');
+      if (!grid) return;
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full p-10 rounded-2xl bg-slate-900/60 border border-slate-800 text-center space-y-3">
+            <div class="text-3xl">🔓</div>
+            <h3 class="text-base font-bold text-white">No Captured View-Once or Deleted Messages Yet</h3>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">
+              Incoming disappearing View-Once media and revoked "Delete for Everyone" messages from private chats and groups will automatically appear here and forward to your WhatsApp DM.
+            </p>
+            <div class="flex items-center justify-center gap-2 pt-2">
+              <button type="button" onclick="triggerVaultCapture('view_once')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer">
+                🔓 Simulate View-Once Capture
+              </button>
+              <button type="button" onclick="triggerVaultCapture('deleted')" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition cursor-pointer">
+                🗑️ Simulate Deleted Message
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const isViewOnce = item.capture_type === 'view_once';
+        const typeLabel = isViewOnce ? '🔓 View-Once Unlocked' : '🗑️ Deleted Msg Recovered';
+        const typeColor = isViewOnce ? 'text-amber-400' : 'text-rose-400';
+        const borderAccent = isViewOnce ? 'border-slate-800 hover:border-amber-500/40' : 'border-slate-800 hover:border-rose-500/40';
+        const chatSourceLabel = item.chat_type === 'group' ? 'Group Chat' : 'Private DM';
+        const senderClean = String(item.sender_jid || '').replace('@s.whatsapp.net', '').replace('@g.us', '');
+        const timeStr = new Date(item.original_timestamp || item.captured_at || Date.now()).toLocaleString();
+        const mediaUrl = `/api/vault/media/${item.id}`;
+        const downloadUrl = `/api/vault/media/${item.id}?download=1`;
+
+        let mediaPreviewHtml = '';
+        if (item.file_name && item.media_type === 'image') {
+          mediaPreviewHtml = `
+            <div class="rounded-xl overflow-hidden bg-slate-950 border border-slate-800/80 aspect-video flex items-center justify-center">
+              <img src="${mediaUrl}" alt="Unlocked View-Once Media" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          `;
+        } else if (item.file_name && item.media_type === 'video') {
+          mediaPreviewHtml = `
+            <div class="rounded-xl overflow-hidden bg-slate-950 border border-slate-800/80 aspect-video flex items-center justify-center">
+              <video src="${mediaUrl}" controls class="w-full h-full object-contain"></video>
+            </div>
+          `;
+        } else if (item.file_name && item.media_type === 'audio') {
+          mediaPreviewHtml = `
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+              <audio src="${mediaUrl}" controls class="w-full h-9"></audio>
+            </div>
+          `;
+        }
+
+        const textBubbleHtml = item.text_content ? `
+          <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800/80 text-xs text-slate-200 leading-relaxed break-words">
+            ${escapeHtmlSafe(item.text_content)}
+          </div>
+        ` : '';
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-900/85 border ${borderAccent} shadow-sm flex flex-col justify-between gap-3.5 transition">
+            <div class="space-y-3">
+              <!-- Top Metadata Row (Unboxed with middle-dot separators) -->
+              <div class="flex items-center justify-between gap-2 text-[11px] font-mono">
+                <span class="font-bold ${typeColor}">${typeLabel}</span>
+                <span class="text-slate-400 tabular-nums">${chatSourceLabel} &middot; ${formatBytes(item.file_size)}</span>
+              </div>
+
+              <!-- Sender & Timestamp -->
+              <div>
+                <div class="text-sm font-bold text-white truncate">${escapeHtmlSafe(item.sender_name || '+' + senderClean)}</div>
+                <div class="text-[11px] text-slate-400 font-mono tabular-nums mt-0.5">
+                  +${escapeHtmlSafe(senderClean)} &middot; ${escapeHtmlSafe(timeStr)}
+                </div>
+              </div>
+
+              ${mediaPreviewHtml}
+              ${textBubbleHtml}
+            </div>
+
+            <!-- Action Controls -->
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <a
+                  href="${downloadUrl}"
+                  download
+                  class="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold transition whitespace-nowrap shrink-0"
+                >
+                  ⬇ Download
+                </a>
+                <button
+                  type="button"
+                  onclick="forwardVaultItemToDm(${item.id})"
+                  class="px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  ${item.forwarded_to_dm ? '✓ Sent to DM' : '📤 Forward DM'}
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onclick="deleteVaultItem(${item.id})"
+                class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 text-xs font-semibold transition whitespace-nowrap shrink-0 cursor-pointer"
+                title="Delete from Vault"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function saveVaultSettings(showFeedback = false) {
+      const enableViewOnce = !!document.getElementById('toggleViewOnce')?.checked;
+      const enableAntiDelete = !!document.getElementById('toggleAntiDelete')?.checked;
+      const autoForwardDm = !!document.getElementById('toggleAutoForwardDm')?.checked;
+      const targetDmNumber = document.getElementById('vaultTargetDmInput')?.value?.trim() || '923299931199';
+
+      try {
+        const res = await fetch('/api/vault/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            enableViewOnce,
+            enableAntiDelete,
+            autoForwardDm,
+            targetDmNumber
+          })
+        });
+        const data = await res.json();
+        if (data.success && showFeedback) {
+          showVaultToast(`✅ Interceptor settings saved! Auto-Forward DM target: +${data.settings.targetDmNumber}`);
+        }
+      } catch (err) {
+        console.warn('[vault] Failed to save settings:', err.message);
+      }
+    }
+
+    function showVaultToast(message) {
+      const box = document.getElementById('vaultSettingsStatus');
+      if (!box) return;
+      box.textContent = message;
+      box.classList.remove('hidden');
+      setTimeout(() => box.classList.add('hidden'), 4000);
+    }
+
+    async function triggerVaultCapture(captureType = 'view_once') {
+      try {
+        const targetDm = document.getElementById('vaultTargetDmInput')?.value?.trim() || '923299931199';
+        const res = await fetch('/api/vault/test-capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            captureType,
+            chatType: captureType === 'view_once' ? 'private' : 'group',
+            mediaType: captureType === 'view_once' ? 'image' : 'text',
+            senderNumber: targetDm
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showVaultToast(`✅ ${data.message}`);
+          fetchVaultItems();
+        }
+      } catch (err) {
+        showVaultToast('❌ Error: ' + err.message);
+      }
+    }
+
+    async function forwardVaultItemToDm(id) {
+      const targetDm = document.getElementById('vaultTargetDmInput')?.value?.trim() || '923299931199';
+      try {
+        const res = await fetch(`/api/vault/forward/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetNumber: targetDm })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showVaultToast(`📤 ${data.message}`);
+          fetchVaultItems();
+        } else {
+          showVaultToast(`❌ ${data.error || 'Could not forward item'}`);
+        }
+      } catch (err) {
+        showVaultToast('❌ Error forwarding: ' + err.message);
+      }
+    }
+
+    async function deleteVaultItem(id) {
+      try {
+        const res = await fetch(`/api/vault/items/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          fetchVaultItems();
+        }
+      } catch (_) {}
+    }
+
+    async function clearAllVaultItems() {
+      try {
+        const res = await fetch(`/api/vault/clear?captureType=${encodeURIComponent(currentVaultCaptureFilter)}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (data.success) {
+          showVaultToast(`🧹 ${data.message}`);
+          fetchVaultItems();
+        }
+      } catch (_) {}
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // INITIALIZATION RUNNER
     // ──────────────────────────────────────────────────────────────────────────
     checkAuthSession();
@@ -3592,18 +4792,28 @@
     updateFakeQuotePreview();
     fetchCommands();
     updateLocationPreview();
+    fetchMySessions();
+    fetchVaultItems();
     setInterval(fetchStatus, 8000);
 
     // Initial hash routing support
     if (window.location.hash) {
       const initialTab = window.location.hash.replace('#', '');
-      if (document.getElementById('tab-' + initialTab)) {
+      if (initialTab === 'viewonce') {
+        setTimeout(() => openVaultWithFilter('view_once'), 150);
+      } else if (initialTab === 'antidelete') {
+        setTimeout(() => openVaultWithFilter('deleted'), 150);
+      } else if (document.getElementById('tab-' + initialTab)) {
         setTimeout(() => switchTab(initialTab), 150);
       }
     }
     window.addEventListener('hashchange', () => {
       const activeHash = window.location.hash.replace('#', '');
-      if (document.getElementById('tab-' + activeHash)) {
+      if (activeHash === 'viewonce') {
+        openVaultWithFilter('view_once');
+      } else if (activeHash === 'antidelete') {
+        openVaultWithFilter('deleted');
+      } else if (document.getElementById('tab-' + activeHash)) {
         switchTab(activeHash);
       }
     });
