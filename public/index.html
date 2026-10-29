@@ -523,12 +523,12 @@
         </div>
       </div>
 
-      <!-- Category 3: 🔐 Device Session & System Management -->
+      <!-- Category 3: 🔐 Device Session, Railway Cloud & System -->
       <div class="space-y-3">
         <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-          <span>🔐 Device Session & System</span>
+          <span>🔐 Device Session, Railway Cloud &amp; System</span>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
           
           <!-- 8. Device Pairing -->
           <div 
@@ -539,8 +539,21 @@
               <span class="text-2xl group-hover:scale-110 transition-transform">🔗</span>
               <span class="px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[9px] font-mono font-bold">Pairing</span>
             </div>
-            <h3 class="font-bold text-sm text-white group-hover:text-sky-300 transition">Pairing & Sessions</h3>
+            <h3 class="font-bold text-sm text-white group-hover:text-sky-300 transition">Pairing &amp; Sessions</h3>
             <p class="text-xs text-slate-400 mt-1 line-clamp-2">Link your WhatsApp number using an 8-digit terminal pairing code. Stored locally.</p>
+          </div>
+
+          <!-- Railway Cloud & Deploy Hub -->
+          <div 
+            onclick="selectService('railway')" 
+            class="p-4 rounded-2xl bg-slate-900/80 hover:bg-indigo-950/40 border border-indigo-500/40 hover:border-indigo-400 shadow-sm hover:shadow-lg hover:shadow-indigo-950/40 transition cursor-pointer group"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🚂</span>
+              <span class="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-wider">Cloud Ready</span>
+            </div>
+            <h3 class="font-bold text-sm text-white group-hover:text-indigo-300 transition">Railway Cloud Hub</h3>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Live Railway Volume telemetry, Raw Env generator, manifest viewer &amp; 1-click deployable ZIP.</p>
           </div>
 
           <!-- 9. Download APK -->
@@ -579,7 +592,7 @@
               <span class="text-2xl group-hover:scale-110 transition-transform">⚙️</span>
               <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[9px] font-mono">Config</span>
             </div>
-            <h3 class="font-bold text-sm text-white group-hover:text-slate-200 transition">Settings & System</h3>
+            <h3 class="font-bold text-sm text-white group-hover:text-slate-200 transition">Settings &amp; System</h3>
             <p class="text-xs text-slate-400 mt-1 line-clamp-2">Tune command trigger prefix, autoread, presence status, and inspect live activity logs.</p>
           </div>
 
@@ -673,6 +686,13 @@
           class="px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
         >
           <span>🗑️ Deleted Msgs</span>
+        </button>
+        <button 
+          type="button" 
+          onclick="switchTab('railway')" 
+          class="px-3 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+        >
+          <span>🚂 Railway Deploy</span>
         </button>
         <button 
           type="button" 
@@ -2332,6 +2352,321 @@
 
     </section>
 
+    <!-- ======================================================================= -->
+    <!-- TAB 11: 🚂 RAILWAY CLOUD & PERSISTENT VOLUME DEPLOYMENT HUB             -->
+    <!-- ======================================================================= -->
+    <section id="tab-railway" class="tab-content hidden space-y-6">
+
+      <!-- Top Header & 1-Click Source Export Bar -->
+      <div class="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🚂</span>
+              <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Railway Cloud &amp; Persistent Volume Hub</h2>
+            </div>
+            <p class="text-xs text-slate-400 max-w-2xl">
+              Full-stack deployment telemetry, unified Railway Volume persistence (<span class="font-mono text-slate-200">/app/data</span>) for WhatsApp sessions, SQLite WAL database, and View-Once Media Vault, plus a one-click deployable project bundle.
+            </p>
+            <div class="flex items-center gap-2 pt-1 text-xs font-mono text-slate-400 flex-wrap">
+              <span id="rwRuntimeModeText" class="text-emerald-400 font-bold">● Ready for Railway</span>
+              <span aria-hidden="true">&middot;</span>
+              <span id="rwDomainText" class="tabular-nums">Domain: localhost:3000</span>
+              <span aria-hidden="true">&middot;</span>
+              <span id="rwPortNodeText" class="tabular-nums">Port: 3000 &middot; Node v22</span>
+              <span aria-hidden="true">&middot;</span>
+              <span id="rwHealthStatusText" class="text-emerald-400 tabular-nums">Healthcheck: /api/health (200 OK)</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5 flex-wrap shrink-0">
+            <a
+              href="/api/railway/export-zip"
+              download="urooj-choudhary-railway-deploy.zip"
+              class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer shadow-md shadow-amber-500/20"
+            >
+              <span>⬇ Download Railway Project (.ZIP)</span>
+            </a>
+            <button
+              type="button"
+              onclick="pingRailwayHealth()"
+              class="px-3.5 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-bold text-xs transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              <span>🩺 Ping /api/health</span>
+            </button>
+            <button
+              type="button"
+              onclick="fetchRailwayStatus()"
+              class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              <span>🔄 Refresh Telemetry</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="railwayToastBox" class="hidden text-xs font-medium px-3.5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono"></div>
+      </div>
+
+      <!-- 🔗 AI Studio Frontend <-> Railway Backend Bridge Control Panel -->
+      <div class="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-amber-500/30 shadow-lg space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🔗</span>
+              <h3 class="text-base sm:text-lg font-extrabold text-white">AI Studio Published Frontend &harr; Railway 24/7 Backend Bridge</h3>
+            </div>
+            <p class="text-xs text-slate-400 max-w-3xl">
+              Connect this published AI Studio Web UI to your 24/7 Railway Backend URL (<code class="text-amber-300 font-mono">RAILWAY_BACKEND_URL</code>). All live stats, WhatsApp Baileys sockets, SQLite rows, and View-Once media stream directly from Railway with <strong>zero logouts</strong> and <strong>zero restarts</strong>.
+            </p>
+            <div class="flex items-center gap-2 pt-1 text-xs font-mono text-slate-400 flex-wrap">
+              <span id="rwBridgeActiveBadge" class="text-emerald-400 font-bold">● Active Target: Same-Origin / Local</span>
+              <span aria-hidden="true">&middot;</span>
+              <span id="rwAuthPersistenceBadge" class="text-amber-300">Auth: Permanent 10-Year HMAC + Auto-Rehydrate</span>
+              <span aria-hidden="true">&middot;</span>
+              <span class="text-sky-400">Keep-Alive: 45s Anti-Sleep Heartbeat</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap shrink-0">
+            <button
+              type="button"
+              onclick="selectRailwayManifest('railwayAiStudioMd')"
+              class="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold text-xs transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              📘 View RailwayAiStudio.md Guide
+            </button>
+            <button
+              type="button"
+              onclick="copyAiStudioEnvBlock()"
+              class="px-3.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-sky-300 font-bold text-xs transition whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              📋 Copy AI Studio .ENV
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+          <div class="lg:col-span-8">
+            <label for="rwBridgeUrlInput" class="block text-[11px] font-mono text-slate-400 mb-1">
+              RAILWAY_BACKEND_URL (Supports both AI Studio <code class="text-slate-200">.env</code> variable &amp; live input below)
+            </label>
+            <input
+              type="url"
+              id="rwBridgeUrlInput"
+              placeholder="https://your-project-production.up.railway.app (leave blank to use current host)"
+              oninput="updateRailwayEnvPreview()"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+            />
+          </div>
+          <div class="lg:col-span-4 flex items-center gap-2">
+            <button
+              type="button"
+              onclick="saveRailwayBridgeUrl()"
+              class="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition cursor-pointer whitespace-nowrap shadow"
+            >
+              🔗 Save &amp; Connect Bridge
+            </button>
+            <button
+              type="button"
+              onclick="clearRailwayBridgeUrl()"
+              class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer whitespace-nowrap"
+              title="Reset to local / same-origin server"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Persistent Volume & Runtime Telemetry KPI Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/75 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Railway Volume Mount</div>
+          <div id="rwStatVolumeWritable" class="text-xl font-extrabold text-emerald-400 mt-1 font-mono tabular-nums">WRITABLE</div>
+          <div id="rwStatVolumePath" class="text-[11px] text-slate-400 font-mono truncate mt-0.5">/app/data</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/75 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">SQLite Database (WAL)</div>
+          <div id="rwStatDbSize" class="text-2xl font-extrabold text-amber-400 mt-1 font-mono tabular-nums">0 KB</div>
+          <div id="rwStatDbSub" class="text-[11px] text-slate-500 font-mono mt-0.5">urooj_suite.db &middot; Persistent</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/75 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Stored Session Folders</div>
+          <div id="rwStatSessions" class="text-2xl font-extrabold text-sky-400 mt-1 font-mono tabular-nums">0</div>
+          <div id="rwStatActiveSockets" class="text-[11px] text-slate-500 font-mono mt-0.5">0 active sockets</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/75 border border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Vault Media Storage</div>
+          <div id="rwStatVaultSize" class="text-2xl font-extrabold text-rose-400 mt-1 font-mono tabular-nums">0 KB</div>
+          <div id="rwStatVaultCount" class="text-[11px] text-slate-500 font-mono mt-0.5">0 unlocked files in Volume</div>
+        </div>
+      </div>
+
+      <!-- Two-Column Workspace: Left = Railway & AI Studio Env Generator, Right = RailwayAiStudio.md & Manifests -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column (6 cols): Dual .ENV Generator (Railway Backend + AI Studio Frontend) -->
+        <div class="lg:col-span-6 p-5 sm:p-6 rounded-2xl bg-slate-900/85 border border-slate-800 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 flex-wrap">
+              <div>
+                <h3 class="text-base font-bold text-white">Railway &amp; AI Studio <code class="font-mono text-amber-400">.env</code> Generator</h3>
+                <p class="text-xs text-slate-400">Copy variables for Railway Backend (24/7) and AI Studio Frontend</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onclick="copyRailwayEnvBlock()"
+                  class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition whitespace-nowrap shrink-0 cursor-pointer shadow"
+                >
+                  📋 Copy Railway .ENV
+                </button>
+                <button
+                  type="button"
+                  onclick="copyAiStudioEnvBlock()"
+                  class="px-3 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-xs transition whitespace-nowrap shrink-0 cursor-pointer shadow"
+                >
+                  📋 Copy AI Studio .ENV
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">BOT_NAME</label>
+                <input type="text" id="rwEnvBotName" value="Urooj Choudhary" oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-amber-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">BOT_OWNER</label>
+                <input type="text" id="rwEnvBotOwner" value="King Unkown" oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-amber-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">OWNER_NUMBER (DM Target)</label>
+                <input type="text" id="rwEnvOwnerNumber" value="923299931199" oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">PREFIX &amp; MODE</label>
+                <input type="text" id="rwEnvPrefix" value="." oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">RAILWAY_VOLUME_MOUNT_PATH</label>
+                <input type="text" id="rwEnvVolumePath" value="/app/data" oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-400 focus:outline-none focus:border-amber-500" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1">SESSION_ID (Optional Fallback)</label>
+                <input type="text" id="rwEnvSessionId" placeholder="Urooj~923299931199~..." oninput="updateRailwayEnvPreview()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-500" />
+              </div>
+            </div>
+
+            <div>
+              <div class="text-[11px] font-mono text-slate-400 mb-1.5">1. Railway Backend Raw Variables (<code class="text-emerald-300">Railway &rarr; Variables &rarr; Raw Editor</code>):</div>
+              <pre id="rwEnvPreviewBox" class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-300 overflow-x-auto leading-relaxed select-all"></pre>
+            </div>
+
+            <div>
+              <div class="text-[11px] font-mono text-slate-400 mb-1.5">2. AI Studio Frontend Variables (<code class="text-sky-300">AI Studio .env</code>):</div>
+              <pre id="rwAiStudioEnvPreviewBox" class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-sky-300 overflow-x-auto leading-relaxed select-all"></pre>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400">
+            💡 <strong>Zero-Logout Secret:</strong> Keep <code class="text-slate-200 font-mono">PERMANENT_AUTH_SECRET</code> identical on both Railway and AI Studio so your 10-year HMAC login token works seamlessly across both servers without ever logging out.
+          </div>
+        </div>
+
+        <!-- Right Column (6 cols): RailwayAiStudio.md Guide, Manifests & Checklist -->
+        <div class="lg:col-span-6 space-y-6">
+
+          <!-- Manifests & RailwayAiStudio.md Viewer Card -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-slate-900/85 border border-slate-800 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-white">RailwayAiStudio.md &amp; Deployment Files</h3>
+                <p class="text-xs text-slate-400">Full instructions, <code class="font-mono">.env</code> sections &amp; required files</p>
+              </div>
+
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 overflow-x-auto">
+                <button
+                  type="button"
+                  id="rwManifestBtn-railwayAiStudioMd"
+                  onclick="selectRailwayManifest('railwayAiStudioMd')"
+                  class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer bg-amber-500 text-slate-950"
+                >
+                  RailwayAiStudio.md
+                </button>
+                <button
+                  type="button"
+                  id="rwManifestBtn-railwayJson"
+                  onclick="selectRailwayManifest('railwayJson')"
+                  class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white"
+                >
+                  railway.json
+                </button>
+                <button
+                  type="button"
+                  id="rwManifestBtn-dockerfile"
+                  onclick="selectRailwayManifest('dockerfile')"
+                  class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white"
+                >
+                  Dockerfile
+                </button>
+                <button
+                  type="button"
+                  id="rwManifestBtn-nixpacksToml"
+                  onclick="selectRailwayManifest('nixpacksToml')"
+                  class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white"
+                >
+                  nixpacks.toml
+                </button>
+              </div>
+            </div>
+
+            <div class="relative">
+              <pre id="rwManifestContentBox" class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 overflow-x-auto h-72 custom-scrollbar leading-relaxed whitespace-pre-wrap"></pre>
+              <button
+                type="button"
+                onclick="copyActiveRailwayManifest()"
+                class="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-[11px] font-mono font-bold transition cursor-pointer"
+              >
+                Copy File
+              </button>
+            </div>
+          </div>
+
+          <!-- 3-Step Hybrid Railway + AI Studio Publishing Checklist -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-slate-900/85 border border-slate-800 space-y-3.5">
+            <h3 class="text-base font-bold text-white">3-Step Railway Backend + AI Studio Frontend Setup</h3>
+            <div class="space-y-3 text-xs text-slate-300">
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                <div class="font-bold text-white">01. Deploy Backend on Railway with <code class="text-emerald-400 font-mono">/app/data</code> Volume</div>
+                <p class="text-slate-400 mt-0.5">
+                  Click <strong>⬇ Download Railway Project (.ZIP)</strong> above and deploy to Railway. Press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-200 font-mono">⌘K</kbd> &rarr; <strong>Add Volume</strong> mounted at <code class="text-emerald-400 font-mono">/app/data</code>, paste the <strong>Railway .ENV</strong> block, and generate your public Railway domain.
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                <div class="font-bold text-white">02. Link AI Studio Frontend to Your Railway URL</div>
+                <p class="text-slate-400 mt-0.5">
+                  Paste your <code class="text-amber-300 font-mono">https://xxxx.up.railway.app</code> domain into the <strong>RAILWAY_BACKEND_URL</strong> input at the top of this tab (or set <code class="text-sky-300 font-mono">RAILWAY_BACKEND_URL</code> in AI Studio's environment variables) and click <strong>Save &amp; Connect Bridge</strong>.
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                <div class="font-bold text-white">03. Publish in AI Studio (Static UI &middot; Zero Logout &middot; No Restarting)</div>
+                <p class="text-slate-400 mt-0.5">
+                  Publish your app in Google AI Studio. Because your WhatsApp sockets run 24/7 on Railway and your browser holds a 10-year HMAC token with auto-rehydration, opening your published AI Studio URL is instant, never logs out, and never restarts your bot!
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Global Footer -->
@@ -2391,9 +2726,12 @@
     const TOKEN_KEY = 'urooj_auth_token';
     const USER_KEY = 'urooj_user';
     const DEVICE_KEY = 'urooj_device_id';
+    const REAUTH_KEY = 'urooj_reauth_creds';
+    const BRIDGE_URL_KEY = 'urooj_railway_backend_url';
     const PASSCODE_SUPERADMIN = 'Zaid@323232';
 
     let currentDeviceId = localStorage.getItem(DEVICE_KEY) || null;
+    let activeRailwayBackendUrl = (localStorage.getItem(BRIDGE_URL_KEY) || '').trim().replace(/\/+$/, '');
 
     function getOrCreateDeviceId() {
       if (!currentDeviceId) {
@@ -2409,11 +2747,23 @@
       return currentDeviceId;
     }
 
-    // Automatically attach X-Device-Id to every single network request
+    function resolveBridgeUrl(url) {
+      if (typeof url !== 'string') return url;
+      // Keep /api/config/bridge on the AI Studio frontend host unless explicitly testing remote
+      if (url.startsWith('/api/config/bridge')) return url;
+      if (activeRailwayBackendUrl && (url.startsWith('/api/') || url.startsWith('/download/') || url === '/health')) {
+        return activeRailwayBackendUrl + url;
+      }
+      return url;
+    }
+
+    // Automatically attach X-Device-Id, permanent Authorization token, and route via RAILWAY_BACKEND_URL bridge
     const _nativeFetch = window.fetch.bind(window);
-    window.fetch = function(url, options) {
+    window.fetch = async function(url, options) {
       options = options || {};
       const devId = getOrCreateDeviceId();
+      const savedTok = localStorage.getItem(TOKEN_KEY);
+
       if (!options.headers) {
         options.headers = { 'X-Device-Id': devId };
       } else if (options.headers instanceof Headers) {
@@ -2423,10 +2773,32 @@
       } else if (typeof options.headers === 'object') {
         if (!options.headers['X-Device-Id']) options.headers['X-Device-Id'] = devId;
       }
-      return _nativeFetch(url, options);
+
+      if (savedTok) {
+        if (options.headers instanceof Headers) {
+          if (!options.headers.has('Authorization')) options.headers.set('Authorization', `Bearer ${savedTok}`);
+        } else if (typeof options.headers === 'object' && !Array.isArray(options.headers)) {
+          if (!options.headers['Authorization']) options.headers['Authorization'] = `Bearer ${savedTok}`;
+        }
+      }
+
+      const targetUrl = resolveBridgeUrl(url);
+      try {
+        return await _nativeFetch(targetUrl, options);
+      } catch (err) {
+        // Automatic resilient fallback to local origin if custom Railway URL is temporarily unreachable
+        if (targetUrl !== url) {
+          return _nativeFetch(url, options);
+        }
+        throw err;
+      }
     };
 
     let currentUser = null;
+    try {
+      const cachedUserStr = localStorage.getItem(USER_KEY);
+      if (cachedUserStr) currentUser = JSON.parse(cachedUserStr);
+    } catch (_) {}
     let currentAuthToken = localStorage.getItem(TOKEN_KEY) || null;
     let allCommands = [];
     let currentCategory = 'all';
@@ -2482,38 +2854,120 @@
       if (input) input.type = input.type === 'password' ? 'text' : 'password';
     }
 
-    // Direct Mobile Startup (Zero Login Barrier)
+    // Zero-Logout Permanent Session + Auto-Rehydration Engine
+    async function initBridgeConfig() {
+      try {
+        const res = await _nativeFetch('/api/config/bridge');
+        const data = await res.json();
+        if (data && data.success) {
+          const envOrServerUrl = (data.railwayBackendUrl || data.envBackendUrl || '').trim().replace(/\/+$/, '');
+          if (!activeRailwayBackendUrl && envOrServerUrl) {
+            activeRailwayBackendUrl = envOrServerUrl;
+            localStorage.setItem(BRIDGE_URL_KEY, activeRailwayBackendUrl);
+          }
+          updateBridgeBadgeUI();
+        }
+      } catch (_) {}
+    }
+
+    function updateBridgeBadgeUI() {
+      const badge = document.getElementById('rwBridgeActiveBadge');
+      const input = document.getElementById('rwBridgeUrlInput');
+      if (input && document.activeElement !== input) {
+        input.value = activeRailwayBackendUrl || '';
+      }
+      if (badge) {
+        if (activeRailwayBackendUrl) {
+          badge.textContent = `● Connected to Railway Backend: ${activeRailwayBackendUrl}`;
+          badge.className = 'text-emerald-400 font-bold';
+        } else {
+          badge.textContent = '● Active Target: Same-Origin / Local Server';
+          badge.className = 'text-amber-300 font-bold';
+        }
+      }
+    }
+
     async function checkAuthSession() {
       const devId = getOrCreateDeviceId();
       hideAuthModal();
 
-      // Check if user has an active token (e.g. Master Admin Urooj)
+      // 1. Immediately render cached user snapshot so published AI Studio UI is 100% static/instant with zero flicker
+      try {
+        const cached = localStorage.getItem(USER_KEY);
+        if (cached) {
+          currentUser = JSON.parse(cached);
+          updateUserUI();
+        }
+      } catch (_) {}
+
+      await initBridgeConfig();
+
+      // 2. Validate or auto-rehydrate permanent token
       const token = localStorage.getItem(TOKEN_KEY);
-      if (token) {
+      let savedCreds = null;
+      try {
+        const rawCreds = localStorage.getItem(REAUTH_KEY);
+        if (rawCreds) savedCreds = JSON.parse(atob(rawCreds));
+      } catch (_) {}
+
+      if (token || savedCreds || (currentUser && currentUser.role !== 'owner')) {
         try {
-          const res = await fetch('/api/auth/me', {
-            headers: { 'Authorization': `Bearer ${token}` }
+          if (token) {
+            const res = await fetch('/api/auth/me', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (res.ok && data.authenticated && data.user && data.user.role !== 'owner') {
+              currentUser = data.user;
+              localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+              updateUserUI();
+              fetchStatus();
+              return;
+            }
+          }
+
+          // Auto-rehydrate session silently if container restarted or backend switched
+          const rehydrateRes = await fetch('/api/auth/rehydrate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token,
+              username: savedCreds?.username || currentUser?.username,
+              password: savedCreds?.password,
+              role: currentUser?.role
+            })
           });
-          const data = await res.json();
-          if (res.ok && data.authenticated && data.user) {
-            currentUser = data.user;
-            localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+          const rehydrateData = await rehydrateRes.json();
+          if (rehydrateRes.ok && rehydrateData.success && rehydrateData.user) {
+            currentAuthToken = rehydrateData.token;
+            currentUser = rehydrateData.user;
+            localStorage.setItem(TOKEN_KEY, rehydrateData.token);
+            localStorage.setItem(USER_KEY, JSON.stringify(rehydrateData.user));
             updateUserUI();
             fetchStatus();
             return;
           }
-        } catch (_) {}
+        } catch (_) {
+          // Network blip: keep current cached user logged in (NEVER log out on network error)
+          if (currentUser) {
+            updateUserUI();
+            fetchStatus();
+            return;
+          }
+        }
       }
 
-      // Default: Direct Device-Bound Owner Access
-      const shortId = devId.slice(-6).toUpperCase();
-      currentUser = {
-        id: devId,
-        username: `Device #${shortId}`,
-        role: 'owner',
-        deviceId: devId
-      };
-      localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+      // Default: Direct Device-Bound Owner Access (if user hasn't signed into a named account yet)
+      if (!currentUser) {
+        const shortId = devId.slice(-6).toUpperCase();
+        currentUser = {
+          id: devId,
+          username: `Device #${shortId}`,
+          role: 'owner',
+          deviceId: devId
+        };
+        localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+      }
       updateUserUI();
       fetchStatus();
     }
@@ -2551,6 +3005,9 @@
           currentUser = data.user;
           localStorage.setItem(TOKEN_KEY, data.token);
           localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+          try {
+            localStorage.setItem(REAUTH_KEY, btoa(JSON.stringify({ username, password })));
+          } catch (_) {}
           hideAuthModal();
           updateUserUI();
           fetchStatus();
@@ -2591,6 +3048,9 @@
           currentUser = data.user;
           localStorage.setItem(TOKEN_KEY, data.token);
           localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+          try {
+            localStorage.setItem(REAUTH_KEY, btoa(JSON.stringify({ username, password })));
+          } catch (_) {}
           hideAuthModal();
           updateUserUI();
           fetchStatus();
@@ -2631,6 +3091,7 @@
       }
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+      localStorage.removeItem(REAUTH_KEY);
       currentUser = null;
       currentAuthToken = null;
       showAuthModal();
@@ -2770,6 +3231,12 @@
         icon: '🔓',
         badge: 'Auto-Interceptor',
         desc: 'Download disappearing View-Once media and fetch deleted messages across DMs & groups'
+      },
+      railway: {
+        title: 'Railway Cloud & Deploy Hub',
+        icon: '🚂',
+        badge: 'Persistent Volume',
+        desc: 'Deploy on Railway with /app/data Volume persistence, Raw Env generator & 1-click ZIP bundle'
       }
     };
 
@@ -2848,6 +3315,7 @@
       if (tabId === 'logs') fetchLogs();
       if (tabId === 'tracker') fetchTrackerLogs();
       if (tabId === 'vault') fetchVaultItems();
+      if (tabId === 'railway') fetchRailwayStatus();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -4784,6 +5252,262 @@
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // 🚂 RAILWAY CLOUD & PERSISTENT VOLUME DEPLOYMENT HUB CONTROLLER
+    // ──────────────────────────────────────────────────────────────────────────
+    let cachedRailwayManifests = {
+      railwayAiStudioMd: '',
+      railwayJson: '',
+      dockerfile: '',
+      nixpacksToml: ''
+    };
+    let currentRailwayManifestKey = 'railwayAiStudioMd';
+
+    function showRailwayToast(msg) {
+      const box = document.getElementById('railwayToastBox');
+      if (!box) return;
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      setTimeout(() => box.classList.add('hidden'), 5000);
+    }
+
+    async function saveRailwayBridgeUrl() {
+      const input = document.getElementById('rwBridgeUrlInput');
+      let raw = (input?.value || '').trim().replace(/\/+$/, '');
+      if (raw && !/^https?:\/\//i.test(raw)) {
+        raw = 'https://' + raw;
+        if (input) input.value = raw;
+      }
+
+      activeRailwayBackendUrl = raw;
+      if (raw) {
+        localStorage.setItem(BRIDGE_URL_KEY, raw);
+      } else {
+        localStorage.removeItem(BRIDGE_URL_KEY);
+      }
+
+      try {
+        await _nativeFetch('/api/config/bridge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ railwayBackendUrl: raw })
+        });
+      } catch (_) {}
+
+      updateBridgeBadgeUI();
+      updateRailwayEnvPreview();
+      fetchRailwayStatus();
+      fetchStatus();
+      showRailwayToast(
+        raw
+          ? `🔗 Bridge connected! AI Studio Frontend is now routing live requests to ${raw}`
+          : '🔗 Bridge reset to local / same-origin backend.'
+      );
+    }
+
+    async function clearRailwayBridgeUrl() {
+      const input = document.getElementById('rwBridgeUrlInput');
+      if (input) input.value = '';
+      await saveRailwayBridgeUrl();
+    }
+
+    function updateRailwayEnvPreview() {
+      const botName = document.getElementById('rwEnvBotName')?.value?.trim() || 'Urooj Choudhary';
+      const botOwner = document.getElementById('rwEnvBotOwner')?.value?.trim() || 'King Unkown';
+      const ownerNumber = document.getElementById('rwEnvOwnerNumber')?.value?.trim() || '923299931199';
+      const prefix = document.getElementById('rwEnvPrefix')?.value?.trim() || '.';
+      const volumePath = document.getElementById('rwEnvVolumePath')?.value?.trim() || '/app/data';
+      const sessionId = document.getElementById('rwEnvSessionId')?.value?.trim() || '';
+      const bridgeUrl = document.getElementById('rwBridgeUrlInput')?.value?.trim().replace(/\/+$/, '') || activeRailwayBackendUrl || 'https://your-project-production.up.railway.app';
+
+      const railwayLines = [
+        `NODE_ENV=production`,
+        `PORT=3000`,
+        `RAILWAY_VOLUME_MOUNT_PATH=${volumePath}`,
+        `SQLITE_PATH=${volumePath}/urooj_suite.db`,
+        `DB_TYPE=sqlite`,
+        `BOT_NAME=${botName}`,
+        `BOT_OWNER=${botOwner}`,
+        `OWNER_NUMBER=${ownerNumber}`,
+        `PREFIX=${prefix}`,
+        `COMMAND_MODE=public`,
+        `PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-923299931199`,
+        `AUTO_REAUTH_ENABLED=true`,
+        `CORS_ORIGIN=*`,
+        `KEEP_ALIVE_INTERVAL_MS=45000`,
+        `AUTO_STATUS_REACT=true`,
+        `TIMEZONE=Asia/Karachi`,
+        `SESSION_ID=${sessionId}`
+      ];
+
+      const aiStudioLines = [
+        `PORT=3000`,
+        `NODE_ENV=production`,
+        `RAILWAY_BACKEND_URL=${bridgeUrl}`,
+        `PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-923299931199`,
+        `AUTO_REAUTH_ENABLED=true`,
+        `CORS_ORIGIN=*`,
+        `OWNER_NUMBER=${ownerNumber}`
+      ];
+
+      const pre = document.getElementById('rwEnvPreviewBox');
+      if (pre) pre.textContent = railwayLines.join('\n');
+
+      const aiPre = document.getElementById('rwAiStudioEnvPreviewBox');
+      if (aiPre) aiPre.textContent = aiStudioLines.join('\n');
+
+      return {
+        railwayEnv: railwayLines.join('\n'),
+        aiStudioEnv: aiStudioLines.join('\n')
+      };
+    }
+
+    function copyRailwayEnvBlock() {
+      const { railwayEnv } = updateRailwayEnvPreview();
+      navigator.clipboard.writeText(railwayEnv).then(() => {
+        showRailwayToast('✅ Copied Railway Backend .ENV to clipboard! Paste into Railway -> Variables -> Raw Editor.');
+      }).catch(() => {
+        prompt('Copy Railway Raw Environment Variables:', railwayEnv);
+      });
+    }
+
+    function copyAiStudioEnvBlock() {
+      const { aiStudioEnv } = updateRailwayEnvPreview();
+      navigator.clipboard.writeText(aiStudioEnv).then(() => {
+        showRailwayToast('✅ Copied AI Studio Frontend .ENV to clipboard!');
+      }).catch(() => {
+        prompt('Copy AI Studio Environment Variables:', aiStudioEnv);
+      });
+    }
+
+    function selectRailwayManifest(key) {
+      currentRailwayManifestKey = key || 'railwayAiStudioMd';
+      ['railwayAiStudioMd', 'railwayJson', 'dockerfile', 'nixpacksToml'].forEach(k => {
+        const btn = document.getElementById('rwManifestBtn-' + k);
+        if (!btn) return;
+        if (k === currentRailwayManifestKey) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer bg-amber-500 text-slate-950 shadow';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition whitespace-nowrap shrink-0 cursor-pointer text-slate-400 hover:text-white';
+        }
+      });
+
+      const box = document.getElementById('rwManifestContentBox');
+      if (box) {
+        box.textContent = cachedRailwayManifests[currentRailwayManifestKey] || '# Loading file...';
+      }
+    }
+
+    function copyActiveRailwayManifest() {
+      const content = cachedRailwayManifests[currentRailwayManifestKey] || '';
+      if (!content) return;
+      navigator.clipboard.writeText(content).then(() => {
+        showRailwayToast(`✅ Copied ${currentRailwayManifestKey} to clipboard!`);
+      });
+    }
+
+    async function pingRailwayHealth() {
+      try {
+        const start = performance.now();
+        const res = await fetch('/api/health');
+        const data = await res.json();
+        const elapsed = Math.round(performance.now() - start);
+        if (data.status === 'ok') {
+          const hEl = document.getElementById('rwHealthStatusText');
+          if (hEl) hEl.textContent = `Healthcheck: /api/health (200 OK · ${elapsed}ms)`;
+          showRailwayToast(`🩺 Healthcheck PASSED in ${elapsed}ms · Volume Writable: ${data.volumeWritable} · Uptime: ${data.uptimeFormatted}`);
+        }
+      } catch (err) {
+        showRailwayToast('❌ Healthcheck failed: ' + err.message);
+      }
+    }
+
+    async function fetchRailwayStatus() {
+      try {
+        const res = await fetch('/api/railway/status');
+        const data = await res.json();
+        if (!data.success) return;
+
+        const rt = data.runtime || {};
+        const vol = data.volume || {};
+        const envDef = data.envDefaults || {};
+        const bridge = data.bridge || {};
+
+        if (!activeRailwayBackendUrl && bridge.railwayBackendUrl) {
+          activeRailwayBackendUrl = bridge.railwayBackendUrl;
+        }
+        updateBridgeBadgeUI();
+
+        const modeEl = document.getElementById('rwRuntimeModeText');
+        if (modeEl) {
+          modeEl.textContent = rt.isRailway
+            ? `● Live on Railway (${rt.environmentName})`
+            : activeRailwayBackendUrl
+              ? `● Bridged to Railway (${activeRailwayBackendUrl})`
+              : `● Railway Package Ready (${rt.environmentName})`;
+        }
+
+        const domEl = document.getElementById('rwDomainText');
+        if (domEl) domEl.textContent = `Domain: ${rt.publicDomain || 'localhost:3000'}`;
+
+        const pnEl = document.getElementById('rwPortNodeText');
+        if (pnEl) pnEl.textContent = `Port: ${rt.port || 3000} · Node ${rt.nodeVersion || 'v22'}`;
+
+        const vwEl = document.getElementById('rwStatVolumeWritable');
+        if (vwEl) {
+          vwEl.textContent = vol.isWritable ? 'WRITABLE' : 'READ-ONLY';
+          vwEl.className = vol.isWritable
+            ? 'text-xl font-extrabold text-emerald-400 mt-1 font-mono tabular-nums'
+            : 'text-xl font-extrabold text-rose-400 mt-1 font-mono tabular-nums';
+        }
+
+        const vpEl = document.getElementById('rwStatVolumePath');
+        if (vpEl) vpEl.textContent = vol.volumePath || '/app/data';
+
+        const dbEl = document.getElementById('rwStatDbSize');
+        if (dbEl) dbEl.textContent = formatBytes(vol.dbSizeBytes || 0);
+
+        const sessEl = document.getElementById('rwStatSessions');
+        if (sessEl) sessEl.textContent = vol.sessionFoldersCount ?? 0;
+
+        const sockEl = document.getElementById('rwStatActiveSockets');
+        if (sockEl) sockEl.textContent = `${rt.activeSocketsCount ?? 0} active socket(s) connected`;
+
+        const vsEl = document.getElementById('rwStatVaultSize');
+        if (vsEl) vsEl.textContent = formatBytes(vol.vaultSizeBytes || 0);
+
+        const vcEl = document.getElementById('rwStatVaultCount');
+        if (vcEl) vcEl.textContent = `${vol.vaultFilesCount ?? 0} unlocked file(s) in Volume`;
+
+        // Populate env inputs if not currently focused
+        const setIfUnfocused = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && document.activeElement !== el && val !== undefined && val !== '') {
+            el.value = val;
+          }
+        };
+        setIfUnfocused('rwEnvBotName', envDef.BOT_NAME);
+        setIfUnfocused('rwEnvBotOwner', envDef.BOT_OWNER);
+        setIfUnfocused('rwEnvOwnerNumber', envDef.OWNER_NUMBER);
+        setIfUnfocused('rwEnvPrefix', envDef.PREFIX);
+        setIfUnfocused('rwEnvSessionId', envDef.SESSION_ID);
+
+        updateRailwayEnvPreview();
+
+        if (data.manifests) {
+          cachedRailwayManifests = {
+            railwayAiStudioMd: data.manifests.railwayAiStudioMd || '',
+            railwayJson: data.manifests.railwayJson || '',
+            dockerfile: data.manifests.dockerfile || '',
+            nixpacksToml: data.manifests.nixpacksToml || ''
+          };
+          selectRailwayManifest(currentRailwayManifestKey);
+        }
+      } catch (err) {
+        console.warn('[railway] fetchRailwayStatus error:', err.message);
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // INITIALIZATION RUNNER
     // ──────────────────────────────────────────────────────────────────────────
     checkAuthSession();
@@ -4794,6 +5518,7 @@
     updateLocationPreview();
     fetchMySessions();
     fetchVaultItems();
+    fetchRailwayStatus();
     setInterval(fetchStatus, 8000);
 
     // Initial hash routing support

@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:22-bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \
@@ -17,9 +17,12 @@ RUN npm install --production --legacy-peer-deps --ignore-scripts && \
 
 COPY . .
 
-RUN mkdir -p tmp session data
+RUN mkdir -p tmp session data /app/data/sessions /app/data/vault
 
-ENV PORT=7860
-EXPOSE 7860
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV RAILWAY_VOLUME_MOUNT_PATH=/app/data
 
-CMD ["node", "index.js"]
+EXPOSE 3000
+
+CMD ["node", "server.js"]

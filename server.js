@@ -14,14 +14,16 @@ const dotenv = require('dotenv');
 dotenv.config({ override: true });
 
 const database = require('./lib/database');
+const { SESSIONS_DIR, CONFIG_PATH, getVolumeDiagnostics } = require('./lib/storagePaths');
+const AdmZip = require('adm-zip');
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const HOST = '0.0.0.0';
 
 // Passcode & Backup configuration
 const DASHBOARD_PASSCODE = 'Zaid@323232';
-const BACKUP_DESTINATION_NUMBER = '923299931199';
+const BACKUP_DESTINATION_NUMBER = process.env.OWNER_NUMBER || '923299931199';
 
 // In-memory circular log buffer
 const MAX_LOGS = 300;
@@ -52,6 +54,19 @@ console.error = (...args) => {
     try { logEvent('[ERROR] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ')); } catch (_) {}
 };
 
+// Universal CORS Middleware (Allows Published AI Studio Frontend to talk to Railway Backend 24/7)
+app.use((req, res, next) => {
+    const allowedOrigin = process.env.CORS_ORIGIN || '*';
+    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Device-Id, X-Auth-Token, X-Railway-Bridge');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+    }
+    next();
+});
+
 // Middleware: Support JSON and large payloads for media uploads (up to 50MB for video notes)
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -81,7 +96,7 @@ try {
 // Read settings
 function getMergedConfig() {
     let fileConfig = {};
-    const configPath = path.join(__dirname, 'data/config.json');
+    const configPath = CONFIG_PATH;
     try {
         if (fs.existsSync(configPath)) {
             fileConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -109,6 +124,7 @@ function getMergedConfig() {
         avatarCaption: 'Urooj Choudhary',
         avatarUrl: '/assets/aistudio/file_00000000f0bc8208be82cd16e83afef8_ac51e6b8.png',
         backupDestinationNumber: BACKUP_DESTINATION_NUMBER,
+        railwayBackendUrl: String(fileConfig.RAILWAY_BACKEND_URL || process.env.RAILWAY_BACKEND_URL || '').trim().replace(/\/+$/, '')
     };
 }
 
@@ -253,6 +269,77 @@ app.post('/api/auth/signout', (req, res) => {
         database.logoutToken(token);
     }
     res.json({ success: true, message: 'Signed out successfully' });
+});
+
+// Zero-Logout Session Rehydration (Restores or re-issues permanent token across container restarts / backend switches)
+app.post('/api/auth/rehydrate', (req, res) => {
+    const { token, username, password, role } = req.body || {};
+    try {
+        if (username && password) {
+            const login = database.loginUser(username, password);
+            return res.json({
+                success: true,
+                rehydrated: true,
+                token: login.token,
+                expiresAt: login.expiresAt,
+                user: login.user
+            });
+        }
+        const restored = database.rehydrateOrEnsureUserSession({ token, username, role });
+        if (restored) {
+            return res.json({
+                success: true,
+                rehydrated: true,
+                token: restored.token,
+                expiresAt: restored.expiresAt,
+                user: restored.user
+            });
+        }
+        return res.status(404).json({ success: false, error: 'Could not rehydrate session' });
+    } catch (err) {
+        return res.status(400).json({ success: false, error: err.message });
+    }
+});
+
+// AI Studio Frontend <-> Railway Backend Bridge Config API
+app.get('/api/config/bridge', (req, res) => {
+    const cfg = getMergedConfig();
+    const envUrl = String(process.env.RAILWAY_BACKEND_URL || '').trim().replace(/\/+$/, '');
+    res.json({
+        success: true,
+        railwayBackendUrl: cfg.railwayBackendUrl || envUrl || '',
+        envBackendUrl: envUrl,
+        autoReauthEnabled: process.env.AUTO_REAUTH_ENABLED !== 'false',
+        keepAliveIntervalMs: Number(process.env.KEEP_ALIVE_INTERVAL_MS) || 45000,
+        ownerNumber: BACKUP_DESTINATION_NUMBER
+    });
+});
+
+app.post('/api/config/bridge', (req, res) => {
+    const rawUrl = String(req.body?.railwayBackendUrl ?? '').trim().replace(/\/+$/, '');
+    let current = {};
+    try {
+        if (fs.existsSync(CONFIG_PATH)) {
+            current = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+        }
+    } catch (_) {}
+
+    current.RAILWAY_BACKEND_URL = rawUrl;
+    process.env.RAILWAY_BACKEND_URL = rawUrl;
+
+    try {
+        fs.writeFileSync(CONFIG_PATH, JSON.stringify(current, null, 2), 'utf8');
+        console.log(`[bridge] 🔗 Updated RAILWAY_BACKEND_URL -> ${rawUrl || '(Local / Same-Origin)'}`);
+        res.json({
+            success: true,
+            railwayBackendUrl: rawUrl,
+            message: rawUrl
+                ? `Connected AI Studio Frontend to Railway Backend: ${rawUrl}`
+                : 'Cleared custom Railway Backend URL (using local/same-origin backend).'
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to save bridge config: ' + err.message });
+    }
 });
 
 // Legacy passcode route for backward compatibility
@@ -938,7 +1025,7 @@ app.get('/api/session/my-sessions', (req, res) => {
         } catch (_) {}
 
         const activeSockets = sessionManager ? sessionManager.getActiveSessions() : [];
-        const sessionBase = path.join(__dirname, 'session');
+        const sessionBase = SESSIONS_DIR;
 
         // Augment with live status and ensure compact session IDs
         const augmented = (sessions || []).map(s => {
@@ -1404,7 +1491,7 @@ app.get('/api/logs', (req, res) => {
 
 // Update Settings
 app.post('/api/settings', (req, res) => {
-    const configPath = path.join(__dirname, 'data/config.json');
+    const configPath = CONFIG_PATH;
     let current = {};
     try {
         if (fs.existsSync(configPath)) {
@@ -1434,6 +1521,154 @@ app.post('/api/settings', (req, res) => {
         res.json({ success: true, message: 'Settings saved successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Failed to write config: ' + err.message });
+    }
+});
+
+// ── 9. RAILWAY CLOUD DEPLOYMENT & PERSISTENT VOLUME HUB ─────────────────
+// Zero-downtime Railway Healthcheck Endpoint
+app.get('/api/health', (req, res) => {
+    const vol = getVolumeDiagnostics();
+    const activeSockets = sessionManager ? sessionManager.getActiveSessions() : [];
+    res.status(200).json({
+        status: 'ok',
+        service: 'Urooj Choudhary WhatsApp Automation Suite',
+        port: PORT,
+        uptimeSeconds: Math.floor(process.uptime()),
+        uptimeFormatted: getFormattedUptime(),
+        volumeWritable: vol.isWritable,
+        volumePath: vol.volumePath,
+        activeSessionsCount: activeSockets.length,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Comprehensive Railway Cloud Status, Volume Diagnostics & Manifests
+app.get('/api/railway/status', (req, res) => {
+    try {
+        const vol = getVolumeDiagnostics();
+        const cfg = getMergedConfig();
+        const activeSockets = sessionManager ? sessionManager.getActiveSessions() : [];
+        const activeSessionId = sessionManager?.getSessionIdForNumber() || process.env.SESSION_ID || '';
+        const vaultStats = database.getRecoveredStats();
+
+        const isRailway = Boolean(
+            process.env.RAILWAY_ENVIRONMENT ||
+            process.env.RAILWAY_ENVIRONMENT_NAME ||
+            process.env.RAILWAY_PROJECT_ID ||
+            process.env.RAILWAY_SERVICE_ID ||
+            process.env.RAILWAY_PUBLIC_DOMAIN
+        );
+
+        const safeReadFile = (relPath) => {
+            try {
+                const full = path.join(__dirname, relPath);
+                return fs.existsSync(full) ? fs.readFileSync(full, 'utf8') : '';
+            } catch (_) {
+                return '';
+            }
+        };
+
+        res.json({
+            success: true,
+            runtime: {
+                isRailway,
+                environmentName: process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_ENVIRONMENT || (isRailway ? 'production' : 'ready-to-deploy'),
+                publicDomain: process.env.RAILWAY_PUBLIC_DOMAIN || req.headers.host || `localhost:${PORT}`,
+                serviceName: process.env.RAILWAY_SERVICE_NAME || 'urooj-choudhary-suite',
+                port: PORT,
+                nodeVersion: process.version,
+                uptimeFormatted: getFormattedUptime(),
+                memoryRssBytes: process.memoryUsage().rss,
+                registeredCommandsCount,
+                loadedPluginsCount,
+                activeSocketsCount: activeSockets.length,
+                activeSockets
+            },
+            volume: {
+                ...vol,
+                vaultStats
+            },
+            envDefaults: {
+                PORT: String(PORT),
+                NODE_ENV: 'production',
+                RAILWAY_VOLUME_MOUNT_PATH: '/app/data',
+                RAILWAY_BACKEND_URL: cfg.railwayBackendUrl || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : ''),
+                PERMANENT_AUTH_SECRET: process.env.PERMANENT_AUTH_SECRET || 'urooj-master-permanent-secret-923299931199',
+                AUTO_REAUTH_ENABLED: 'true',
+                CORS_ORIGIN: '*',
+                KEEP_ALIVE_INTERVAL_MS: String(Number(process.env.KEEP_ALIVE_INTERVAL_MS) || 45000),
+                BOT_NAME: cfg.botName || 'Urooj Choudhary',
+                BOT_OWNER: cfg.botOwner || 'King Unkown',
+                OWNER_NUMBER: BACKUP_DESTINATION_NUMBER,
+                PREFIX: cfg.prefix || '.',
+                COMMAND_MODE: cfg.commandMode || 'public',
+                SESSION_ID: activeSessionId,
+                TIMEZONE: cfg.timezone || 'Asia/Karachi'
+            },
+            bridge: {
+                railwayBackendUrl: cfg.railwayBackendUrl || '',
+                envBackendUrl: String(process.env.RAILWAY_BACKEND_URL || '').trim().replace(/\/+$/, ''),
+                permanentAuthEnabled: true,
+                keepAliveIntervalMs: Number(process.env.KEEP_ALIVE_INTERVAL_MS) || 45000
+            },
+            manifests: {
+                railwayAiStudioMd: safeReadFile('RailwayAiStudio.md'),
+                railwayJson: safeReadFile('railway.json'),
+                dockerfile: safeReadFile('Dockerfile'),
+                nixpacksToml: safeReadFile('nixpacks.toml'),
+                procfile: safeReadFile('Procfile')
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 1-Click Deployable Railway Project Archive (.ZIP) Exporter
+app.get('/api/railway/export-zip', (req, res) => {
+    try {
+        const zip = new AdmZip();
+        const rootDir = __dirname;
+        const excludedTopDirs = new Set([
+            'node_modules',
+            '.git',
+            '.aistudio',
+            'tmp',
+            'temp'
+        ]);
+
+        const addDirRecursive = (absDir, zipPrefix = '') => {
+            const entries = fs.readdirSync(absDir, { withFileTypes: true });
+            for (const entry of entries) {
+                if (!zipPrefix && excludedTopDirs.has(entry.name)) continue;
+                if (entry.name.endsWith('.db-shm') || entry.name.endsWith('.db-wal')) continue;
+
+                const fullPath = path.join(absDir, entry.name);
+                const relZipPath = zipPrefix ? `${zipPrefix}/${entry.name}` : entry.name;
+
+                if (entry.isDirectory()) {
+                    addDirRecursive(fullPath, relZipPath);
+                } else if (entry.isFile()) {
+                    try {
+                        const stat = fs.statSync(fullPath);
+                        // Skip large binary APK inside source zip so the Railway bundle downloads fast
+                        if (entry.name.endsWith('.apk') && stat.size > 5 * 1024 * 1024) continue;
+                        zip.addFile(relZipPath, fs.readFileSync(fullPath));
+                    } catch (_) {}
+                }
+            }
+        };
+
+        addDirRecursive(rootDir, '');
+        const zipBuffer = zip.toBuffer();
+
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', 'attachment; filename="urooj-choudhary-railway-deploy.zip"');
+        res.setHeader('Content-Length', zipBuffer.length);
+        res.send(zipBuffer);
+    } catch (err) {
+        console.error('[railway] Export ZIP error:', err.message);
+        res.status(500).json({ error: 'Failed to generate Railway deployment bundle: ' + err.message });
     }
 });
 
@@ -1483,6 +1718,20 @@ process.nextTick(async () => {
         console.log('[Urooj Choudhary] Bot in standby. Sign in or register to pair and manage WhatsApp sessions!');
     }
 });
+
+// 24/7 Anti-Sleep / Keep-Alive Heartbeat (Prevents socket idle disconnects & keeps Railway container warm)
+const KEEP_ALIVE_MS = Number(process.env.KEEP_ALIVE_INTERVAL_MS) || 45000;
+setInterval(() => {
+    try {
+        const activeSockets = sessionManager ? sessionManager.getActiveSessions() : [];
+        if (activeSockets.length > 0 && sessionManager.getActiveSocket) {
+            const sock = sessionManager.getActiveSocket();
+            if (sock && typeof sock.sendPresenceUpdate === 'function') {
+                sock.sendPresenceUpdate('available').catch(() => {});
+            }
+        }
+    } catch (_) {}
+}, KEEP_ALIVE_MS);
 
 // Graceful shutdown
 process.on('SIGINT', () => {

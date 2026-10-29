@@ -9,16 +9,18 @@
     "dev": "node server.js",
     "lint": "node -c server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docker:build": "docker build -t queenriam .",
-    "docker:run": "docker run -e SESSION_ID=$SESSION_ID queenriam"
+    "docker:build": "docker build -t urooj-choudhary .",
+    "docker:run": "docker run -p 3000:3000 -v $(pwd)/data:/app/data urooj-choudhary"
   },
   "keywords": [
-    "whatsapp-bot"
+    "whatsapp-bot",
+    "railway",
+    "baileys"
   ],
-  "author": "Hector Manuel",
+  "author": "King Unkown",
   "license": "ISC",
   "engines": {
-    "node": ">=20.x"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
