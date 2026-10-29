@@ -81,8 +81,9 @@ function getHeader() {
     const uptimeFormatted = formatTime(process.uptime());
     const botMode = settings.commandMode === 'public' ? 'public' : 'private';
 
-    return `*『 👑 𝚀𝚄𝙴𝙴𝙽 𝚁𝙸𝙰𝙼 』*
-*│ 👤 ᴏᴡɴᴇʀ     : ${settings.botOwner}*
+    return `*『 👑 𝚄𝚁𝙾𝙾𝙹 𝙲𝙷𝙾𝚄𝙳𝙷𝙰𝚁𝚈 』*
+*│ 👤 ᴏᴡɴᴇʀ     : Urooj Choudhary*
+*│ 📞 ɴᴜᴍʙᴇʀ    : +${settings.ownerNumber || '254141693915'}*
 *│ 🌍 ᴍᴏᴅᴇ      : [ ${botMode} ]*
 *│ ⏰ ᴛɪᴍᴇ      : ${currentTime}*
 *│ 📅 ᴅᴀᴛᴇ      : ${currentDate}*
@@ -132,7 +133,7 @@ function buildFullMenu(sock) {
         const block = buildCategoryText(key, sock);
         if (block) text += '\n' + block + '\n';
     }
-    text += '\n> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝚀𝚄𝙴𝙴𝙽 𝚁𝙸𝙰𝙼*';
+    text += '\n> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝚄𝚁𝙾𝙾𝙹 𝙲𝙷𝙾𝚄𝙳𝙷𝙰𝚁𝚈 (+254141693915)*';
     return text;
 }
 
@@ -180,13 +181,13 @@ async function helpCommand(sock, chatId, message, _, subCategory) {
             await sock.sendMessage(chatId, { text: 'No commands in that category yet.' });
             return;
         }
-        const catText = block + '\n\n> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝚀𝚄𝙴𝙴𝙽 𝚁𝙸𝙰𝙼*';
+        const catText = block + '\n\n> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝚄𝚁𝙾𝙾𝙹 𝙲𝙷𝙾𝚄𝙳𝙷𝙰𝚁𝚈 (+254141693915)*';
 
         if (isButtonModeOn() && sendButtons) {
             try {
                 const opts = {
                     text:        catText,
-                    footer:      '© Queen Riam',
+                    footer:      '© Urooj Choudhary',
                     buttons:     [{ id: '.help', text: getLang(sock).help_back_btn }],
                 };
                 if (menuImage) opts.image = menuImage;
@@ -213,7 +214,7 @@ async function helpCommand(sock, chatId, message, _, subCategory) {
 
             const opts = {
                 text:        menuText,
-                footer:      '© Queen Riam',
+                footer:      '© Urooj Choudhary',
                 buttons,
             };
             if (menuImage) opts.image = menuImage;

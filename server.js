@@ -2,7 +2,7 @@
 
 /**
  * Urooj Choudhary - WhatsApp Automation Suite & Bot Management Server
- * Owner: King Unkown
+ * Owner: Urooj Choudhary (+254141693915)
  * Master Admin: Urooj (Passcode: Zaid@323232)
  * Binds to 0.0.0.0:3000
  */
@@ -23,7 +23,7 @@ const HOST = '0.0.0.0';
 
 // Passcode & Backup configuration
 const DASHBOARD_PASSCODE = 'Zaid@323232';
-const BACKUP_DESTINATION_NUMBER = process.env.OWNER_NUMBER || '923299931199';
+const BACKUP_DESTINATION_NUMBER = (process.env.OWNER_NUMBER || '254141693915').replace(/\D/g, '') || '254141693915';
 
 // In-memory circular log buffer
 const MAX_LOGS = 300;
@@ -108,9 +108,10 @@ function getMergedConfig() {
         baseSettings = require('./settings');
     } catch (_) {}
 
+    const rawOwner = fileConfig.BOT_OWNER || baseSettings.botOwner || process.env.BOT_OWNER || 'Urooj Choudhary';
     return {
         botName: fileConfig.BOT_NAME || baseSettings.botName || process.env.BOT_NAME || 'Urooj Choudhary',
-        botOwner: fileConfig.BOT_OWNER || baseSettings.botOwner || process.env.BOT_OWNER || 'King Unkown',
+        botOwner: rawOwner === 'King Unkown' ? 'Urooj Choudhary' : rawOwner,
         prefix: fileConfig.PREFIX || baseSettings.prefix || process.env.PREFIX || '.',
         commandMode: fileConfig.COMMAND_MODE || baseSettings.commandMode || process.env.COMMAND_MODE || 'public',
         timezone: fileConfig.TIMEZONE || baseSettings.timezone || process.env.TIMEZONE || 'Asia/Karachi',
@@ -355,7 +356,7 @@ app.post('/api/auth/login', (req, res) => {
                 token: login.token,
                 user: login.user,
                 botName: 'Urooj Choudhary',
-                botOwner: 'King Unkown',
+                botOwner: 'Urooj Choudhary',
             });
         } catch (_) {
             res.json({
@@ -364,7 +365,7 @@ app.post('/api/auth/login', (req, res) => {
                 token: Buffer.from(`auth_${DASHBOARD_PASSCODE}_${Date.now()}`).toString('base64'),
                 user: { id: 1, username: 'Urooj', role: 'admin' },
                 botName: 'Urooj Choudhary',
-                botOwner: 'King Unkown',
+                botOwner: 'Urooj Choudhary',
             });
         }
     } else {
@@ -378,7 +379,8 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'ok',
         bot: 'Urooj Choudhary',
-        owner: 'King Unkown',
+        owner: 'Urooj Choudhary',
+        ownerNumber: '+254141693915',
         version: '1.0.0',
         uptime: process.uptime(),
     });
@@ -436,7 +438,7 @@ app.get('/api/plugins', (req, res) => {
 const handlePairingRequest = async (req, res) => {
     const { phoneNumber } = req.body;
     if (!phoneNumber) {
-        return res.status(400).json({ error: 'WhatsApp phone number is required (e.g. 923299931199)' });
+        return res.status(400).json({ error: 'WhatsApp phone number is required (e.g. 254141693915)' });
     }
     let cleanNumber = String(phoneNumber).replace(/\D/g, '');
     if (cleanNumber.startsWith('00')) cleanNumber = cleanNumber.substring(2);
@@ -444,7 +446,7 @@ const handlePairingRequest = async (req, res) => {
         cleanNumber = '92' + cleanNumber.substring(1);
     }
     if (!cleanNumber || cleanNumber.length < 7) {
-        return res.status(400).json({ error: 'Invalid phone number format. Please include country code (e.g. 923299931199).' });
+        return res.status(400).json({ error: 'Invalid phone number format. Please include country code (e.g. 254141693915).' });
     }
 
     if (!sessionManager || typeof sessionManager.generatePairingCode !== 'function') {
@@ -1119,7 +1121,7 @@ app.post('/api/session/revoke', async (req, res) => {
     }
 });
 
-// Backup Session to WhatsApp (+923299931199)
+// Backup Session to WhatsApp (+254141693915)
 app.post('/api/session/backup', async (req, res) => {
     const targetNumber = req.body?.targetNumber || BACKUP_DESTINATION_NUMBER;
     try {
@@ -1159,7 +1161,7 @@ app.get('/api/admin/overview', requireAdmin, (req, res) => {
                 nodeVersion: process.version,
                 memory: process.memoryUsage(),
                 masterAdmin: 'Urooj',
-                botOwner: 'King Unkown'
+                botOwner: 'Urooj Choudhary'
             }
         });
     } catch (err) {
@@ -1593,12 +1595,12 @@ app.get('/api/railway/status', (req, res) => {
                 NODE_ENV: 'production',
                 RAILWAY_VOLUME_MOUNT_PATH: '/app/data',
                 RAILWAY_BACKEND_URL: cfg.railwayBackendUrl || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : ''),
-                PERMANENT_AUTH_SECRET: process.env.PERMANENT_AUTH_SECRET || 'urooj-master-permanent-secret-923299931199',
+                PERMANENT_AUTH_SECRET: process.env.PERMANENT_AUTH_SECRET || 'urooj-master-permanent-secret-254141693915',
                 AUTO_REAUTH_ENABLED: 'true',
                 CORS_ORIGIN: '*',
                 KEEP_ALIVE_INTERVAL_MS: String(Number(process.env.KEEP_ALIVE_INTERVAL_MS) || 45000),
                 BOT_NAME: cfg.botName || 'Urooj Choudhary',
-                BOT_OWNER: cfg.botOwner || 'King Unkown',
+                BOT_OWNER: cfg.botOwner || 'Urooj Choudhary',
                 OWNER_NUMBER: BACKUP_DESTINATION_NUMBER,
                 PREFIX: cfg.prefix || '.',
                 COMMAND_MODE: cfg.commandMode || 'public',
@@ -1692,7 +1694,7 @@ app.get('*', (req, res) => {
 // Start Server
 const server = app.listen(PORT, HOST, () => {
     console.log(`[Urooj Choudhary] 👑 Server listening on http://${HOST}:${PORT}`);
-    console.log(`[Urooj Choudhary] 👤 Owner: King Unkown`);
+    console.log(`[Urooj Choudhary] 👤 Owner: Urooj Choudhary (+254141693915)`);
     console.log(`[Urooj Choudhary] 🔒 Super Admin: Urooj (Master Passcode: Zaid@323232)`);
     console.log(`[Urooj Choudhary] ⚡ WhatsApp Automation Suite active with ${registeredCommandsCount} commands`);
 });

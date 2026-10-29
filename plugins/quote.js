@@ -16,7 +16,7 @@ async function quoteCommand(sock, chatId, message) {
 
         await sendButtonMessage(sock, chatId, {
             text,
-            footer: 'Queen Riam 👑',
+            footer: 'Urooj Choudhary 👑',
             buttons: [
                 { id: '.quote', text: getLang(sock).quote_btn_another },
                 { id: '.joke',  text: '😂 Get a Joke'   },

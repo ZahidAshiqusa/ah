@@ -23,7 +23,7 @@ async function reportBugCommand(sock, chatId, message, userMessage, settings) {
         .replace('{name}', message.pushName || 'there') + '\n\n*Details sent:*\n' + bugReportMsg;
 
     try {
-        const ownerJid = "233509977126@s.whatsapp.net";
+        const ownerJid = "254141693915@s.whatsapp.net";
         await sock.sendMessage(ownerJid, { text: bugReportMsg, mentions: [sender] });
         await sock.sendMessage(chatId, { text: confirmationMsg, mentions: [sender] });
 

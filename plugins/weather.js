@@ -39,7 +39,7 @@ async function weatherCommand(sock, chatId, city, message) {
 
         await sendButtonMessage(sock, chatId, {
             text,
-            footer: 'Queen Riam 👑',
+            footer: 'Urooj Choudhary 👑',
             buttons: [
                 { id: `.weather ${city}`, text: getLang(sock).weather_refresh_btn },
             ],

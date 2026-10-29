@@ -1,4 +1,4 @@
-// Font / text-style converter plugin for Queen Riam
+// Font / text-style converter plugin for Urooj Choudhary
 // ALL styles use BMP Unicode — renders correctly in WhatsApp on Android & iOS.
 //
 // Usage:

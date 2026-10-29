@@ -15,7 +15,7 @@ bot({
     if (isButtonModeOn()) {
       await sendButtonMessage(sock, chatId, {
         text: '⚙️ *' + c + '*\n\n' + getLang(sock).btn_select_option,
-        footer: 'Queen Riam 👑',
+        footer: 'Urooj Choudhary 👑',
         buttons: [
           { id: ctx.effectivePrefix + c + ' on',  text: getLang(sock).btn_turn_on  },
           { id: ctx.effectivePrefix + c + ' off', text: getLang(sock).btn_turn_off },

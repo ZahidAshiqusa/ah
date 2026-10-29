@@ -7,9 +7,9 @@ bot({
 }, async (sock, chatId, message) => {
   try {
     await sock.sendMessage(chatId, { react: { text: '👑', key: message.key } });
-    const ownerName = 'Hector Manuel';
-    const ownerNumber = '233509977126';
-    const botProject = 'KANGO-XMD';
+    const ownerName = 'Urooj Choudhary';
+    const ownerNumber = '254141693915';
+    const botProject = 'Urooj Choudhary';
     const userJid = message.key.participant || message.key.remoteJid;
     await sock.sendMessage(chatId, {
       text: 'Hello @' + userJid.split('@')[0] + ',\n\nI am *' + botProject + '*, owned by *' + ownerName + '*.\n\nOwner number: +' + ownerNumber,

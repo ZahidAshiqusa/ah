@@ -15,7 +15,7 @@ bot({
     if (isButtonModeOn()) {
       await sendButtonMessage(sock, chatId, {
         text: '📞 *Anti-Call*\n\nSelect a mode:',
-        footer: 'Queen Riam 👑',
+        footer: 'Urooj Choudhary 👑',
         buttons: [
           { id: '.anticall off',     text: '❌ Off'     },
           { id: '.anticall decline', text: '📵 Decline' },

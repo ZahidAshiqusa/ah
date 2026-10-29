@@ -54,7 +54,7 @@ async function snapCommand(sock, chatId, message) {
             });
         }
 
-        const caption = `*${type}* by *${username}*\n\n📥 Downloaded by Queen Riam`;
+        const caption = `*${type}* by *${username}*\n\n📥 Downloaded by Urooj Choudhary`;
         const tmpDir = path.join(process.cwd(), 'tmp');
         if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 

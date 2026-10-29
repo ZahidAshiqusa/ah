@@ -1,7 +1,7 @@
 # Railway Backend + Google AI Studio Frontend Guide (`RailwayAiStudio.md`)
 
 **Project:** Urooj Choudhary — WhatsApp Automation Suite  
-**Owner:** King Unkown (`+923299931199`)  
+**Owner:** Urooj Choudhary (`+254141693915`)  
 **Master Admin:** `Urooj` (Passcode: `Zaid@323232`)
 
 ---
@@ -44,14 +44,14 @@ DB_TYPE=sqlite
 
 # ── BOT IDENTITY & OWNER CONFIG ──────────────────────────────
 BOT_NAME=Urooj Choudhary
-BOT_OWNER=King Unkown
-OWNER_NUMBER=923299931199
+BOT_OWNER=Urooj Choudhary
+OWNER_NUMBER=254141693915
 PREFIX=.
 COMMAND_MODE=public
 TIMEZONE=Asia/Karachi
 
 # ── ZERO-LOGOUT PERMANENT AUTH & CORS BRIDGE ─────────────────
-PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-923299931199
+PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-254141693915
 AUTO_REAUTH_ENABLED=true
 CORS_ORIGIN=*
 KEEP_ALIVE_INTERVAL_MS=45000
@@ -59,11 +59,14 @@ KEEP_ALIVE_INTERVAL_MS=45000
 # ── AUTOMATION & INTERCEPTOR DEFAULTS ────────────────────────
 AUTO_STATUS_REACT=true
 AUTO_STATUS_REPLY=false
+AUTO_STATUS_MSG=Status Viewed by Urooj Choudhary
 AUTOREAD=false
 AUTOTYPE=false
 AUTORECORD=false
 ALWAYSONLINE=true
 BUTTONMODE=on
+PACK_AUTHOR=Urooj Choudhary
+PACK_NAME=Urooj Choudhary
 
 # ── OPTIONAL FALLBACK SESSION ID ─────────────────────────────
 SESSION_ID=
@@ -79,17 +82,32 @@ Set these in **AI Studio** (or inside `.env` / the live Dashboard Bridge input) 
 PORT=3000
 NODE_ENV=production
 RAILWAY_BACKEND_URL=https://your-project-production.up.railway.app
-PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-923299931199
+PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-254141693915
 AUTO_REAUTH_ENABLED=true
 CORS_ORIGIN=*
-OWNER_NUMBER=923299931199
+BOT_NAME=Urooj Choudhary
+BOT_OWNER=Urooj Choudhary
+OWNER_NUMBER=254141693915
 ```
 
 > **Note:** Replace `https://your-project-production.up.railway.app` with the actual public domain generated in Railway (`Settings → Networking → Generate Domain`). You can also paste or change this URL at any time inside the dashboard under **🚂 Railway Cloud → AI Studio ↔ Railway Backend Bridge**.
 
 ---
 
-## 3. Necessary Files Checklist
+## 3. Custom Urooj Choudhary Bot Commands
+
+| Command | Syntax | Description |
+| :--- | :--- | :--- |
+| **`.button`** | `.button/msg/buttonlimit/button1/button2 +923number` *(or `.button/+923number/msg/buttonlimit/button1/button2`)* | Sends an interactive button message with up to `buttonlimit` buttons and `👑 Urooj Choudhary` footer to the target number. |
+| **`.ptv`** | Reply to video with `.ptv +923number` | Sends the replied video as a circular WhatsApp Video Note (`ptv: true`) to `+923number`. |
+| **`.voice`** | Reply to audio/video with `.voice +923number` | Sends the replied audio/video as a playable WhatsApp Voice Note (`ptt: true`) to `+923number`. |
+| **`.😍`** | Reply to View-Once with `.😍` | Unlocks any View-Once photo, video, or audio and sends the file directly to Owner DM (`+254141693915`). |
+| **`.qouted`** | `.qouted msg1/replied +923number` *(or `.qouted/+923number/msg1/replied`)* | Sends `replied` as a fake-quoted reply to `msg1` on the target number. |
+| **`.online`** | `.online +9232number` | Subscribes to real-time WhatsApp presence for `+9232number` and displays their live status & timestamped online history. |
+
+---
+
+## 4. Necessary Files Checklist
 
 Make sure the following files are present in your project (all of them are automatically included when you click **⬇ Download Railway Project (.ZIP)** in the dashboard):
 
@@ -106,51 +124,26 @@ Make sure the following files are present in your project (all of them are autom
 | `lib/database.js` | SQLite WAL database engine + permanent HMAC session tokens (`10-year` expiry + stateless auto-rehydration). |
 | `lib/sessionManager.js` | Multi-device WhatsApp Baileys socket manager with automatic session rehydration on boot. |
 | `lib/vaultInterceptor.js` | Real-time View-Once media decryptor and Deleted Message ("Delete for Everyone") recovery engine. |
-| `lib/pluginLoader.js` & `plugins/*` | Loads all 156 plugins / 236 WhatsApp bot commands. |
-
-### Required Files for Google AI Studio (Published Web Frontend)
-| File Path | Purpose |
-| :--- | :--- |
-| `public/index.html` | Single-page application dashboard with smart `window.fetch` Railway Bridge interceptor, permanent login storage, and live telemetry. |
-| `server.js` | Serves `public/index.html` on Port `3000` in AI Studio and provides `/api/config/bridge` + `/api/auth/rehydrate`. |
-| `.env.example` | Documents `RAILWAY_BACKEND_URL`, `PERMANENT_AUTH_SECRET`, and all runtime variables. |
-| `RailwayAiStudio.md` | This deployment and configuration reference guide (served via `/api/railway/status` and viewable in the UI). |
-| `metadata.json` | AI Studio application metadata and permissions manifest. |
+| `plugins/urooj_custom_commands.js` | Implements `.button`, `.ptv`, `.voice`, `.😍`, `.qouted`, and `.online` commands. |
 
 ---
 
-## 4. Step-by-Step Instructions: Deploy Backend on Railway & Publish Frontend in AI Studio
+## 5. Step-by-Step Instructions (Including Mobile Browser Volume Setup)
 
-### Step 1: Deploy Backend on Railway
-1. Open the dashboard and go to the **🚂 Railway Cloud** tab.
-2. Click **⬇ Download Railway Project (.ZIP)** (or push this repository to GitHub).
-3. Go to [Railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** (or run `railway up` using the Railway CLI).
-4. **Attach a Persistent Volume** (Critical for zero session loss):
-   - In the Railway project canvas, right-click (or press `⌘K` / `Ctrl+K`) → **Add Volume**.
-   - Attach the Volume to your service and set the **Mount Path** to:
+### Step 1: Deploy & Add a Persistent Volume on Railway (Mobile Browser Guide)
+1. In Railway on your mobile browser, look at the **left-most vertical icon bar** (where you see the Architecture/Canvas icon at the top and the Gear `⚙️` icon at the bottom).
+2. Tap the **top icon above the bar chart** (the **Architecture / Canvas** icon) to exit Project Settings and return to your project canvas.
+3. On the project canvas:
+   - Tap the **`+ Create` / `+ New`** button in the top-right corner, **OR** tap and hold on empty canvas space.
+   - Select **Volume**.
+   - Choose your deployed service to attach the Volume to.
+   - Enter the **Mount Path** as:
      ```text
      /app/data
      ```
-5. Open **Variables → Raw Editor** in Railway and paste the **2A. Railway Backend `.env` Variables** block above.
-6. Go to **Settings → Networking → Public Networking** and click **Generate Domain**. Copy your new HTTPS URL (e.g. `https://urooj-suite-production.up.railway.app`).
+4. Next, tap on your **Service card** → **Variables** → **Raw Editor**, and paste the **2A. Railway Backend `.env` Variables** block above.
+5. Tap **Settings** (inside your Service card, not Project Settings) → **Networking** → **Generate Domain** and copy your `https://...up.railway.app` URL.
 
 ### Step 2: Connect AI Studio Frontend to Your Railway Backend
-You have **two ways** to link your AI Studio Frontend to Railway (both work together):
-
-- **Method A (Live in the Web Dashboard — Instant, No Rebuild Needed):**
-  1. Open your AI Studio app and go to **🚂 Railway Cloud**.
-  2. In the **🔗 AI Studio Frontend ↔ Railway Backend Bridge** card at the top, paste your Railway URL (`https://your-project.up.railway.app`) and click **Save & Connect Bridge**.
-  3. The browser immediately routes all `/api/*` and media requests directly to your 24/7 Railway backend and saves the URL to both `localStorage` and the server bridge config.
-
-- **Method B (Environment Variable in AI Studio):**
-  1. Set `RAILWAY_BACKEND_URL=https://your-project.up.railway.app` and `PERMANENT_AUTH_SECRET=urooj-master-permanent-secret-923299931199` in your AI Studio environment settings.
-  2. Every visitor who opens your published AI Studio link will automatically connect to your Railway backend without needing to type the URL.
-
-### Step 3: Publish in AI Studio with Zero Logout & No Restarting
-1. Sign in once as Super Admin (`Urooj` / `Zaid@323232`) or your user account.
-2. Pair your WhatsApp number in the **📱 Device Pairing** tab. Your session credentials are written directly to Railway's `/app/data/sessions` volume.
-3. Click **Publish / Share** in Google AI Studio.
-4. Whenever you open your published AI Studio URL:
-   - **No Log Out:** Your permanent HMAC token (`urooj_perm_...`) and cached user snapshot restore your session immediately without showing a login screen.
-   - **No Restarting:** Because your WhatsApp sockets and SQLite database run 24/7 on Railway, closing your browser or letting the AI Studio frontend idle never disconnects or restarts your WhatsApp bot.
-   - **Live Statics:** All command counts, uptime, active sockets, and unlocked View-Once / Deleted messages stream live from your Railway backend.
+- Open your AI Studio app → **🚂 Railway Cloud** tab → paste your Railway URL into **🔗 AI Studio Frontend ↔ Railway Backend Bridge** → click **Save & Connect Bridge**.
+- Or set `RAILWAY_BACKEND_URL=https://your-project.up.railway.app` in `.env`.

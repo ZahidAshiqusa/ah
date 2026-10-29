@@ -87,7 +87,7 @@ async function tgsearchCommand(sock, chatId, message, query) {
             text += '\n';
         });
 
-        text += `\n_Powered by Queen Riam_`;
+        text += `\n_Powered by Urooj Choudhary_`;
 
         await sock.sendMessage(chatId, { text });
         await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });

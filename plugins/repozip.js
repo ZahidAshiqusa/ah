@@ -19,7 +19,7 @@ async function githubCommand(sock, chatId, message) {
         if (!res.ok) throw new Error('Error fetching repository data');
         const repo = await res.json();
 
-        let txt = `*🌹 Queen Riam Repository*\n\n`;
+        let txt = `*🌹 Urooj Choudhary Repository*\n\n`;
         txt += `🔗 *URL:* ${repo.html_url}\n`;
         txt += `📝 *Description:* ${repo.description || "_No description provided_"}\n`;
         txt += `🌟 *Stars:* ${repo.stargazers_count}\n`;
@@ -34,7 +34,7 @@ async function githubCommand(sock, chatId, message) {
             try {
                 await sendButtons(sock, chatId, {
                     text: txt,
-                    footer: 'Queen Riam 👑',
+                    footer: 'Urooj Choudhary 👑',
                     buttons: [
                         {
                             name: 'cta_url',
@@ -80,7 +80,7 @@ async function repoZipCommand(sock, chatId, message) {
             document: Buffer.from(response.data),
             mimetype: 'application/zip',
             fileName: 'Queen-Riam.zip',
-            caption: '📦 *Queen Riam* — Source Code\n\n⭐ Star the repo: https://github.com/Dev-Kango/Queen-Riam',
+            caption: '📦 *Urooj Choudhary* — Source Code\n\n⭐ Star the repo: https://github.com/Dev-Kango/Queen-Riam',
         });
 
         await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });

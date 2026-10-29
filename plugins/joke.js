@@ -13,7 +13,7 @@ async function jokeCommand(sock, chatId, message) {
 
         await sendButtonMessage(sock, chatId, {
             text,
-            footer: 'Queen Riam 👑',
+            footer: 'Urooj Choudhary 👑',
             buttons: [
                 { id: '.joke',  text: getLang(sock).joke_btn_another },
                 { id: '.fact',  text: '🧠 Random Fact'  },

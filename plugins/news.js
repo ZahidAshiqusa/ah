@@ -17,7 +17,7 @@ async function newsCommand(sock, chatId, message) {
 
         await sendButtonMessage(sock, chatId, {
             text,
-            footer: 'Queen Riam 👑',
+            footer: 'Urooj Choudhary 👑',
             buttons: [
                 { id: '.news', text: getLang(sock).news_refresh_btn },
             ],

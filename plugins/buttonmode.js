@@ -18,7 +18,7 @@ async function buttonmodeCommand(sock, chatId, message, args) {
         if (isButtonModeOn()) {
             await sendButtonMessage(sock, chatId, {
                 text,
-                footer: 'Queen Riam 👑',
+                footer: 'Urooj Choudhary 👑',
                 buttons: [
                     { id: '.buttonmode on',  text: getLang(sock).btn_turn_on  },
                     { id: '.buttonmode off', text: getLang(sock).btn_turn_off },

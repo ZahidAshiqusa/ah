@@ -82,7 +82,7 @@ async function autoStatusCommand(sock, chatId, msg, args) {
             if (isButtonModeOn()) {
                 await sendButtonMessage(sock, chatId, {
                     text,
-                    footer: 'Queen Riam 👑',
+                    footer: 'Urooj Choudhary 👑',
                     buttons: [
                         { id: '.autoviewstatus on',  text: getLang(sock).btn_turn_on  },
                         { id: '.autoviewstatus off', text: getLang(sock).btn_turn_off },

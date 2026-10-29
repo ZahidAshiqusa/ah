@@ -36,7 +36,7 @@ async function pingCommand(sock, chatId, message) {
         const response =
             `*${t.ping_pong}*\n` +
             `${t.ping_response} *${latency}* ${t.ping_seconds}\n\n` +
-            `*💻 ${settings.botName || "Queen Riam"}* ${t.ping_server_info}\n` +
+            `*💻 ${settings.botName || "Urooj Choudhary"}* ${t.ping_server_info}\n` +
             `${t.ping_ram} *${ramUsage}*\n` +
             `${t.ping_cores} *${cpus.length}*\n` +
             `${t.ping_speed} *${(cpu.speed / cpus.length).toFixed(2)} MHz*`;
@@ -44,7 +44,7 @@ async function pingCommand(sock, chatId, message) {
         if (isButtonModeOn()) {
             await sendButtonMessage(sock, chatId, {
                 text: response,
-                footer: `${settings.botName || "Queen Riam"} 👑`,
+                footer: `Urooj Choudhary 👑`,
                 buttons: [
                     { id: '.alive', text: t.ping_alive_btn },
                 ],

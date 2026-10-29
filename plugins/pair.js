@@ -50,7 +50,7 @@ async function pairCommand(sock, chatId, message, args) {
             try {
                 await sendButtons(sock, chatId, {
                     text: response,
-                    footer: '© Queen Riam',
+                    footer: '© Urooj Choudhary',
                     buttons: [
                         {
                             name: 'cta_copy',

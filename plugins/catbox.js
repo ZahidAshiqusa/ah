@@ -66,7 +66,7 @@ async function catboxCommand(sock, chatId, message) {
             try {
                 await sendButtons(sock, chatId, {
                     text: reply,
-                    footer: '© Queen Riam',
+                    footer: '© Urooj Choudhary',
                     buttons: [
                         {
                             name: 'cta_copy',

@@ -100,7 +100,7 @@ async function videoCommand(sock, chatId, message) {
                 video: fs.readFileSync(outFile),
                 mimetype: 'video/mp4',
                 fileName: safeName + '.mp4',
-                caption: '*' + finalTitle + '*\n' + getLang(sock).dl_quality + ' 360p\n\n> *_Downloaded by Queen Riam_*'
+                caption: '*' + finalTitle + '*\n' + getLang(sock).dl_quality + ' 360p\n\n> *_Downloaded by Urooj Choudhary_*'
             });
 
             await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });

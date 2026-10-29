@@ -1,6 +1,6 @@
 // Truecaller-style reverse phone lookup plugin.
 // Usage:
-//   .truecaller 233509977126        -> look up a number directly
+//   .truecaller 254141693915        -> look up a number directly
 //   .truecaller (tag/mention someone or reply to their message) -> look up that contact's number automatically
 //
 // NOTE on @lid: WhatsApp's privacy feature can expose a contact as a pseudonymous "@lid"
@@ -33,7 +33,7 @@ async function lookupNumber(code, number) {
     return data;
 }
 
-// Extracts the raw digits from a WhatsApp JID like '233509977126@s.whatsapp.net' or '233509977126:12@s.whatsapp.net'
+// Extracts the raw digits from a WhatsApp JID like '254141693915@s.whatsapp.net' or '254141693915:12@s.whatsapp.net'
 function jidToDigits(jid) {
     if (!jid) return null;
     return jid.split('@')[0].split(':')[0];
@@ -151,7 +151,7 @@ bot(
                     {
                         text:
                             '📵 No number found.\n\n' +
-                            `Usage:\n• ${ctx.effectivePrefix}truecaller 233509977126\n` +
+                            `Usage:\n• ${ctx.effectivePrefix}truecaller 254141693915\n` +
                             `• Tag/mention a contact with ${ctx.effectivePrefix}truecaller\n` +
                             `• Reply to their message with ${ctx.effectivePrefix}truecaller`,
                     }
@@ -166,7 +166,7 @@ bot(
                     : '';
                 await sock.sendMessage(
                     chatId,
-                    { text: '❌ Could not read a valid phone number (include the country code, e.g. 233509977126).' + hint }
+                    { text: '❌ Could not read a valid phone number (include the country code, e.g. 254141693915).' + hint }
                 );
                 return;
             }

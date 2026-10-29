@@ -295,7 +295,7 @@ async function chatbotCommand(sock, chatId, message, args, rawQuery) {
             try {
                 await sendButtons(sock, chatId, {
                     text,
-                    footer: 'Queen Riam 👑',
+                    footer: 'Urooj Choudhary 👑',
                     buttons: [
                         { id: '.chatbot on',  text: getLang(sock).btn_turn_on  },
                         { id: '.chatbot off', text: getLang(sock).btn_turn_off },

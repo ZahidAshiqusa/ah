@@ -1,4 +1,4 @@
-// Migrated from commands/owner.js
+// Urooj Choudhary Owner Command
 const settings = require('../settings');
 const { bot } = require('../lib/pluginLoader');
 
@@ -8,6 +8,6 @@ bot({
   category: 'general',
 }, async (sock, chatId) => {
   await sock.sendMessage(chatId, {
-    text: '*Queen Riam Owner*\n\nName: ' + settings.botOwner + '\nNumber: +' + settings.ownerNumber,
+    text: '*👑 Urooj Choudhary Owner*\n\n👤 *Name:* Urooj Choudhary\n📞 *Number:* +' + (settings.ownerNumber || '254141693915'),
   });
 });

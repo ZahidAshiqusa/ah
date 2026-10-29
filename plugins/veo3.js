@@ -44,7 +44,7 @@ async function veo3Command(sock, chatId, message, query) {
         await sock.sendMessage(chatId, {
             video: videoBuffer,
             mimetype: 'video/mp4',
-            caption: '🎬 *AI Video Generated*\n\n📝 Prompt: _' + query + '_\n\n_Powered by Queen Riam_',
+            caption: '🎬 *AI Video Generated*\n\n📝 Prompt: _' + query + '_\n\n_Powered by Urooj Choudhary_',
         });
 
         await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });

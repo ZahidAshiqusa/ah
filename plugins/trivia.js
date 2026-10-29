@@ -66,7 +66,7 @@ async function startTrivia(sock, chatId, message) {
                 }));
                 await sendButtons(sock, chatId, {
                     text,
-                    footer: 'Queen Riam 👑 — Tap your answer!',
+                    footer: 'Urooj Choudhary 👑 — Tap your answer!',
                     buttons,
                 });
             } catch (_) {
@@ -107,7 +107,7 @@ async function answerTrivia(sock, chatId, answer, message) {
     if (isButtonModeOn()) {
         await sendButtonMessage(sock, chatId, {
             text,
-            footer: 'Queen Riam 👑',
+            footer: 'Urooj Choudhary 👑',
             buttons: [
                 { id: '.trivia', text: '🧠 Next Question' },
             ],

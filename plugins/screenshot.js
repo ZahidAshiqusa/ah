@@ -279,7 +279,7 @@ async function screenshotCommand(sock, chatId, message) {
         ctx.fillStyle = "#546E7A";
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
-        ctx.fillText("Queen Riam", CANVAS_W / 2, TOTAL_H - 6);
+        ctx.fillText("Urooj Choudhary", CANVAS_W / 2, TOTAL_H - 6);
 
         const imgBuffer = canvas.toBuffer("image/png");
 
